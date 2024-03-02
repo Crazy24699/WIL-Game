@@ -2,6 +2,34 @@
     "name": "Player Input",
     "maps": [
         {
+            "name": "PlayerInteraction",
+            "id": "fc310c59-04d6-4929-a855-2c8c1e9523c6",
+            "actions": [
+                {
+                    "name": "ShowMenu",
+                    "type": "Button",
+                    "id": "0b3272b1-2236-4b7f-b3c6-4981561c6387",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "054d728c-1fb5-483a-ac8c-c196809fe499",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "ShowMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "Base Player Movement",
             "id": "924fcd8c-8bd2-4235-abe2-45c725172a5b",
             "actions": [
@@ -96,13 +124,13 @@
             ]
         },
         {
-            "name": "Player Interaction",
-            "id": "fc310c59-04d6-4929-a855-2c8c1e9523c6",
+            "name": "PlayerAttack",
+            "id": "50ff9ac7-f556-418d-ace2-43ac0f970f89",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "ClawSlash",
                     "type": "Button",
-                    "id": "0b3272b1-2236-4b7f-b3c6-4981561c6387",
+                    "id": "30e8abb0-54b2-4f06-b815-cac8d8f83a30",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -112,12 +140,12 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "054d728c-1fb5-483a-ac8c-c196809fe499",
-                    "path": "",
+                    "id": "e70e226c-d24c-4116-ba67-065be466682d",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard",
-                    "action": "New action",
+                    "groups": "",
+                    "action": "ClawSlash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
