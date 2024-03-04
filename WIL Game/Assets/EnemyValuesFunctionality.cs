@@ -24,7 +24,7 @@ public class EnemyValuesFunctionality : MonoBehaviour
     public int HandleHealth(int HealthChange)
     {
 
-        CurrentHealth += HealthChange;
+        CurrentHealth -= HealthChange;
 
         //Play health gained particle effect
         return CurrentHealth;

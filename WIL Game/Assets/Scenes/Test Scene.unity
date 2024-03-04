@@ -996,6 +996,7 @@ GameObject:
   - component: {fileID: 790436630}
   - component: {fileID: 790436629}
   - component: {fileID: 790436632}
+  - component: {fileID: 790436634}
   - component: {fileID: 790436633}
   m_Layer: 0
   m_Name: Player
@@ -1142,9 +1143,37 @@ MonoBehaviour:
   m_GameObject: {fileID: 790436626}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b8215966cfafa041b984cf52de5be0a, type: 3}
+  m_Script: {fileID: 11500000, guid: 01be62b70abc0664a9e4c8e46532ff35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Name: 
+  Damage: 10
+  AttackSpeed: 0
+  AttackAnimation: {fileID: 1631708296}
+  UnlockedAttacks: []
+  CurrentAttack: 0
+  SlashAttackScript: {fileID: 790436633}
+  WolfRef: {fileID: 0}
+  ClawRef: {fileID: 0}
+--- !u!114 &790436634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790436626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0854e44c2799e74dab00412ac6334ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  Damage: 0
+  AttackSpeed: 0
+  AttackAnimation: {fileID: 1631708296}
+  UnlockedAttacks: []
+  CurrentAttack: 0
+  SlashAttackScript: {fileID: 790436633}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1412,7 +1441,7 @@ GameObject:
   - component: {fileID: 1228588664}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1542,7 +1571,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcbbd0e5403855e45bcb378bc1ca85b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 0
+  MaxHealth: 50
   CurrentHealth: 0
 --- !u!1 &1631708294
 GameObject:

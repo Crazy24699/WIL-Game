@@ -4,15 +4,21 @@ using UnityEngine;
 
 public class ClawFunctionality : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    protected PlayerAttacks PlayerAttackRef;
+
+    public void Start()
     {
-        
+        PlayerAttackRef = FindObjectOfType<PlayerAttacks>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter(Collider Collision)
     {
-        
+        if (Collision.CompareTag("Enemy") && PlayerAttackRef != null) 
+        {
+            EnemyValuesFunctionality EnemyFunctionScript = Collision.GetComponent<EnemyValuesFunctionality>();
+
+            EnemyFunctionScript.HandleHealth(PlayerAttackRef.Damage);
+
+        }
     }
 }

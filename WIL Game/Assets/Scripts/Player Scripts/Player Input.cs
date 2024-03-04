@@ -150,7 +150,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             ""id"": ""50ff9ac7-f556-418d-ace2-43ac0f970f89"",
             ""actions"": [
                 {
-                    ""name"": ""ClawSlash"",
+                    ""name"": ""SlashAttack"",
                     ""type"": ""Button"",
                     ""id"": ""30e8abb0-54b2-4f06-b815-cac8d8f83a30"",
                     ""expectedControlType"": ""Button"",
@@ -167,7 +167,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ClawSlash"",
+                    ""action"": ""SlashAttack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -196,7 +196,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_BasePlayerMovement_Movement = m_BasePlayerMovement.FindAction("Movement", throwIfNotFound: true);
         // PlayerAttack
         m_PlayerAttack = asset.FindActionMap("PlayerAttack", throwIfNotFound: true);
-        m_PlayerAttack_ClawSlash = m_PlayerAttack.FindAction("ClawSlash", throwIfNotFound: true);
+        m_PlayerAttack_SlashAttack = m_PlayerAttack.FindAction("SlashAttack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -350,12 +350,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     // PlayerAttack
     private readonly InputActionMap m_PlayerAttack;
     private List<IPlayerAttackActions> m_PlayerAttackActionsCallbackInterfaces = new List<IPlayerAttackActions>();
-    private readonly InputAction m_PlayerAttack_ClawSlash;
+    private readonly InputAction m_PlayerAttack_SlashAttack;
     public struct PlayerAttackActions
     {
         private @PlayerInput m_Wrapper;
         public PlayerAttackActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @ClawSlash => m_Wrapper.m_PlayerAttack_ClawSlash;
+        public InputAction @SlashAttack => m_Wrapper.m_PlayerAttack_SlashAttack;
         public InputActionMap Get() { return m_Wrapper.m_PlayerAttack; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -365,16 +365,16 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_PlayerAttackActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_PlayerAttackActionsCallbackInterfaces.Add(instance);
-            @ClawSlash.started += instance.OnClawSlash;
-            @ClawSlash.performed += instance.OnClawSlash;
-            @ClawSlash.canceled += instance.OnClawSlash;
+            @SlashAttack.started += instance.OnSlashAttack;
+            @SlashAttack.performed += instance.OnSlashAttack;
+            @SlashAttack.canceled += instance.OnSlashAttack;
         }
 
         private void UnregisterCallbacks(IPlayerAttackActions instance)
         {
-            @ClawSlash.started -= instance.OnClawSlash;
-            @ClawSlash.performed -= instance.OnClawSlash;
-            @ClawSlash.canceled -= instance.OnClawSlash;
+            @SlashAttack.started -= instance.OnSlashAttack;
+            @SlashAttack.performed -= instance.OnSlashAttack;
+            @SlashAttack.canceled -= instance.OnSlashAttack;
         }
 
         public void RemoveCallbacks(IPlayerAttackActions instance)
@@ -411,6 +411,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     }
     public interface IPlayerAttackActions
     {
-        void OnClawSlash(InputAction.CallbackContext context);
+        void OnSlashAttack(InputAction.CallbackContext context);
     }
 }
