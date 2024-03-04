@@ -1,3 +1,5 @@
+
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,12 +10,15 @@ public class PlayerAttack : MonoBehaviour
     public PlayerInput PlayerInputRef;
     protected InputAction InputRef;
 
-    
+    protected bool IsAttacking = false;
+
 
     // Start is called before the first frame update
     void Awake()
     {
         PlayerInputRef=new PlayerInput();
+
+
     }
 
     public void OnEnable()

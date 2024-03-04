@@ -1409,6 +1409,7 @@ GameObject:
   - component: {fileID: 1228588661}
   - component: {fileID: 1228588660}
   - component: {fileID: 1228588659}
+  - component: {fileID: 1228588664}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -1522,13 +1523,27 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1228588658}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.5, y: 6.73, z: -2.41}
+  m_LocalRotation: {x: -0, y: 0.05321092, z: -0, w: -0.99858326}
+  m_LocalPosition: {x: -0.149, y: -0.52, z: -1.609}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -366.1, z: 0}
+--- !u!114 &1228588664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1228588658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcbbd0e5403855e45bcb378bc1ca85b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHealth: 0
+  CurrentHealth: 0
 --- !u!1 &1631708294
 GameObject:
   m_ObjectHideFlags: 0
@@ -1538,6 +1553,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1631708295}
+  - component: {fileID: 1631708296}
   m_Layer: 0
   m_Name: PH Claw Pivot
   m_TagString: Untagged
@@ -1553,14 +1569,35 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1631708294}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.14273812, y: 0.44743583, z: -0.26831904, w: 0.8410897}
+  m_LocalRotation: {x: -0.16744699, y: -0.52488977, z: 0.25363517, w: -0.7950607}
   m_LocalPosition: {x: -0.46, y: 0.004, z: -0.48}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4614687391286710212}
   m_Father: {fileID: 790436628}
-  m_LocalEulerAnglesHint: {x: 28.7, y: 50.422, z: -21.651}
+  m_LocalEulerAnglesHint: {x: 32.176, y: 1142.342, z: -15.594}
+--- !u!95 &1631708296
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1631708294}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 427fa7b432ac3be4987925394dc77153, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1773909976
 GameObject:
   m_ObjectHideFlags: 3
@@ -1764,6 +1801,8 @@ GameObject:
   - component: {fileID: 4614687391286710212}
   - component: {fileID: 4177080043618646362}
   - component: {fileID: 5544482824962139525}
+  - component: {fileID: 8682330784219791663}
+  - component: {fileID: 8682330784219791664}
   m_Layer: 0
   m_Name: PH Claw
   m_TagString: Untagged
@@ -1771,6 +1810,40 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &8682330784219791663
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8682330784219791662}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -5495902117074765545, guid: 5271c7cd7725ecb4caf33c177fdb6eaa, type: 3}
+--- !u!114 &8682330784219791664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8682330784219791662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 834c6d705905cf94cb9095545928d1a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
