@@ -23,10 +23,13 @@ public class EnemyValuesFunctionality : MonoBehaviour
 
     public int HandleHealth(int HealthChange)
     {
+        if(CurrentHealth>0  || CurrentHealth < MaxHealth)
+        {
+            CurrentHealth -= HealthChange;
 
-        CurrentHealth -= HealthChange;
-
-        //Play health gained particle effect
-        return CurrentHealth;
+            //Play health gained particle effect
+            return CurrentHealth;
+        }
+        return 0;
     }
 }
