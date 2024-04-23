@@ -68,7 +68,19 @@ public class PlayerAttacks : MonoBehaviour
 
     public void SlashAttackFunction()
     {
-        SlashAttackScript.Attack();
+        PlayAttackAnim(0.5f, "SlashAttack");
+    }
+
+    protected void PlayAttackAnim(float ResetTime, string AnimName)
+    {
+        AttackAnimation.SetBool(AnimName, true);
+        StartCoroutine(AttackReset(ResetTime, AnimName));
+    }
+
+    public IEnumerator AttackReset(float ResetTime, string AnimName)
+    {
+        yield return new WaitForSeconds(ResetTime);
+        AttackAnimation.SetBool(AnimName, false);
     }
 
     // Update is called once per frame
