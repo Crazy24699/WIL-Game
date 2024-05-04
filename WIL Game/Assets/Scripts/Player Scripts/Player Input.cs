@@ -150,9 +150,18 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             ""id"": ""50ff9ac7-f556-418d-ace2-43ac0f970f89"",
             ""actions"": [
                 {
-                    ""name"": ""SlashAttack"",
+                    ""name"": ""Slash Attack"",
                     ""type"": ""Button"",
                     ""id"": ""30e8abb0-54b2-4f06-b815-cac8d8f83a30"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Tail Whip"",
+                    ""type"": ""Button"",
+                    ""id"": ""7efce37b-30cd-46a9-bc91-1250a362a38a"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -167,18 +176,18 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SlashAttack"",
+                    ""action"": ""Slash Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""03788229-ffe8-438c-92d6-cbe92aba641f"",
-                    ""path"": ""<Mouse>/rightButton"",
+                    ""id"": ""c093973a-7323-47e6-9eaa-92018b086950"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SlashAttack"",
+                    ""action"": ""Tail Whip"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -207,7 +216,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_BasePlayerMovement_Movement = m_BasePlayerMovement.FindAction("Movement", throwIfNotFound: true);
         // PlayerAttack
         m_PlayerAttack = asset.FindActionMap("PlayerAttack", throwIfNotFound: true);
-        m_PlayerAttack_SlashAttack = m_PlayerAttack.FindAction("SlashAttack", throwIfNotFound: true);
+        m_PlayerAttack_SlashAttack = m_PlayerAttack.FindAction("Slash Attack", throwIfNotFound: true);
+        m_PlayerAttack_TailWhip = m_PlayerAttack.FindAction("Tail Whip", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -362,11 +372,13 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_PlayerAttack;
     private List<IPlayerAttackActions> m_PlayerAttackActionsCallbackInterfaces = new List<IPlayerAttackActions>();
     private readonly InputAction m_PlayerAttack_SlashAttack;
+    private readonly InputAction m_PlayerAttack_TailWhip;
     public struct PlayerAttackActions
     {
         private @PlayerInput m_Wrapper;
         public PlayerAttackActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @SlashAttack => m_Wrapper.m_PlayerAttack_SlashAttack;
+        public InputAction @TailWhip => m_Wrapper.m_PlayerAttack_TailWhip;
         public InputActionMap Get() { return m_Wrapper.m_PlayerAttack; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -379,6 +391,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @SlashAttack.started += instance.OnSlashAttack;
             @SlashAttack.performed += instance.OnSlashAttack;
             @SlashAttack.canceled += instance.OnSlashAttack;
+            @TailWhip.started += instance.OnTailWhip;
+            @TailWhip.performed += instance.OnTailWhip;
+            @TailWhip.canceled += instance.OnTailWhip;
         }
 
         private void UnregisterCallbacks(IPlayerAttackActions instance)
@@ -386,6 +401,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @SlashAttack.started -= instance.OnSlashAttack;
             @SlashAttack.performed -= instance.OnSlashAttack;
             @SlashAttack.canceled -= instance.OnSlashAttack;
+            @TailWhip.started -= instance.OnTailWhip;
+            @TailWhip.performed -= instance.OnTailWhip;
+            @TailWhip.canceled -= instance.OnTailWhip;
         }
 
         public void RemoveCallbacks(IPlayerAttackActions instance)
@@ -423,5 +441,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     public interface IPlayerAttackActions
     {
         void OnSlashAttack(InputAction.CallbackContext context);
+        void OnTailWhip(InputAction.CallbackContext context);
     }
 }

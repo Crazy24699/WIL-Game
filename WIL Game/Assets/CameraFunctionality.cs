@@ -10,7 +10,9 @@ public class CameraFunctionality : MonoBehaviour
 
     public Transform MainCamera;
 
-    public Vector3 PlayerVelocity;
+    public GameObject CameraLock;
+
+    public bool LockView = false;
 
     public float FinalMoveSpeed;
     public float CurrentMoveSpeed;
@@ -22,21 +24,35 @@ public class CameraFunctionality : MonoBehaviour
     public Transform PlayerObject;
 
     public Vector3 ViewDirection;
-
+    public Vector3 PlayerVelocity;
     public Vector3 TransformDirection;
     [SerializeField] protected Vector3 MoveDirection;
+
+    float LockoutTime;
+    float CurrentLockoutTime;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        CurrentLockoutTime = LockoutTime;
     }
 
     // Update is called once per frame
     void Update()
     {
         RotateToView();
-        //TestView();
+        if (LockView && CameraLock.Equals(false)) 
+        {
+            CurrentLockoutTime -= Time.deltaTime;
+            if (CurrentLockoutTime <= 0)
+            {
+                ChangeCamLockState(false);
+            }
+        }
+        else if (!LockView)
+        {
+            CurrentLockoutTime = LockoutTime;
+        }
     }
 
     public void RotateToView()
@@ -56,39 +72,9 @@ public class CameraFunctionality : MonoBehaviour
 
     }
 
-    public void TestView()
+    protected void ChangeCamLockState(bool LockState)
     {
 
-        Vector3 viewDir = PlayerOrientation.position - new Vector3(transform.position.x, Player.position.y, transform.position.z);
-        PlayerOrientation.forward = viewDir.normalized;
-
-        // roate player object
-
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
-        Vector3 inputDir = PlayerOrientation.forward * verticalInput + PlayerOrientation.right * horizontalInput;
-
-
-        if (inputDir != Vector3.zero)
-            PlayerObject.forward = Vector3.Slerp(PlayerObject.forward, inputDir.normalized, Time.deltaTime * RotationSpeed);
     }
-
-
-
-    protected IEnumerator SpeedTransition()
-    {
-        float TransitionTime = 0;
-        float SpeedDifference = Mathf.Abs(FinalMoveSpeed - CurrentMoveSpeed);
-        float InitialMoveSpeed = CurrentMoveSpeed;
-
-        while (TransitionTime < SpeedDifference)
-        {
-            CurrentMoveSpeed = Mathf.Lerp(InitialMoveSpeed, FinalMoveSpeed, TransitionTime / SpeedDifference);
-            TransitionTime += Time.deltaTime * Incrimenter;
-            yield return null;
-        }
-        CurrentMoveSpeed = FinalMoveSpeed;
-    }
-
 
 }
