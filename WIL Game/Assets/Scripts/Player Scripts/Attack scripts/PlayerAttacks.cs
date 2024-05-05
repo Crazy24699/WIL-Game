@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.UI;
 
 public class PlayerAttacks : MonoBehaviour
 {
@@ -45,14 +46,16 @@ public class PlayerAttacks : MonoBehaviour
         PlayerInputRef.Enable();
 
         SetActiveAttack(AllAttacks.SlashAttack);
+        //PlayerInputRef.PlayerAttack.PrimaryAttack.performed += Context => PerformAttack();
+        //PlayerInputRef.PlayerAttack.PrimaryAttack.performed += Context => PerformAttack();
     }
 
     public void SetActiveAttack(AllAttacks SetAttck)
     {
+        //PlayerInputRef.PlayerAttack.PrimaryAttack.RemoveAction();
         switch (SetAttck)
         {
             case AllAttacks.SlashAttack:
-                PlayerInputRef.PlayerAttack.SlashAttack.performed += PerformAttack;
                 break;
             case AllAttacks.TailWhip:
                 break;
@@ -61,9 +64,20 @@ public class PlayerAttacks : MonoBehaviour
             default:
                 break;
         }
+        PlayerInputRef.PlayerAttack.PrimaryAttack.performed += Context => PerformAttack();
+        CurrentAttack = SetAttck;
     }
 
-    public void PerformAttack(InputAction.CallbackContext InputCallBack)
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            Debug.Log("Victorious");
+            SetActiveAttack(AllAttacks.TailWhip);
+        }
+    }
+
+    public void PerformAttack()
     {
 
         if (IsAttacking)
@@ -91,11 +105,14 @@ public class PlayerAttacks : MonoBehaviour
     {
         PlayAttackAnim(0.5f, "SlashAttack");
         IsAttacking = true;
+        Debug.Log("rise");
     }
 
     public void TailWhipFunction()
     {
-        PlayAttackAnim(0.85f, "SlashAttack");
+        PlayAttackAnim(0.85f, "TailWhip");
+        Debug.Log("We");
+        IsAttacking = true;
     }
 
     protected void PlayAttackAnim(float ResetTime, string AnimName)

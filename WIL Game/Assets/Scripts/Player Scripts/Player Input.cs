@@ -150,7 +150,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             ""id"": ""50ff9ac7-f556-418d-ace2-43ac0f970f89"",
             ""actions"": [
                 {
-                    ""name"": ""Slash Attack"",
+                    ""name"": ""Primary Attack"",
                     ""type"": ""Button"",
                     ""id"": ""30e8abb0-54b2-4f06-b815-cac8d8f83a30"",
                     ""expectedControlType"": ""Button"",
@@ -159,7 +159,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Tail Whip"",
+                    ""name"": ""Secondary Attack"",
                     ""type"": ""Button"",
                     ""id"": ""7efce37b-30cd-46a9-bc91-1250a362a38a"",
                     ""expectedControlType"": ""Button"",
@@ -176,7 +176,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Slash Attack"",
+                    ""action"": ""Primary Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -187,7 +187,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Tail Whip"",
+                    ""action"": ""Secondary Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -216,8 +216,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_BasePlayerMovement_Movement = m_BasePlayerMovement.FindAction("Movement", throwIfNotFound: true);
         // PlayerAttack
         m_PlayerAttack = asset.FindActionMap("PlayerAttack", throwIfNotFound: true);
-        m_PlayerAttack_SlashAttack = m_PlayerAttack.FindAction("Slash Attack", throwIfNotFound: true);
-        m_PlayerAttack_TailWhip = m_PlayerAttack.FindAction("Tail Whip", throwIfNotFound: true);
+        m_PlayerAttack_PrimaryAttack = m_PlayerAttack.FindAction("Primary Attack", throwIfNotFound: true);
+        m_PlayerAttack_SecondaryAttack = m_PlayerAttack.FindAction("Secondary Attack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -371,14 +371,14 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     // PlayerAttack
     private readonly InputActionMap m_PlayerAttack;
     private List<IPlayerAttackActions> m_PlayerAttackActionsCallbackInterfaces = new List<IPlayerAttackActions>();
-    private readonly InputAction m_PlayerAttack_SlashAttack;
-    private readonly InputAction m_PlayerAttack_TailWhip;
+    private readonly InputAction m_PlayerAttack_PrimaryAttack;
+    private readonly InputAction m_PlayerAttack_SecondaryAttack;
     public struct PlayerAttackActions
     {
         private @PlayerInput m_Wrapper;
         public PlayerAttackActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @SlashAttack => m_Wrapper.m_PlayerAttack_SlashAttack;
-        public InputAction @TailWhip => m_Wrapper.m_PlayerAttack_TailWhip;
+        public InputAction @PrimaryAttack => m_Wrapper.m_PlayerAttack_PrimaryAttack;
+        public InputAction @SecondaryAttack => m_Wrapper.m_PlayerAttack_SecondaryAttack;
         public InputActionMap Get() { return m_Wrapper.m_PlayerAttack; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -388,22 +388,22 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_PlayerAttackActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_PlayerAttackActionsCallbackInterfaces.Add(instance);
-            @SlashAttack.started += instance.OnSlashAttack;
-            @SlashAttack.performed += instance.OnSlashAttack;
-            @SlashAttack.canceled += instance.OnSlashAttack;
-            @TailWhip.started += instance.OnTailWhip;
-            @TailWhip.performed += instance.OnTailWhip;
-            @TailWhip.canceled += instance.OnTailWhip;
+            @PrimaryAttack.started += instance.OnPrimaryAttack;
+            @PrimaryAttack.performed += instance.OnPrimaryAttack;
+            @PrimaryAttack.canceled += instance.OnPrimaryAttack;
+            @SecondaryAttack.started += instance.OnSecondaryAttack;
+            @SecondaryAttack.performed += instance.OnSecondaryAttack;
+            @SecondaryAttack.canceled += instance.OnSecondaryAttack;
         }
 
         private void UnregisterCallbacks(IPlayerAttackActions instance)
         {
-            @SlashAttack.started -= instance.OnSlashAttack;
-            @SlashAttack.performed -= instance.OnSlashAttack;
-            @SlashAttack.canceled -= instance.OnSlashAttack;
-            @TailWhip.started -= instance.OnTailWhip;
-            @TailWhip.performed -= instance.OnTailWhip;
-            @TailWhip.canceled -= instance.OnTailWhip;
+            @PrimaryAttack.started -= instance.OnPrimaryAttack;
+            @PrimaryAttack.performed -= instance.OnPrimaryAttack;
+            @PrimaryAttack.canceled -= instance.OnPrimaryAttack;
+            @SecondaryAttack.started -= instance.OnSecondaryAttack;
+            @SecondaryAttack.performed -= instance.OnSecondaryAttack;
+            @SecondaryAttack.canceled -= instance.OnSecondaryAttack;
         }
 
         public void RemoveCallbacks(IPlayerAttackActions instance)
@@ -440,7 +440,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     }
     public interface IPlayerAttackActions
     {
-        void OnSlashAttack(InputAction.CallbackContext context);
-        void OnTailWhip(InputAction.CallbackContext context);
+        void OnPrimaryAttack(InputAction.CallbackContext context);
+        void OnSecondaryAttack(InputAction.CallbackContext context);
     }
 }

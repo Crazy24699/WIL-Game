@@ -128,7 +128,7 @@
             "id": "50ff9ac7-f556-418d-ace2-43ac0f970f89",
             "actions": [
                 {
-                    "name": "Slash Attack",
+                    "name": "Primary Attack",
                     "type": "Button",
                     "id": "30e8abb0-54b2-4f06-b815-cac8d8f83a30",
                     "expectedControlType": "Button",
@@ -137,7 +137,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Tail Whip",
+                    "name": "Secondary Attack",
                     "type": "Button",
                     "id": "7efce37b-30cd-46a9-bc91-1250a362a38a",
                     "expectedControlType": "Button",
@@ -154,7 +154,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Slash Attack",
+                    "action": "Primary Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -165,7 +165,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Tail Whip",
+                    "action": "Secondary Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
