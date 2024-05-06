@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.UI;
@@ -11,13 +12,29 @@ public class PlayerAttacks : MonoBehaviour
     public int Damage;
     public int AttackSpeed;
 
+    private bool AttackOneActive;
+    private bool AttackTwoActive;
+    private bool AttackThreeActive;
+    [SerializeField] protected bool IsAttacking = false;
+
+    [Space(5)]
+    public GameObject FreeLookCam;
+    [Space(5)]
     public Animator AttackAnimation;
 
+    [Space(5)]
+                //PLAYER INPUT ACTIONS
     public PlayerInput PlayerInputRef;
-    protected InputAction InputRef;
-    public PlayerMovement PlayerMoveScript;
+    protected InputAction MainAttack;
+    protected InputAction SecondAttack;
+    [Space(5)]
 
-    [SerializeField]protected bool IsAttacking = false;
+    public AttackBase[] Attacks;
+    public PlayerMovement PlayerMoveScript;
+    public Cinemachine.CinemachineBrain CinemachineBrainScript;
+    public CameraFunctionality CamFunctionScript;
+
+
 
     public enum AllAttacks
     {
@@ -26,46 +43,77 @@ public class PlayerAttacks : MonoBehaviour
         TailWhip,
         Toppler
     }
-
     public AllAttacks CurrentAttack;
     public AllAttacks NextAttack;
+    protected Dictionary<AllAttacks, bool> AttacksInUse = new Dictionary<AllAttacks, bool>();
 
-    public SlashAttack SlashAttackScript;
+    public enum AttackTypes
+    {
+        Primary,
+        Secondary,
+        Third
+    }
+
 
     // Start is called before the first frame update
     void Awake()
     {
+        PopulateAttacks();
+
         NextAttack = AllAttacks.None;
         PlayerInputRef = new PlayerInput();
 
-        SlashAttackScript = FindObjectOfType<SlashAttack>();
         PlayerMoveScript = FindObjectOfType<PlayerMovement>();
 
         CurrentAttack = AllAttacks.SlashAttack;
 
         PlayerInputRef.Enable();
 
-        SetActiveAttack(AllAttacks.SlashAttack);
-        //PlayerInputRef.PlayerAttack.PrimaryAttack.performed += Context => PerformAttack();
-        //PlayerInputRef.PlayerAttack.PrimaryAttack.performed += Context => PerformAttack();
+        SetActiveAttack(AllAttacks.SlashAttack,AttackTypes.Primary);
+        SetActiveAttack(AllAttacks.TailWhip, AttackTypes.Secondary);
+
     }
 
-    public void SetActiveAttack(AllAttacks SetAttck)
+    private void PopulateAttacks()
     {
-        //PlayerInputRef.PlayerAttack.PrimaryAttack.RemoveAction();
-        switch (SetAttck)
+        foreach (AllAttacks Attack in System.Enum.GetValues(typeof(AllAttacks)))
         {
-            case AllAttacks.SlashAttack:
+            if (!Attack.Equals(AllAttacks.None))
+            {
+                AttacksInUse.Add(Attack, false);
+            }
+        }
+    }
+
+    public void SetActiveAttack(AllAttacks SetAttck, AttackTypes ChosenAttack)
+    {
+
+        if (AttacksInUse[SetAttck])
+        {
+            //Idicator on screen to show that the attack cant be used
+            return;
+        }
+
+        //PlayerInputRef.PlayerAttack.PrimaryAttack.RemoveAction();
+        switch (ChosenAttack)
+        {
+            case AttackTypes.Primary:
+                PlayerInputRef.PlayerAttack.PrimaryAttack.performed += Context => PerformAttack(SetAttck);
+                MainAttack = PlayerInputRef.PlayerAttack.PrimaryAttack;
                 break;
-            case AllAttacks.TailWhip:
+            case AttackTypes.Secondary:
+                PlayerInputRef.PlayerAttack.SecondaryAttack.performed += Context => PerformAttack(SetAttck);
+                SecondAttack = PlayerInputRef.PlayerAttack.SecondaryAttack;
                 break;
-            case AllAttacks.Toppler:
+            case AttackTypes.Third:
                 break;
             default:
                 break;
         }
-        PlayerInputRef.PlayerAttack.PrimaryAttack.performed += Context => PerformAttack();
-        CurrentAttack = SetAttck;
+        
+        
+
+        
     }
 
     private void Update()
@@ -73,19 +121,21 @@ public class PlayerAttacks : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.C))
         {
             Debug.Log("Victorious");
-            SetActiveAttack(AllAttacks.TailWhip);
+            //SetActiveAttack(AllAttacks.TailWhip, AttackTypes.Primary);
         }
+
     }
 
-    public void PerformAttack()
+    public void PerformAttack(AllAttacks SetAttck)
     {
 
-        if (IsAttacking)
+        if (IsAttacking && NextAttack == AllAttacks.None) 
         {
             Debug.Log("Ocean");
+            NextAttack = SetAttck;
             return;
         }
-        switch (CurrentAttack)
+        switch (SetAttck)
         {
             default:
             case AllAttacks.SlashAttack:
@@ -103,44 +153,54 @@ public class PlayerAttacks : MonoBehaviour
 
     public void SlashAttackFunction()
     {
-        PlayAttackAnim(0.5f, "SlashAttack");
+        PlayAttackAnim("SlashAttackTrigger");
         IsAttacking = true;
         Debug.Log("rise");
     }
 
     public void TailWhipFunction()
     {
-        PlayAttackAnim(0.85f, "TailWhip");
+        PlayAttackAnim("TailWhip");
         Debug.Log("We");
+        HandleMovementState(false);
+        HandleCameraState(false);
         IsAttacking = true;
     }
 
-    protected void PlayAttackAnim(float ResetTime, string AnimName)
+    protected void PlayAttackAnim(string AnimName)
     {
-        AttackAnimation.SetBool(AnimName, true);
-        StartCoroutine(AttackReset(ResetTime, AnimName));
+        AttackAnimation.SetTrigger(AnimName);
+
+        StartCoroutine(AttackReset());
     }
 
-    public IEnumerator AttackReset(float ResetTime, string AnimName)
+    public IEnumerator AttackReset()
     {
-        yield return new WaitForSeconds(ResetTime);
-        AttackAnimation.SetBool(AnimName, false);
-        IsAttacking = false;
-
+        yield return new WaitForSeconds(0.2f);
         if (NextAttack != AllAttacks.None) 
         {
-            
+            CurrentAttack = NextAttack;
+            PerformAttack(CurrentAttack);
+            NextAttack = AllAttacks.None;
+            Debug.Log("None");
+            yield return null;
         }
+        yield return new WaitForSeconds(0.75f);
+        IsAttacking = false;
+        HandleCameraState(true);
+        HandleMovementState(true);
     }
 
     protected void HandleMovementState(bool LockMovement)
     {
-
+        PlayerMoveScript.enabled = LockMovement;
     }
 
     protected void HandleCameraState(bool LockCamera)
     {
-
+        CinemachineBrainScript.enabled = LockCamera;
+        CamFunctionScript.enabled = LockCamera;
+        FreeLookCam.SetActive(LockCamera);
     }
 
 }

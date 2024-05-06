@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EnemyAI : EnemyBase
 {
+    [SerializeField] protected float KnockbackPower;
+
 
     private void Start()
     {
@@ -15,4 +17,10 @@ public class EnemyAI : EnemyBase
     {
         
     }
+
+    public void ApplyKnockback(float KnockbackPower)
+    {
+
+    }
+
 }

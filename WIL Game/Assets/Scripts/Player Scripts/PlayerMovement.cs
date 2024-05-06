@@ -56,7 +56,7 @@ public class PlayerMovement : MonoBehaviour
         MoveDirection = PlayerActionMap.action.ReadValue<Vector3>();
         MoveDirection = PlayerOrientation.forward * MoveDirection.z + PlayerOrientation.right * MoveDirection.x;
 
-        Rigidbody.AddForce(new Vector3( MoveDirection.x,MoveDirection.y, MoveDirection.z) * BaseMoveSpeed * 10f, ForceMode.Force);
+        Rigidbody.AddForce(new Vector3(MoveDirection.x, MoveDirection.y, MoveDirection.z) * BaseMoveSpeed * 10f, ForceMode.Force);
         
     }
 
