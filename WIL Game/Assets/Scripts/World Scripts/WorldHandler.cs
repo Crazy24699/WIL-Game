@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class WorldHandler : MonoBehaviour
@@ -15,4 +16,15 @@ public class WorldHandler : MonoBehaviour
     {
         
     }
+
+    public async void ReloadPathfindingGrid()
+    {
+        await PathGridReloadTimer();
+    }
+
+    public async Task PathGridReloadTimer ()
+    {
+        await Task.Delay(100);
+    }
+
 }

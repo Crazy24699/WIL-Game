@@ -2,11 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAI : EnemyBase
+public class SpewerAi : EnemyBase
 {
-    [SerializeField] protected float KnockbackPower;
-
-
+    
     private void Start()
     {
         BaseStartup();
@@ -15,10 +13,10 @@ public class EnemyAI : EnemyBase
     // Update is called once per frame
     void Update()
     {
-        
+        HandleForce();
     }
 
-    public void ApplyKnockback(float KnockbackPower)
+    public void CreateBehaviourTree()
     {
 
     }

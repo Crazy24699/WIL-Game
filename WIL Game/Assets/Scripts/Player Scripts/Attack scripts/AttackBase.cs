@@ -22,10 +22,10 @@ public class AttackBase : MonoBehaviour
     {
         if (Collision.CompareTag("Enemy") && PlayerAttackRef != null)
         {
-            EnemyValuesFunctionality EnemyFunctionScript = Collision.GetComponent<EnemyValuesFunctionality>();
+            EnemyBase EnemyBaseScript = Collision.GetComponent<EnemyBase>();
 
-            EnemyFunctionScript.HandleHealth(PlayerAttackRef.Damage);
-
+            EnemyBaseScript.HandleHealth(PlayerAttackRef.Damage);
+            EnemyBaseScript.ApplyKnockback();
         }
     }
 }
