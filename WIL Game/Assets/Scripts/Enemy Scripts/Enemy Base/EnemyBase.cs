@@ -97,9 +97,6 @@ public class EnemyBase : MonoBehaviour
 
             Rigidbody.velocity = new Vector3(CurrentXVelocity, CurrentYVelocity, CurrentZVelocity);
         }
-
-
-
     }
 
 }

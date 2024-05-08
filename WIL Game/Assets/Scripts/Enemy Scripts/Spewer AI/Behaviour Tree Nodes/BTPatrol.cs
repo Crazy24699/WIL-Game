@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BTPatrol : MonoBehaviour
+public class BTPatrol : BTNodeBase
 {
 
     /// <summary>
@@ -14,16 +14,29 @@ public class BTPatrol : MonoBehaviour
     /// unites either positively or negatively
     /// </summary>
 
+    protected EnemyBase EnemyAIScript;
 
-    // Start is called before the first frame update
-    void Start()
+    protected HashSet<Transform> WaypointTransforms = new HashSet<Transform>();
+    public List<Transform> SpirePoints;
+
+    protected bool ReachedEndOfPath = false;
+
+    public BTPatrol(GameObject EnemyAIRef)
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+
+    protected void GenerateNewPath()
     {
-        
+
     }
+
+    public override NodeStateOptions RunLogicAndState()
+    {
+
+
+        return NodeStateOptions.Failed;
+    }
+
 }
