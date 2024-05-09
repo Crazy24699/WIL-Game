@@ -22,20 +22,40 @@ public class BTPatrol : BTNodeBase
 
     protected EnemyBase EnemyAIScript;
 
-    public List<Transform> SpirePoints;
+    public SpireParent SpireParentScript;
 
-    protected bool ReachedEndOfPath = false;
+    protected EnemyBase EnemyScriptRef;
+
+    protected Transform TargetPositon;
 
     public BTPatrol(GameObject EnemyAIRef)
     {
-
+        EnemyScriptRef = EnemyAIRef.GetComponent<EnemyBase>();
     }
 
     public override NodeStateOptions RunLogicAndState()
     {
+        if (EnemyScriptRef.SeenPlayer)
+        {
+            return NodeStateOptions.Failed;
+        }
+        else if (!EnemyScriptRef.SeenPlayer && EnemyScriptRef.DestinationSetterScript.target == null) 
+        {
+            //EnemyScriptRef.SetDestination(WaypointPosition);
+            return NodeStateOptions.Passed;
+        }
 
+        if(EnemyAIScript.AtEndOfPath)
+        {
+            ChooseNewSpot();
+        }
 
         return NodeStateOptions.Failed;
+    }
+
+    public void ChooseNewSpot()
+    {
+
     }
 
 }

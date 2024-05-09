@@ -5,7 +5,10 @@ using UnityEngine;
 
 public class WorldHandler : MonoBehaviour
 {
-    // Start is called before the first frame update
+
+    public List<SpireObject> SpirePoints;
+    
+
     void Start()
     {
         

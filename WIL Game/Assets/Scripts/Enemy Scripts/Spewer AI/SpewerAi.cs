@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class SpewerAi : EnemyBase
 {
-    
+
+    public bool SearchSequenceActive = false;
+    public bool SpeedBoost;
+
     private void Start()
     {
         BaseStartup();
@@ -20,5 +23,7 @@ public class SpewerAi : EnemyBase
     {
 
     }
+
+    
 
 }
