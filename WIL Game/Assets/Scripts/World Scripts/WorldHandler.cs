@@ -6,8 +6,7 @@ using UnityEngine;
 public class WorldHandler : MonoBehaviour
 {
 
-    public List<SpireObject> SpirePoints;
-    
+    public Dictionary<int, List<SpireObject>> AllSpires = new Dictionary<int, List<SpireObject>>();
 
     void Start()
     {

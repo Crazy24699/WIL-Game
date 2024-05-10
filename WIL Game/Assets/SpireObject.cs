@@ -18,6 +18,7 @@ public class SpireObject : MonoBehaviour
     {
         ThisSpire = GetComponent<SpireObject>();
         SpireParentScript = transform.GetComponentInParent<SpireParent>();
+        WaypointSpot = transform.Find("Location");
 
         foreach (var Spire in SpireParentScript.SpireObjects)
         {
@@ -32,7 +33,13 @@ public class SpireObject : MonoBehaviour
     {
         if (TriggerObject.CompareTag("Enemy"))
         {
-            TriggerObject.GetComponent<EnemyBase>().SpireLoaction = ThisSpire;
+            EnemyBase EnemyRef = TriggerObject.GetComponent<EnemyBase>();
+            
+            
+            EnemyRef.SpireLoaction = ThisSpire;
+            EnemyRef.NewPatrolPoint();
+            EnemyRef.AtEndOfPath = false;
+
         }
     }
 }

@@ -2,6 +2,7 @@ using Pathfinding;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyBase : MonoBehaviour
@@ -33,7 +34,8 @@ public class EnemyBase : MonoBehaviour
     protected GameObject PlayerRef;
 
     [Space(5)]
-    [SerializeField]protected Transform WaypointPosition;
+    [SerializeField] protected Transform WaypointPosition;
+    [SerializeField] protected Transform WaypointParent;
     #endregion
 
     #region Bools
@@ -42,6 +44,7 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] protected bool ReduceKnockbackForce = true;
     public bool SeenPlayer = false;
     public bool AtEndOfPath = false;
+    protected bool StartupRan = false;  
     #endregion
 
     #region Scripts
@@ -60,15 +63,21 @@ public class EnemyBase : MonoBehaviour
 
     #endregion
 
-    public void BaseStartup()
+    public IEnumerator BaseStartup()
     {
+        //small delay to allow the world to start up
+        yield return new WaitForSeconds(1);
+
         CurrentHealth = MaxHealth;
         Rigidbody = GetComponent<Rigidbody>();
         EnemyRef = this.gameObject;
         PlayerRef = GameObject.FindGameObjectWithTag("Player");
+        WorldHandlerScript = FindObjectOfType<WorldHandler>();
 
-        int RandomSpire=Random.Range(0, WorldHandlerScript.SpirePoints.Count);
-        SpireLoaction = WorldHandlerScript.SpirePoints[RandomSpire];
+        int RandomSpire=Random.Range(1, WorldHandlerScript.AllSpires.Count);
+        List<SpireObject> SpireListChosen= WorldHandlerScript.AllSpires[RandomSpire];
+        SpireLoaction = SpireListChosen[RandomSpire];
+        WaypointParent = SpireLoaction.transform.GetComponentInParent<SpireObject>().transform;
 
         AISeeker = GetComponent<Seeker>();
         DestinationSetterScript = GetComponent<AIDestinationSetter>();
@@ -78,7 +87,10 @@ public class EnemyBase : MonoBehaviour
         InvokeRepeating("UpdatePath", 0f, 1f);
 
         CanTakeDamage = true;
+        StartupRan = true;
     }
+
+
 
     public int HandleHealth(int HealthChange)
     {
@@ -150,8 +162,14 @@ public class EnemyBase : MonoBehaviour
             PathRef = CompletedPath;
             CurrentWayPoint = 0;
 
+            
+        }
+
+        if (AtEndOfPath)
+        {
             NewPatrolPoint();
         }
+
     }
 
     protected void UpdatePath()
@@ -189,7 +207,10 @@ public class EnemyBase : MonoBehaviour
     public void NewPatrolPoint()
     {
         int RandomSpire = Random.Range(0, SpireLoaction.NeighboringSpires.Count);
+        WaypointParent = SpireLoaction.NeighboringSpires[RandomSpire].WaypointSpot.transform.GetComponentInParent<SpireObject>().transform;
+        WaypointPosition = SpireLoaction.NeighboringSpires[RandomSpire].WaypointSpot;
         SetDestination(SpireLoaction.NeighboringSpires[RandomSpire].WaypointSpot);
+        Debug.Log("Patrol");
     }
 
     #endregion 

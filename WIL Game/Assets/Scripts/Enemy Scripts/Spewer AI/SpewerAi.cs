@@ -10,12 +10,16 @@ public class SpewerAi : EnemyBase
 
     private void Start()
     {
-        BaseStartup();
+        StartCoroutine(BaseStartup());
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!StartupRan)
+        {
+            return;
+        }
         HandleForce();
     }
 
