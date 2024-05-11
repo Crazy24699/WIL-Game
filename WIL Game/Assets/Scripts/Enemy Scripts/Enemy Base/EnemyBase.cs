@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class EnemyBase : MonoBehaviour
@@ -26,16 +27,23 @@ public class EnemyBase : MonoBehaviour
     [SerializeField]protected float BaseMoveSpeed;
     [SerializeField]protected float CurrentMoveSpeed;
     public float NextWaypointDistance = 5f;
+
+    [Space(8)]
+    public float CurrentPlayerDistance;
+    public float OutOfRangeDistance;
+    public float OutOfRangeTimer;
+    public float CurrentRangeTime;
     #endregion
 
     #region Gameobjects and transforms
-    [Space(5)]
+    [Space(15)]
     protected GameObject EnemyRef;
     protected GameObject PlayerRef;
 
     [Space(5)]
-    [SerializeField] protected Transform WaypointPosition;
+    [SerializeField] public Transform WaypointPosition;
     [SerializeField] protected Transform WaypointParent;
+    [HideInInspector]public Transform PlayerTarget;
     #endregion
 
     #region Bools
@@ -43,6 +51,7 @@ public class EnemyBase : MonoBehaviour
     protected bool CanTakeDamage = true;
     [SerializeField] protected bool ReduceKnockbackForce = true;
     public bool SeenPlayer = false;
+    public bool PlayerEscaped = false;
     public bool AtEndOfPath = false;
     protected bool StartupRan = false;  
     #endregion
@@ -55,7 +64,7 @@ public class EnemyBase : MonoBehaviour
     [HideInInspector] public AIDestinationSetter DestinationSetterScript;
     [HideInInspector] public Seeker AISeeker;
     protected Path PathRef;
-    [HideInInspector]public SpireObject SpireLoaction;
+    public SpireObject SpireLoaction;
     public WorldHandler WorldHandlerScript;
 
     [Space(10)]
@@ -67,6 +76,8 @@ public class EnemyBase : MonoBehaviour
     {
         //small delay to allow the world to start up
         yield return new WaitForSeconds(1);
+
+        CurrentRangeTime = OutOfRangeTimer;
 
         CurrentHealth = MaxHealth;
         Rigidbody = GetComponent<Rigidbody>();
@@ -82,9 +93,10 @@ public class EnemyBase : MonoBehaviour
         AISeeker = GetComponent<Seeker>();
         DestinationSetterScript = GetComponent<AIDestinationSetter>();
         SetDestination(WaypointPosition);
-        AISeeker.StartPath(Rigidbody.position, WaypointPosition.position, OnPathCompletion);
 
         InvokeRepeating("UpdatePath", 0f, 1f);
+        AISeeker.StartPath(Rigidbody.position, WaypointPosition.position, OnPathCompletion);
+
 
         CanTakeDamage = true;
         StartupRan = true;
@@ -167,7 +179,7 @@ public class EnemyBase : MonoBehaviour
 
         if (AtEndOfPath)
         {
-            NewPatrolPoint();
+            //NewPatrolPoint();
         }
 
     }
@@ -176,7 +188,7 @@ public class EnemyBase : MonoBehaviour
     {
         if (AISeeker.IsDone())
         {
-            AISeeker.StartPath(Rigidbody.position, WaypointPosition.position, OnPathCompletion);
+            //AISeeker.StartPath(Rigidbody.position, WaypointPosition.position, OnPathCompletion);
         }
     }
 
@@ -196,25 +208,62 @@ public class EnemyBase : MonoBehaviour
             AtEndOfPath = false;
         }
 
+        //Vector3 Direction = ((Vector3)PathRef.vectorPath[CurrentWayPoint] - Rigidbody.position).normalized;
+        //Vector3 MoveForce = Direction * (CurrentMoveSpeed * 50) * Time.deltaTime;
+
+        //Rigidbody.AddForce(MoveForce);
 
         float Distance = Vector3.Distance(Rigidbody.position, PathRef.vectorPath[CurrentWayPoint]);
         if (Distance < NextWaypointDistance)
         {
             CurrentWayPoint++;
         }
+        Quaternion TargetRotationValue = Quaternion.LookRotation(DestinationSetterScript.target.position-this.transform.position,Vector3.up);
+        //transform.rotation = Quaternion.Slerp(transform.rotation, TargetRotationValue, 5.5f * Time.deltaTime);
     }
 
-    public void NewPatrolPoint()
+    public void NewPatrolPoint(SpireObject ChosenSpire)
     {
-        int RandomSpire = Random.Range(0, SpireLoaction.NeighboringSpires.Count);
-        WaypointParent = SpireLoaction.NeighboringSpires[RandomSpire].WaypointSpot.transform.GetComponentInParent<SpireObject>().transform;
-        WaypointPosition = SpireLoaction.NeighboringSpires[RandomSpire].WaypointSpot;
-        SetDestination(SpireLoaction.NeighboringSpires[RandomSpire].WaypointSpot);
+        int RandomSpire = Random.Range(0, ChosenSpire.NeighboringSpires.Count);
+        WaypointParent = ChosenSpire.NeighboringSpires[RandomSpire].transform;
+        WaypointPosition = ChosenSpire.NeighboringSpires[RandomSpire].WaypointSpot;
+        SpireLoaction = ChosenSpire.NeighboringSpires[RandomSpire].ThisSpire;
+        SetDestination(ChosenSpire.NeighboringSpires[RandomSpire].WaypointSpot);
         Debug.Log("Patrol");
+
     }
 
-    #endregion 
+    #endregion
 
+    public virtual void OnTriggerEnter(Collider Collision)
+    {
+        if (Collision.CompareTag("Player"))
+        {
+            SeenPlayer = true;
+            PlayerTarget = Collision.gameObject.transform;
+        }
+    }
 
+    public void HandlePlayerRange()
+    {
+        CurrentPlayerDistance = Vector3.Distance(this.transform.position, PlayerTarget.transform.position);
+        //Draw a raycast to the player, if it hits something before the player then the enemy can not see the player
+
+        if (CurrentPlayerDistance >= OutOfRangeDistance)
+        {
+            CurrentRangeTime -= Time.deltaTime;
+            if (CurrentRangeTime <= 0)
+            {
+                CurrentRangeTime = 0;
+                SeenPlayer = false;
+                PlayerEscaped = true;
+            }
+        }
+
+        else if(CurrentPlayerDistance < OutOfRangeDistance)
+        {
+            CurrentRangeTime = OutOfRangeTimer;
+        }
+    }
 
 }

@@ -34,12 +34,15 @@ public class SpireObject : MonoBehaviour
         if (TriggerObject.CompareTag("Enemy"))
         {
             EnemyBase EnemyRef = TriggerObject.GetComponent<EnemyBase>();
-            
-            
-            EnemyRef.SpireLoaction = ThisSpire;
-            EnemyRef.NewPatrolPoint();
-            EnemyRef.AtEndOfPath = false;
+            if (EnemyRef.SeenPlayer)
+            {
+                return;
+            }
 
+            if (EnemyRef.SpireLoaction == ThisSpire) 
+            {
+                EnemyRef.NewPatrolPoint(ThisSpire);
+            }
         }
     }
 }

@@ -25,7 +25,7 @@ public class EnemySight : MonoBehaviour
     {
         if (Trigger.CompareTag("Player"))
         {
-            EnemyAIScript.SeenPlayer = false;
+            //EnemyAIScript.SeenPlayer = false;
         }
     }
 

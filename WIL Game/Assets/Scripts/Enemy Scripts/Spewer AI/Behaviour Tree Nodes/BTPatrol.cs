@@ -35,27 +35,14 @@ public class BTPatrol : BTNodeBase
 
     public override NodeStateOptions RunLogicAndState()
     {
-        if (EnemyScriptRef.SeenPlayer)
+        if (!EnemyScriptRef.SeenPlayer && EnemyScriptRef.PlayerEscaped) 
         {
-            return NodeStateOptions.Failed;
-        }
-        else if (!EnemyScriptRef.SeenPlayer && EnemyScriptRef.DestinationSetterScript.target == null) 
-        {
-            //EnemyScriptRef.SetDestination(WaypointPosition);
+            EnemyScriptRef.SetDestination(EnemyAIScript.WaypointPosition);
             return NodeStateOptions.Passed;
-        }
-
-        if(EnemyAIScript.AtEndOfPath)
-        {
-            ChooseNewSpot();
         }
 
         return NodeStateOptions.Failed;
     }
 
-    public void ChooseNewSpot()
-    {
-
-    }
 
 }
