@@ -20,7 +20,6 @@ public class BTPatrol : BTNodeBase
     ///spires will have a value that will determine the next one, it is up to random chance but the further 
     ///a spire is from the current one, the more likely it is to be chosen
 
-    protected EnemyBase EnemyAIScript;
 
     public SpireParent SpireParentScript;
 
@@ -37,7 +36,7 @@ public class BTPatrol : BTNodeBase
     {
         if (!EnemyScriptRef.SeenPlayer && EnemyScriptRef.PlayerEscaped) 
         {
-            EnemyScriptRef.SetDestination(EnemyAIScript.WaypointPosition);
+            EnemyScriptRef.SetDestination(EnemyScriptRef.WaypointPosition);
             return NodeStateOptions.Passed;
         }
 

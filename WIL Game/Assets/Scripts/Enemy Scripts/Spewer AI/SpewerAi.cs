@@ -14,7 +14,8 @@ public class SpewerAi : EnemyBase
     {
         StartCoroutine(BaseStartup());
 
-        CreateBehaviourTree();
+        StartCoroutine(StartupDelay());
+
     }
 
     // Update is called once per frame
@@ -27,6 +28,12 @@ public class SpewerAi : EnemyBase
         HandleForce();
 
         RootNode.RunLogicAndState();
+    }
+
+    private IEnumerator StartupDelay()
+    {
+        yield return new WaitForSeconds(0.5f);
+        CreateBehaviourTree();
     }
 
     private void FixedUpdate()

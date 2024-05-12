@@ -264,6 +264,11 @@ public class EnemyBase : MonoBehaviour
         {
             CurrentRangeTime = OutOfRangeTimer;
         }
+
+        if(PlayerEscaped)
+        {
+            CurrentRangeTime = OutOfRangeTimer;
+        }
     }
 
 }

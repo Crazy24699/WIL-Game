@@ -566,7 +566,7 @@ MonoBehaviour:
   CurrentMoveSpeed: 60
   NextWaypointDistance: 5
   CurrentPlayerDistance: 0
-  OutOfRangeDistance: 0
+  OutOfRangeDistance: 10
   OutOfRangeTimer: 5
   CurrentRangeTime: 0
   WaypointPosition: {fileID: 814836563}
@@ -618,11 +618,11 @@ MonoBehaviour:
     maximumInterval: 2
     visualizeSensitivity: 0
   targetCompatibility: {fileID: 0}
-  maxAcceleration: -2.5
+  maxAcceleration: 352.4
   rotationSpeed: 360
-  slowdownDistance: 5.47
-  pickNextWaypointDist: 4.3
-  endReachedDistance: 2.37
+  slowdownDistance: 10
+  pickNextWaypointDist: 5
+  endReachedDistance: 7
   alwaysDrawGizmos: 0
   slowWhenNotFacingTarget: 1
   whenCloseToDestination: 0
@@ -701,7 +701,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 163744511}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.16451703, y: -0.000000018975195, z: 0.0000000031648664, w: 0.98637426}
+  m_LocalRotation: {x: 0.16451703, y: 0.000000018975198, z: -0.0000000031648668, w: 0.98637426}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -913,7 +913,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 306808680}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.20023847, y: -0.000000016857898, z: 0.0000000034453784, w: 0.97974724}
+  m_LocalRotation: {x: 0.20023847, y: 0.00000001685791, z: -0.0000000034453802, w: 0.97974724}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1504,7 +1504,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
@@ -1740,7 +1740,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2002385, y: -0.000000033715803, z: 0.0000000068907595, w: 0.9797472}
+  m_LocalRotation: {x: 0.2002385, y: 0.000000033715807, z: -0.00000000689076, w: 0.9797472}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
