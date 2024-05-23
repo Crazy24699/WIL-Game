@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float JumpHeight;
 
+    public Animator PlayerAnimations;
 
     public Vector3 PlayerVelocity;
     [SerializeField] protected Vector3 MoveDirection;
@@ -38,7 +39,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        switch (CurrentSpeed)
+        {
+            case <= 0.001f:
+                //PlayerAnimations.SetBool("Is Moving", false);
+                break;
 
+            case > 1:
+                PlayerAnimations.SetBool("Is Moving", true);
+                break;
+        }
         MovePlayer();
     }
 
@@ -57,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
         MoveDirection = PlayerOrientation.forward * MoveDirection.z + PlayerOrientation.right * MoveDirection.x;
 
         Rigidbody.AddForce(new Vector3(MoveDirection.x, MoveDirection.y, MoveDirection.z) * BaseMoveSpeed * 10f, ForceMode.Force);
-        
+        CurrentSpeed = Rigidbody.velocity.magnitude;
     }
 
 }
