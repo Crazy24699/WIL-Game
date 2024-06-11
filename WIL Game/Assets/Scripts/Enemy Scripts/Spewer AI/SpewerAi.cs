@@ -8,7 +8,8 @@ public class SpewerAi : EnemyBase
 
     public bool SearchSequenceActive = false;
     public bool SpeedBoost;
-
+    [SerializeField] private GameObject Dropplet;
+    [SerializeField] private GameObject SpewPoint;
 
     private void Start()
     {
@@ -39,6 +40,13 @@ public class SpewerAi : EnemyBase
     private void FixedUpdate()
     {
         //HandlePatrol();
+    }
+
+    public override void Attack()
+    {
+        //Play animation of attack
+        //Instantiate(Dropplet, SpewPoint.transform.position, Quaternion.identity);
+        LockForAttack();
     }
 
     public void CreateBehaviourTree()

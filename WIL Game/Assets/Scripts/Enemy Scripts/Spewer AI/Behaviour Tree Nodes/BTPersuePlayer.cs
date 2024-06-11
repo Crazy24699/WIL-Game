@@ -15,6 +15,12 @@ public class BTPersuePlayer : BTNodeBase
 
     public override NodeStateOptions RunLogicAndState()
     {
+
+        if (EnemyScript.IsAttacking)
+        {
+            return NodeStateOptions.Running;
+        }
+
         if (EnemyScript.SeenPlayer && !EnemyScript.PlayerEscaped)
         {
             EnemyScript.SetDestination(EnemyScript.PlayerTarget);

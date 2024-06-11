@@ -22,7 +22,7 @@ public class BTAttack : BTNodeBase
             return NodeStateOptions.Running;
         }
 
-        if (EnemyScript.AttackPlayer && EnemyScript.CanAttackPlayer)
+        if (EnemyScript.AttackPlayer && EnemyScript.CanAttackPlayer )
         {
             EnemyScript.Attack();
 

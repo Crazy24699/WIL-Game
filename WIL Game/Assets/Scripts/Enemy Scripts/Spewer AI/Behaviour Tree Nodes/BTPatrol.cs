@@ -23,20 +23,24 @@ public class BTPatrol : BTNodeBase
 
     public SpireParent SpireParentScript;
 
-    protected EnemyBase EnemyScriptRef;
+    protected EnemyBase EnemyScript;
 
     protected Transform TargetPositon;
 
     public BTPatrol(GameObject EnemyAIRef)
     {
-        EnemyScriptRef = EnemyAIRef.GetComponent<EnemyBase>();
+        EnemyScript = EnemyAIRef.GetComponent<EnemyBase>();
     }
 
     public override NodeStateOptions RunLogicAndState()
     {
-        if (!EnemyScriptRef.SeenPlayer && EnemyScriptRef.PlayerEscaped && !EnemyScriptRef.CanAttackPlayer) 
+        if (EnemyScript.IsAttacking)
         {
-            EnemyScriptRef.SetDestination(EnemyScriptRef.WaypointPosition);
+            return NodeStateOptions.Running;
+        }
+        if (!EnemyScript.SeenPlayer && EnemyScript.PlayerEscaped && !EnemyScript.CanAttackPlayer) 
+        {
+            EnemyScript.SetDestination(EnemyScript.WaypointPosition);
             return NodeStateOptions.Passed;
         }
 

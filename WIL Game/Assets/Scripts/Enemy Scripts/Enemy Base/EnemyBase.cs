@@ -62,6 +62,10 @@ public class EnemyBase : MonoBehaviour
     public bool IsAttacking;
     #endregion
 
+    //Vectors
+    protected Vector3 PositionLock;
+    protected Vector3 ViewLock;
+
     #region Scripts
     [HideInInspector] public BTNodeBase RootNode;
     [HideInInspector] public List<BTNodeBase> AllNodeChoices;
@@ -215,6 +219,11 @@ public class EnemyBase : MonoBehaviour
     #endregion
 
     public virtual void Attack()
+    {
+
+    }
+
+    protected void LockForAttack()
     {
 
     }
