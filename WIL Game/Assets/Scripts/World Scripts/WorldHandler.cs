@@ -8,6 +8,10 @@ public class WorldHandler : MonoBehaviour
 
     public Dictionary<int, List<SpireObject>> AllSpires = new Dictionary<int, List<SpireObject>>();
 
+    public List<EnemyBase> AllEnemies = new List<EnemyBase>();
+    public List<EnemyBase> EnemiesAttacking = new List<EnemyBase>();
+    
+
     void Start()
     {
         

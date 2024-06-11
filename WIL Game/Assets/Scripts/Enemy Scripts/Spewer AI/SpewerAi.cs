@@ -45,6 +45,7 @@ public class SpewerAi : EnemyBase
     {
         BTPatrol PatrolNode = new BTPatrol(this.gameObject);
         BTPersuePlayer PersuePlayerNode = new BTPersuePlayer(this.gameObject);
+        BTAttack AttackNode;
 
         BTNodeSequence PatrolSequence = new BTNodeSequence();
         BTNodeSequence PersuePlayerSequence = new BTNodeSequence();
@@ -55,7 +56,5 @@ public class SpewerAi : EnemyBase
         RootNode = new BTNodeSelector(new List<BTNodeBase> { PatrolSequence, PersuePlayerSequence });
 
     }
-
-
 
 }

@@ -26,6 +26,12 @@ public class BTPersuePlayer : BTNodeBase
         {
             return NodeStateOptions.Running;
         }
+
+        if(EnemyScript.AttackPlayer && EnemyScript.SeenPlayer)
+        {
+            EnemyScript.SetDestination(EnemyScript.PlayerTarget);
+            return NodeStateOptions.Running;
+        }
         return NodeStateOptions.Failed;
     }
 

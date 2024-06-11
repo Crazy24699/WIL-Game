@@ -39,31 +39,38 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        switch (CurrentSpeed)
+        MovePlayer();
+        switch (MoveDirection.magnitude)
         {
-            case <= 0.001f:
-                //PlayerAnimations.SetBool("Is Moving", false);
+            case <= 0.1f:
+                PlayerAnimations.SetBool("Is Moving", false);
                 break;
 
-            case > 1:
+            case >= 1:
                 PlayerAnimations.SetBool("Is Moving", true);
                 break;
         }
-        MovePlayer();
+
     }
 
     protected void MovePlayer()
     {
         PlayerVelocity = new Vector3(Rigidbody.velocity.x, Rigidbody.velocity.y, Rigidbody.velocity.z);
+        MoveDirection = PlayerActionMap.action.ReadValue<Vector3>();
 
-        if (PlayerVelocity.magnitude > BaseMoveSpeed)
+        if(MoveDirection.magnitude <= 0.1f)
+        {
+            Rigidbody.velocity = Vector3.zero;
+            return;
+        }
+
+        if (PlayerVelocity.magnitude > BaseMoveSpeed) 
         {
             Vector3 VelocityCap = PlayerVelocity.normalized * BaseMoveSpeed;
             Rigidbody.velocity = new Vector3(VelocityCap.x, 0
                 , VelocityCap.z);
         }
 
-        MoveDirection = PlayerActionMap.action.ReadValue<Vector3>();
         MoveDirection = PlayerOrientation.forward * MoveDirection.z + PlayerOrientation.right * MoveDirection.x;
 
         Rigidbody.AddForce(new Vector3(MoveDirection.x, MoveDirection.y, MoveDirection.z) * BaseMoveSpeed * 10f, ForceMode.Force);

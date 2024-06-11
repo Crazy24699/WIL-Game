@@ -34,7 +34,7 @@ public class BTPatrol : BTNodeBase
 
     public override NodeStateOptions RunLogicAndState()
     {
-        if (!EnemyScriptRef.SeenPlayer && EnemyScriptRef.PlayerEscaped) 
+        if (!EnemyScriptRef.SeenPlayer && EnemyScriptRef.PlayerEscaped && !EnemyScriptRef.CanAttackPlayer) 
         {
             EnemyScriptRef.SetDestination(EnemyScriptRef.WaypointPosition);
             return NodeStateOptions.Passed;
