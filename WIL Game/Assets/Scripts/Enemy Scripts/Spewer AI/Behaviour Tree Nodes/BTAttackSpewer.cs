@@ -2,16 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BTAttack : BTNodeBase
+public class BTAttackSpewer : BTNodeBase
 {
 
     private EnemyBase EnemyScript;
     private GameObject EnemyObjectRef;
 
-    public BTAttack(GameObject AIObject)
+    public BTAttackSpewer(GameObject EnemyAIRef)
     {
-        EnemyScript = AIObject.GetComponent<EnemyBase>();
-        EnemyObjectRef = AIObject;
+        EnemyScript = EnemyAIRef.GetComponent<EnemyBase>();
+        EnemyObjectRef = EnemyAIRef;
     }
 
     public override NodeStateOptions RunLogicAndState()

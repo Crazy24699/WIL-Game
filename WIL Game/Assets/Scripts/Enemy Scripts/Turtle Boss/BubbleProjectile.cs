@@ -16,6 +16,7 @@ public class BubbleProjectile : ProjectileBase
     private Color MaterialColour;
     protected override void CustomBehaviour()
     {
+        Damage = 15;
         LifeTime = 8;
         CurrentLifeTime = LifeTime;
 
@@ -30,17 +31,11 @@ public class BubbleProjectile : ProjectileBase
         MaterialColour = BubbleMaterialRef.color;
 
 
-        IncreaseSize();
     }
 
     private void Start()
     {
         //CustomBehaviour();
-    }
-
-    private void IncreaseSize()
-    {
-
     }
 
     //there are 2 ways to do this, one via animation and one via code. Just checking when the alpha of the

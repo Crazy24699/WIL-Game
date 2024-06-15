@@ -7,6 +7,12 @@ public class BossBase : MonoBehaviour
     [SerializeField] protected int MaxHealth;
     protected int CurrentHealth;
 
+    public GameObject PlayerRef;
+
+    [HideInInspector] public BTNodeBase RootNode;
+    [HideInInspector] public List<BTNodeBase> AllNodeChoices;
+
+
     public virtual void BossStartup()
     {
 
@@ -29,11 +35,6 @@ public class BossBase : MonoBehaviour
             return;
         }
 
-
-    }
-
-    protected virtual void Attack()
-    {
 
     }
 

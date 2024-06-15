@@ -5,31 +5,32 @@ using UnityEngine;
 public class ProjectileBase : MonoBehaviour
 {
     private bool LifeStarted = false;
+    protected bool CustomLifeTimer = false;
 
     private Rigidbody RigidBodyRef;
     [SerializeField] private Vector3 ForceChanges;
 
     protected float LifeTime;
-    protected bool CustomLifeTimer = false;
+    protected int Damage;
 
     public void LifeStartup(Vector3 DirectionalForce, float InitalForce)
     {
-        if (DirectionalForce == Vector3.zero)
-        {
-            DirectionalForce = Vector3.forward;
-        }
         CustomBehaviour();
         if (LifeStarted)
         {
             return;
         }
         RigidBodyRef = GetComponent<Rigidbody>();
+        if (Damage == 0)
+        {
+            Damage = 5;
+        }
 
         if (RigidBodyRef == null)
         {
             gameObject.AddComponent<Rigidbody>();
         }
-        Debug.Log(DirectionalForce + "  " + InitalForce);
+        //Debug.Log(DirectionalForce + "  " + InitalForce);
 
         if (LifeTime == 0)
         {
@@ -43,7 +44,6 @@ public class ProjectileBase : MonoBehaviour
             InvokeRepeating("VelocityReduction", 0, 0.25f);
         }
         LifeStarted = true;
-        CustomBehaviour();
     }
 
     protected virtual void CustomBehaviour()

@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class DroppletProjectile : ProjectileBase
 {
-
-
-    
-
-
     private void OnTriggerEnter(Collider Collision)
     {
         if (Collision.CompareTag("DamageObject") || Collision.CompareTag("Player"))
