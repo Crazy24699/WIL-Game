@@ -16,7 +16,7 @@ public class TurtleBossAI : BossBase
     public bool CanPerformAction = true;
     public bool MoveToPlayer;
     public bool PerformingAttack = false;
-    public bool AttackActive;
+    [SerializeField] private bool AttackActive;
 
     private float ActionCooldown = 1.5f;
     private float CurrentActionCooldown = 0.0f;
@@ -129,7 +129,10 @@ public class TurtleBossAI : BossBase
 
     protected void BubbleAttackMethod()
     {
-
+        if (AttackActive || !CanPerformAction)
+        {
+            return;
+        }
         LockPosition();
         Debug.Log("Coral high");
         Vector3 RotationChange = PlayerRef.transform.position - transform.position;
@@ -149,15 +152,21 @@ public class TurtleBossAI : BossBase
 
     protected void BucketBashMethod()
     {
+        if (AttackActive ||!CanPerformAction)
+        {
+            return;
+        }
         LockPosition();
 
         MoveToPlayer = false;
         Debug.Log("Afluvian");
         BucketAttackClass.BucketBash();
-        StartCoroutine(BucketAttackClass.AttackCooldown());
         CanPerformAction = false;
         CurrentActionCooldown = ActionCooldown;
         PerformingAttack = false;
+        AttackActive = false;
+        StartCoroutine(BucketAttackClass.AttackCooldown());
+
     }
 
     #region Turtle Logic
@@ -178,10 +187,6 @@ public class TurtleBossAI : BossBase
 
     private IEnumerator BubbleShotFunctionality()
     {
-        //if (AttackActive)
-        //{
-        //    yield return null;
-        //}
         string ShotNumber = "";
         for (int i = 0; i < 4; i++)
         {
@@ -189,7 +194,7 @@ public class TurtleBossAI : BossBase
             {
                 ShotNumber = i.ToString() + y.ToString();
                 BubbleAttackClass.BubbleShot(y, ShotNumber);
-                yield return new WaitForSeconds(0.075f);
+                yield return new WaitForSeconds(0.05f);
 
                 y++;
             }
@@ -198,6 +203,7 @@ public class TurtleBossAI : BossBase
         CanPerformAction = false;
         CurrentActionCooldown = ActionCooldown;
         PerformingAttack = false;
+        AttackActive = false;
         StartCoroutine(BubbleAttackClass.AttackCooldown());
     }
 
@@ -261,7 +267,8 @@ public class TurtleBossAI : BossBase
         {
             if (!AttackCooldownActive)
             {
-                yield return new WaitForSeconds(3.5f);
+                AttackCooldownActive = true;
+                yield return new WaitForSeconds(7.5f);
                 AttackCooldownActive = false;
             }
         }
@@ -291,6 +298,7 @@ public class TurtleBossAI : BossBase
         {
             if (!AttackCooldownActive)
             {
+                AttackCooldownActive = true;
                 yield return new WaitForSeconds(1.5f);
                 AttackCooldownActive = false;
             }

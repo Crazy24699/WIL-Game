@@ -16,7 +16,7 @@ public class BTTurtleAttack : BTNodeBase
     public override NodeStateOptions RunLogicAndState()
     {
         //Debug.Log("Nullberries");
-        if (BossScript.CanPerformAction && BossScript.Distance <= 20 && !BossScript.PerformingAttack) 
+        if (BossScript.CanPerformAction && BossScript.Distance <= 70 && !BossScript.PerformingAttack) 
         {
             SetAttack();
             Debug.Log("Nullberries");
@@ -29,9 +29,10 @@ public class BTTurtleAttack : BTNodeBase
     private void SetAttack()
     {
         float PlayerDistance = Vector3.Distance(BossScript.PlayerRef.transform.position, BossObjectRef.transform.position);
+        BossScript.MoveToPlayer = false;
         switch (PlayerDistance)
         {
-            case <= 5.0f:
+            case <= 10.0f:
 
                 if (!BossScript.BucketAttackClass.AttackCooldownActive)
                 {
@@ -44,7 +45,7 @@ public class BTTurtleAttack : BTNodeBase
 
                 break;
 
-            case > 5.0f:
+            case > 10.0f:
 
                 if (!BossScript.BubbleAttackClass.AttackCooldownActive)
                 {
