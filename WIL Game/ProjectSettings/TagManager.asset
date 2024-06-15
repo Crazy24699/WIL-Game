@@ -8,6 +8,7 @@ TagManager:
   - Wall
   - AttackCollider
   - Spire
+  - DamageObject
   layers:
   - Default
   - TransparentFX

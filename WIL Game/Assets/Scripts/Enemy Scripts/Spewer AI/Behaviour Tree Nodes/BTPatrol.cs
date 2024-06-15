@@ -38,8 +38,17 @@ public class BTPatrol : BTNodeBase
         {
             return NodeStateOptions.Running;
         }
+
+        if(EnemyScript.PatrolActive)
+        {
+            EnemyScript.SetDestination(EnemyScript.WaypointPosition);
+            return NodeStateOptions.Passed;
+        }
+
         if (!EnemyScript.SeenPlayer && EnemyScript.PlayerEscaped && !EnemyScript.CanAttackPlayer) 
         {
+
+            //have this set a patrol point to a place where the player was, when the player makes a sound
             EnemyScript.SetDestination(EnemyScript.WaypointPosition);
             return NodeStateOptions.Passed;
         }

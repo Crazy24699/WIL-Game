@@ -31,14 +31,16 @@ public class EnemyBase : MonoBehaviour
 
     [Space(8)]
     public float CurrentPlayerDistance;
-    public float OutOfRangeDistance;
+    public float OutOfFollowDistance;
+    public float OutOfAttackDistance;
+
     public float OutOfRangeTimer;
     public float CurrentRangeTime;
     #endregion
 
     #region Gameobjects and transforms
     [Space(15)]
-    protected GameObject EnemyRef;
+    protected GameObject EnemyObjectRef;
     protected GameObject PlayerRef;
 
     [Space(5)]
@@ -55,6 +57,8 @@ public class EnemyBase : MonoBehaviour
     public bool PlayerEscaped = false;
     public bool AtEndOfPath = false;
     protected bool StartupRan = false;
+
+    public bool PatrolActive = false;
 
     public bool AttackPlayer;
     public bool CanAttackPlayer;
@@ -92,7 +96,7 @@ public class EnemyBase : MonoBehaviour
 
         CurrentHealth = MaxHealth;
         Rigidbody = GetComponent<Rigidbody>();
-        EnemyRef = this.gameObject;
+        EnemyObjectRef = this.gameObject;
         PlayerRef = GameObject.FindGameObjectWithTag("Player");
         WorldHandlerScript = FindObjectOfType<WorldHandler>();
 
@@ -106,8 +110,6 @@ public class EnemyBase : MonoBehaviour
             NavMeshRef = GetComponent<NavMeshAgent>();
         }
         SetDestination(WaypointPosition);
-
-        InvokeRepeating("UpdatePath", 0f, 1f);
 
         CanTakeDamage = true;
         StartupRan = true;
@@ -175,7 +177,7 @@ public class EnemyBase : MonoBehaviour
         CurrentPlayerDistance = Vector3.Distance(this.transform.position, PlayerTarget.transform.position);
         //Draw a raycast to the player, if it hits something before the player then the enemy can not see the player
 
-        if (CurrentPlayerDistance >= OutOfRangeDistance)
+        if (CurrentPlayerDistance >= OutOfFollowDistance)
         {
             CurrentRangeTime -= Time.deltaTime;
             if (CurrentRangeTime <= 0)
@@ -186,7 +188,7 @@ public class EnemyBase : MonoBehaviour
             }
         }
 
-        else if (CurrentPlayerDistance < OutOfRangeDistance)
+        else if (CurrentPlayerDistance < OutOfFollowDistance)
         {
             CurrentRangeTime = OutOfRangeTimer;
         }
@@ -223,9 +225,30 @@ public class EnemyBase : MonoBehaviour
 
     }
 
+
+    protected IEnumerator AttackCooldown()
+    {
+        yield return new WaitForSeconds(2.5f);
+        CanAttackPlayer = true;
+    }
+
+    public IEnumerator TempAttackCooldownLock()
+    {
+        yield return new WaitForSeconds(1f);
+        IsAttacking = false;
+    }
+
     protected void LockForAttack()
     {
+        ViewLock = transform.rotation.eulerAngles;
+        PositionLock = transform.position;
+        IsAttacking = true;
+    }
 
+    public void EnforceLock()
+    {
+        EnemyObjectRef.transform.position = PositionLock;
+        EnemyObjectRef.transform.rotation = Quaternion.Euler(ViewLock);
     }
 
     protected void Die()

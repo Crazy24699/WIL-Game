@@ -28,6 +28,17 @@ public class SpewerAi : EnemyBase
         }
         HandleForce();
 
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            IsAttacking = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            CanAttackPlayer = true;
+        }
+        
+
         RootNode.RunLogicAndState();
     }
 
@@ -45,23 +56,30 @@ public class SpewerAi : EnemyBase
     public override void Attack()
     {
         //Play animation of attack
-        //Instantiate(Dropplet, SpewPoint.transform.position, Quaternion.identity);
         LockForAttack();
+
+        GameObject SpawnedDropplet = Instantiate(Dropplet, SpewPoint.transform.position, SpewPoint.transform.rotation);
+        SpawnedDropplet.GetComponent<ProjectileBase>().LifeStartup(transform.forward, 100);
+        CanAttackPlayer = false;
+        StartCoroutine(AttackCooldown());
+        StartCoroutine(TempAttackCooldownLock());
     }
 
     public void CreateBehaviourTree()
     {
         BTPatrol PatrolNode = new BTPatrol(this.gameObject);
         BTPersuePlayer PersuePlayerNode = new BTPersuePlayer(this.gameObject);
-        BTAttack AttackNode;
+        BTAttack AttackNode = new BTAttack(this.gameObject);
 
         BTNodeSequence PatrolSequence = new BTNodeSequence();
         BTNodeSequence PersuePlayerSequence = new BTNodeSequence();
+        BTNodeSequence AttackSequence = new BTNodeSequence();
 
         PatrolSequence.SetSequenceValues(new List<BTNodeBase> { PatrolNode });
         PersuePlayerSequence.SetSequenceValues(new List<BTNodeBase> { PersuePlayerNode });
+        AttackSequence.SetSequenceValues(new List<BTNodeBase> { AttackNode });
 
-        RootNode = new BTNodeSelector(new List<BTNodeBase> { PatrolSequence, PersuePlayerSequence });
+        RootNode = new BTNodeSelector(new List<BTNodeBase> { PatrolSequence, PersuePlayerSequence, AttackSequence });
 
     }
 

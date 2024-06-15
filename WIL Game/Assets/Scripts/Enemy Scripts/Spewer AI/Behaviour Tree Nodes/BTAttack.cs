@@ -19,10 +19,15 @@ public class BTAttack : BTNodeBase
 
         if (EnemyScript.IsAttacking)
         {
+            EnemyScript.EnforceLock();
             return NodeStateOptions.Running;
         }
-
-        if (EnemyScript.AttackPlayer && EnemyScript.CanAttackPlayer )
+        if(EnemyScript.CurrentPlayerDistance <= EnemyScript.OutOfAttackDistance)
+        {
+            EnemyScript.CanAttackPlayer = true;
+            EnemyScript.AttackPlayer = true;
+        }
+        if (EnemyScript.AttackPlayer && EnemyScript.CanAttackPlayer && EnemyScript.SeenPlayer) 
         {
             EnemyScript.Attack();
 

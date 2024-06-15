@@ -7,6 +7,8 @@ public class BTPersuePlayer : BTNodeBase
     protected EnemyBase EnemyScript;
     protected GameObject EnemySelf;
 
+
+
     public BTPersuePlayer(GameObject EnemyAIRef)
     {
         EnemyScript = EnemyAIRef.GetComponent<EnemyBase>();
@@ -25,20 +27,27 @@ public class BTPersuePlayer : BTNodeBase
         {
             EnemyScript.SetDestination(EnemyScript.PlayerTarget);
             EnemyScript.HandlePlayerRange();
+            if(EnemyScript.CurrentPlayerDistance>EnemyScript.OutOfAttackDistance)
+            {
+                EnemyScript.CanAttackPlayer = false;
+            }
 
             return NodeStateOptions.Passed;
         }
         else if(!EnemyScript.PlayerEscaped && !EnemyScript.SeenPlayer)
         {
-            return NodeStateOptions.Running;
+            EnemyScript.PatrolActive = true;
+            return NodeStateOptions.Failed;
         }
 
-        if(EnemyScript.AttackPlayer && EnemyScript.SeenPlayer)
+        if (EnemyScript.AttackPlayer && EnemyScript.SeenPlayer) 
         {
             EnemyScript.SetDestination(EnemyScript.PlayerTarget);
             return NodeStateOptions.Running;
         }
         return NodeStateOptions.Failed;
     }
+
+
 
 }
