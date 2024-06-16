@@ -10,6 +10,7 @@ public class BTTurtleMove : BTNodeBase
 
     private Transform TurtleDestination;
     private bool LocationChosen = false;
+    public int Values = 20;
 
     public BTTurtleMove(GameObject EnemyAIRef)
     {

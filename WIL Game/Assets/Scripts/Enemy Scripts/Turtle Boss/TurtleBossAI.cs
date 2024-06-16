@@ -84,7 +84,7 @@ public class TurtleBossAI : BossBase
 
         if (PerformingAttack) 
         {
-            Debug.Log("Sneeze");
+            //Debug.Log("Sneeze");
             switch (ChosenAttack)
             {
                 default:
