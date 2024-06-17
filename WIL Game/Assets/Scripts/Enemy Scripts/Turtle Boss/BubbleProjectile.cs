@@ -75,12 +75,22 @@ public class BubbleProjectile : ProjectileBase
 
         }
 
-        //if(CurrentLifeTime <= 0)
-        //{
-        //    Destroy(gameObject);
-        //}
+        if (CurrentLifeTime <= 0)
+        {
+            Destroy(gameObject);
+        }
 
 
+    }
+
+
+    private void OnTriggerEnter(Collider Collision)
+    {
+        if (Collision.CompareTag("Player"))
+        {
+            Collision.GetComponent<PlayerInteraction>().HandleHealth(-1);
+        }
+        Destroy(gameObject);
     }
 
 }

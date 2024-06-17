@@ -9,6 +9,12 @@ public class DroppletProjectile : ProjectileBase
         if (Collision.CompareTag("DamageObject") || Collision.CompareTag("Player"))
         {
             //Deal Damage to the thing
+            if (Collision.CompareTag("Player"))
+            {
+                
+                Collision.transform.GetComponentInParent<PlayerInteraction>().HandleHealth(-1);
+            }
+
             Debug.Log(Collision.name + "   Hit Object");
             Destroy(this.gameObject);
         }

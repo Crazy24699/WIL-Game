@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -27,12 +28,14 @@ public class PlayerAttacks : MonoBehaviour
     public PlayerInput PlayerInputRef;
     protected InputAction MainAttack;
     protected InputAction SecondAttack;
+    protected InputAction ThirdAttack;
     [Space(5)]
 
     public AttackBase[] Attacks;
     public PlayerMovement PlayerMoveScript;
     public Cinemachine.CinemachineBrain CinemachineBrainScript;
     public CameraFunctionality CamFunctionScript;
+    protected PlayerInteraction PlayerInteractionScript;
 
 
 
@@ -41,7 +44,7 @@ public class PlayerAttacks : MonoBehaviour
         None,
         SlashAttack,
         TailWhip,
-        Toppler
+        BiteAttack
     }
     public AllAttacks CurrentAttack;
     public AllAttacks NextAttack;
@@ -69,9 +72,11 @@ public class PlayerAttacks : MonoBehaviour
 
         PlayerInputRef.Enable();
 
+        PlayerInteractionScript = FindObjectOfType<PlayerInteraction>();
+
         SetActiveAttack(AllAttacks.SlashAttack,AttackTypes.Primary);
         SetActiveAttack(AllAttacks.TailWhip, AttackTypes.Secondary);
-
+        SetActiveAttack(AllAttacks.BiteAttack, AttackTypes.Third);
     }
 
     private void PopulateAttacks()
@@ -101,11 +106,15 @@ public class PlayerAttacks : MonoBehaviour
                 PlayerInputRef.PlayerAttack.PrimaryAttack.performed += Context => PerformAttack(SetAttck);
                 MainAttack = PlayerInputRef.PlayerAttack.PrimaryAttack;
                 break;
+
             case AttackTypes.Secondary:
                 PlayerInputRef.PlayerAttack.SecondaryAttack.performed += Context => PerformAttack(SetAttck);
                 SecondAttack = PlayerInputRef.PlayerAttack.SecondaryAttack;
                 break;
+
             case AttackTypes.Third:
+                PlayerInputRef.PlayerAttack.ThirdAttack.performed += Context => PerformAttack(SetAttck);
+                ThirdAttack = PlayerInputRef.PlayerAttack.ThirdAttack;
                 break;
             default:
                 break;
@@ -123,7 +132,7 @@ public class PlayerAttacks : MonoBehaviour
             Debug.Log("Victorious");
             //SetActiveAttack(AllAttacks.TailWhip, AttackTypes.Primary);
         }
-
+        AttackAnimation.SetBool("IsAttacking", IsAttacking);
     }
 
     public void PerformAttack(AllAttacks SetAttck)
@@ -135,6 +144,7 @@ public class PlayerAttacks : MonoBehaviour
             NextAttack = SetAttck;
             return;
         }
+        PlayerInteractionScript.CanTakeDamage = false;
         switch (SetAttck)
         {
             default:
@@ -146,25 +156,45 @@ public class PlayerAttacks : MonoBehaviour
                 TailWhipFunction();
                 break;
 
-        }
+            case AllAttacks.BiteAttack:
+                BiteAttackFunction();
+                break;
 
+        }
+        
 
     }
 
-    public void SlashAttackFunction()
+    private void SlashAttackFunction()
     {
         PlayAttackAnim("SlashAttackTrigger");
         IsAttacking = true;
         Debug.Log("rise");
     }
 
-    public void TailWhipFunction()
+    private void TailWhipFunction()
     {
         PlayAttackAnim("TailWhip");
         Debug.Log("We");
         HandleMovementState(false);
         HandleCameraState(false);
         IsAttacking = true;
+    }
+
+
+    private void BiteAttackFunction()
+    {
+        PlayAttackAnim("BiteAttack");
+        HandleMovementState(false);
+        StartCoroutine(AttackBoxLifetime(2.5f, Attacks[0]));
+        IsAttacking = true;
+    }
+
+    private IEnumerator AttackBoxLifetime(float LifeTime, AttackBase AttackScript)
+    {
+        AttackScript.enabled = true;
+        yield return new WaitForSeconds(LifeTime);
+        AttackScript.enabled = false;
     }
 
     protected void PlayAttackAnim(string AnimName)
@@ -185,15 +215,17 @@ public class PlayerAttacks : MonoBehaviour
             Debug.Log("None");
             yield return null;
         }
-        yield return new WaitForSeconds(0.75f);
+        yield return new WaitForSeconds(1.75f);
         IsAttacking = false;
+        PlayerInteractionScript.CanTakeDamage = true;
         HandleCameraState(true);
         HandleMovementState(true);
     }
 
     protected void HandleMovementState(bool LockMovement)
     {
-        PlayerMoveScript.enabled = LockMovement;
+        //PlayerMoveScript.enabled = LockMovement;
+        //PlayerMoveScript.Rigidbody.velocity = Vector3.zero;
     }
 
     protected void HandleCameraState(bool LockCamera)

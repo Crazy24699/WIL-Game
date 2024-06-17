@@ -11,7 +11,7 @@ public class EnemyBase : MonoBehaviour
 {
 
     #region Ints
-    protected int MaxHealth = 100;
+    protected int MaxHealth = 2;
     [SerializeField] protected int CurrentHealth;
     protected int CurrentWayPoint = 0;
     #endregion
@@ -142,6 +142,7 @@ public class EnemyBase : MonoBehaviour
     public void ApplyKnockback()
     {
         Rigidbody.AddForce(Vector3.forward * -1 * KnockbackPower, ForceMode.Impulse);
+        Debug.Log("Love gone wrong");
     }
 
     protected void HandleForce()

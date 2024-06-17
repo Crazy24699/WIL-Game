@@ -11,12 +11,18 @@ public class SpewerAi : EnemyBase
     [SerializeField] private GameObject Dropplet;
     [SerializeField] private GameObject SpewPoint;
 
+    private Animator EnemyAnimator;
+
     private void Start()
     {
         StartCoroutine(BaseStartup());
 
         StartCoroutine(StartupDelay());
-
+        EnemyAnimator=GetComponent<Animator>();
+        if(EnemyAnimator == null)
+        {
+            EnemyAnimator = transform.GetComponentInChildren<Animator>();
+        }
     }
 
     // Update is called once per frame
@@ -37,9 +43,13 @@ public class SpewerAi : EnemyBase
         {
             CanAttackPlayer = true;
         }
-        
 
+        CurrentMoveSpeed = NavMeshRef.velocity.magnitude;
+        //Debug.Log(CurrentMoveSpeed);
+        CurrentMoveSpeed = (float)System.Math.Round(CurrentMoveSpeed, 2);
+        //Debug.Log(CurrentMoveSpeed);
         RootNode.RunLogicAndState();
+        PlayAnimation();
     }
 
     private IEnumerator StartupDelay()
@@ -48,16 +58,22 @@ public class SpewerAi : EnemyBase
         CreateBehaviourTree();
     }
 
-    private void FixedUpdate()
+    private void PlayAnimation()
     {
-        //HandlePatrol();
+        EnemyAnimator.SetFloat("CurrentSpeed", CurrentMoveSpeed);
+
     }
+
 
     public override void Attack()
     {
         //Play animation of attack
         LockForAttack();
 
+        //if (IsAttacking)
+        //{
+        //}
+        EnemyAnimator.SetTrigger("Attack");
         GameObject SpawnedDropplet = Instantiate(Dropplet, SpewPoint.transform.position, SpewPoint.transform.rotation);
         SpawnedDropplet.GetComponent<ProjectileBase>().LifeStartup(transform.forward, 100);
         CanAttackPlayer = false;

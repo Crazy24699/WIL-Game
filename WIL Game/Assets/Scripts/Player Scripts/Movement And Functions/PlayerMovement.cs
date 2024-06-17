@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] protected Vector3 MoveDirection;
 
     public Transform PlayerOrientation;
-
+    public GameObject HitParticle;
 
 
     // Start is called before the first frame update
@@ -39,6 +39,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if(Input.GetKey(KeyCode.L))
+        {
+            Instantiate(HitParticle, transform.position, Quaternion.identity);
+        }
+        if (PlayerAnimations.GetBool("IsAttacking"))
+        {
+            Rigidbody.velocity = Vector3.zero;
+            Debug.Log("laced with poison");
+            return;
+        }
         MovePlayer();
         switch (MoveDirection.magnitude)
         {

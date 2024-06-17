@@ -11,6 +11,10 @@ public class PlayerInteraction : MonoBehaviour
     protected InputAction InputRef;
 
     public bool MenuActive;
+    public bool CanTakeDamage = true;
+
+    public int MaxHealth;
+    public int CurrentHealth;
 
     // Start is called before the first frame update
     void Awake()
@@ -18,6 +22,8 @@ public class PlayerInteraction : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         MenuActive = false ;
         PlayerInputRef = new PlayerInput();
+
+        CurrentHealth = MaxHealth;
     }
 
     public void OnEnable()
@@ -52,6 +58,20 @@ public class PlayerInteraction : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
                 MenuActive = false ;
                 break;
+        }
+    }
+
+    public void HandleHealth(int HealthChange)
+    {
+        if(!CanTakeDamage)
+        {
+            return;
+        }
+        CurrentHealth += HealthChange;
+        if (CurrentHealth <= 0)
+        {
+            CurrentHealth = 0;
+            Time.timeScale = 0;
         }
     }
 

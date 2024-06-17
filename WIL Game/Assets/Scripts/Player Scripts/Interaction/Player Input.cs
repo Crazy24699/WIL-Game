@@ -166,6 +166,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Third Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""ffe18392-07f1-43c6-9bb1-74e9cb75634c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -188,6 +197,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Secondary Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""443aa6a3-ee0f-45cd-84a0-c20a21d9d1eb"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Third Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -218,6 +238,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_PlayerAttack = asset.FindActionMap("PlayerAttack", throwIfNotFound: true);
         m_PlayerAttack_PrimaryAttack = m_PlayerAttack.FindAction("Primary Attack", throwIfNotFound: true);
         m_PlayerAttack_SecondaryAttack = m_PlayerAttack.FindAction("Secondary Attack", throwIfNotFound: true);
+        m_PlayerAttack_ThirdAttack = m_PlayerAttack.FindAction("Third Attack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -373,12 +394,14 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private List<IPlayerAttackActions> m_PlayerAttackActionsCallbackInterfaces = new List<IPlayerAttackActions>();
     private readonly InputAction m_PlayerAttack_PrimaryAttack;
     private readonly InputAction m_PlayerAttack_SecondaryAttack;
+    private readonly InputAction m_PlayerAttack_ThirdAttack;
     public struct PlayerAttackActions
     {
         private @PlayerInput m_Wrapper;
         public PlayerAttackActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @PrimaryAttack => m_Wrapper.m_PlayerAttack_PrimaryAttack;
         public InputAction @SecondaryAttack => m_Wrapper.m_PlayerAttack_SecondaryAttack;
+        public InputAction @ThirdAttack => m_Wrapper.m_PlayerAttack_ThirdAttack;
         public InputActionMap Get() { return m_Wrapper.m_PlayerAttack; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -394,6 +417,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @SecondaryAttack.started += instance.OnSecondaryAttack;
             @SecondaryAttack.performed += instance.OnSecondaryAttack;
             @SecondaryAttack.canceled += instance.OnSecondaryAttack;
+            @ThirdAttack.started += instance.OnThirdAttack;
+            @ThirdAttack.performed += instance.OnThirdAttack;
+            @ThirdAttack.canceled += instance.OnThirdAttack;
         }
 
         private void UnregisterCallbacks(IPlayerAttackActions instance)
@@ -404,6 +430,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @SecondaryAttack.started -= instance.OnSecondaryAttack;
             @SecondaryAttack.performed -= instance.OnSecondaryAttack;
             @SecondaryAttack.canceled -= instance.OnSecondaryAttack;
+            @ThirdAttack.started -= instance.OnThirdAttack;
+            @ThirdAttack.performed -= instance.OnThirdAttack;
+            @ThirdAttack.canceled -= instance.OnThirdAttack;
         }
 
         public void RemoveCallbacks(IPlayerAttackActions instance)
@@ -442,5 +471,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     {
         void OnPrimaryAttack(InputAction.CallbackContext context);
         void OnSecondaryAttack(InputAction.CallbackContext context);
+        void OnThirdAttack(InputAction.CallbackContext context);
     }
 }
