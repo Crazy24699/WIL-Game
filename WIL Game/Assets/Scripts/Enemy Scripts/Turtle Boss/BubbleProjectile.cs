@@ -16,7 +16,7 @@ public class BubbleProjectile : ProjectileBase
     private Color MaterialColour;
     protected override void CustomBehaviour()
     {
-        Damage = 15;
+        Damage = 1;
         LifeTime = 8;
         CurrentLifeTime = LifeTime;
 

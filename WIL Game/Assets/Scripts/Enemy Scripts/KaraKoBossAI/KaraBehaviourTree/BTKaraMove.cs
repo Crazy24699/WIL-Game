@@ -17,7 +17,7 @@ public class BTKaraMove : BTNodeBase
     public override NodeStateOptions RunLogicAndState()
     {
 
-        if (KaraScript.PlayerDistance <= KaraScript.StoppingDistance)
+        if (KaraScript.PlayerDistance <= KaraScript.StoppingDistance && KaraScript.CanMove)
         {
             KaraScript.SetDestination(KaraScript.transform);
             return NodeStateOptions.Passed;
@@ -29,7 +29,7 @@ public class BTKaraMove : BTNodeBase
             return NodeStateOptions.Running;
         }
 
-        if(KaraScript.PlayerDistance > KaraScript.StoppingDistance || KaraScript.AllAttacksDown)
+        if((KaraScript.PlayerDistance > KaraScript.StoppingDistance && KaraScript.CanMove) || KaraScript.AllAttacksDown)
         {
             KaraScript.CanMove = true;
             KaraScript.SetDestination(KaraScript.PlayerRef.transform);

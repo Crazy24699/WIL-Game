@@ -7,7 +7,7 @@ public class ProjectileBase : MonoBehaviour
     private bool LifeStarted = false;
     protected bool CustomLifeTimer = false;
 
-    private Rigidbody RigidBodyRef;
+    protected Rigidbody RigidBodyRef;
     [SerializeField] private Vector3 ForceChanges;
 
     protected float LifeTime;
@@ -32,7 +32,7 @@ public class ProjectileBase : MonoBehaviour
         }
         //Debug.Log(DirectionalForce + "  " + InitalForce);
 
-        if (LifeTime == 0)
+        if (LifeTime == 0 && !CustomLifeTimer)
         {
             LifeTime = 15;
         }
