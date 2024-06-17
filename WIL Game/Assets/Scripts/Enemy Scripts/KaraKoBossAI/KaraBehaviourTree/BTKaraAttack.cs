@@ -16,8 +16,9 @@ public class BTKaraAttack : BTNodeBase
 
     public override NodeStateOptions RunLogicAndState()
     {
-        if (KaraScript.AttackChosen && KaraScript.PerformingAttack)
+        if (KaraScript.AttackChosen && KaraScript.PerformingAttack && KaraScript.AttackChosen)
         {
+            Debug.Log("Attacking");
             KaraScript.RunChosenAttack();
             return NodeStateOptions.Running;
         }

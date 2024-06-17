@@ -7,13 +7,13 @@ public class KaraBossAI : BossBase
 {
 
     #region Bools
-    [HideInInspector] public bool PerformingAttack;
+     public bool PerformingAttack;
     [HideInInspector] public bool CanMove = true;
     public bool ChosenDestination = false;
     public bool AttackChosen = false;
     public bool CanPerformAction;
     [HideInInspector] public bool CustomLocationChosen = false;
-    [HideInInspector] public bool CloseRange;
+     public bool CloseRange;
     [HideInInspector] public bool OutOfRange;
     public bool AllAttacksDown = false;
     private bool StartupRan;
@@ -24,8 +24,8 @@ public class KaraBossAI : BossBase
 
     [Space(5)]
     public float PlayerDistance = 0.0f;
-    [HideInInspector]public float StoppingDistance = 25;
-    private float ActionLockoutTime;
+    public float StoppingDistance = 20;
+    [SerializeField]private float ActionLockoutTime;
     [Space(2)]
     public float CloseRangeDistance;
     public float LongRangeDistance;
@@ -61,6 +61,7 @@ public class KaraBossAI : BossBase
 
     public override void BossStartup()
     {
+        CanPerformAction = true;
         if (PlayerRef == null)
         {
             PlayerRef = GameObject.Find("Player");
@@ -76,7 +77,7 @@ public class KaraBossAI : BossBase
 
     private void CreateBehaviourTree()
     {
-        //BTKaraAttack AttackNode = new BTKaraAttack(this.gameObject);
+        BTKaraAttack AttackNode = new BTKaraAttack(this.gameObject);
         BTKaraChoice ChoiceNode = new BTKaraChoice(this.gameObject);
         BTKaraMove MoveNode = new BTKaraMove(gameObject);
 
@@ -84,7 +85,7 @@ public class KaraBossAI : BossBase
         BTNodeSequence MoveSequence = new BTNodeSequence();
         BTNodeSequence ChoiceSequence = new BTNodeSequence();
 
-        AttackSequence.SetSequenceValues(new List<BTNodeBase> { MoveNode });
+        AttackSequence.SetSequenceValues(new List<BTNodeBase> { AttackNode });
         MoveSequence.SetSequenceValues(new List<BTNodeBase> { MoveNode });
         ChoiceSequence.SetSequenceValues(new List<BTNodeBase> { ChoiceNode });
 
@@ -117,6 +118,10 @@ public class KaraBossAI : BossBase
 
     public void RunChosenAttack()
     {
+        if (AttackWaitTime > 0)
+        {
+            return;
+        }
         CanMove = false;
         switch (ChosenAttack)
         {
@@ -134,9 +139,9 @@ public class KaraBossAI : BossBase
 
         }
         CanPerformAction = false;
-        AttackChosen = true;
+        //AttackChosen = false;
 
-        PerformingAttack = true;
+        //PerformingAttack = true;
     }
 
     public void ResetAttackLockout(float AttackLockoutTime)
@@ -151,25 +156,27 @@ public class KaraBossAI : BossBase
     public void ActiveActionCooldown()
     {
 
-        if (!CanPerformAction && ActionLockoutTime > 0)
+        if (!CanPerformAction && ActionLockoutTime > 0 && PerformingAttack)
         {
             ActionLockoutTime -= Time.deltaTime;
         }
-        else if (!CanPerformAction && ActionLockoutTime <= 0)
+        else if (!CanPerformAction && ActionLockoutTime <= 0 && PerformingAttack)
         {
             ActionLockoutTime = 0;
             CanPerformAction = true;
+            PerformingAttack = false;
+            AttackChosen = false;
         }
 
         if (AttackWaitTime > 0)
         {
             AttackWaitTime -= Time.deltaTime;
         }
-        if (AttackWaitTime <= 0 && CanMove == true && !AttackChosen)
+        if (AttackWaitTime <= 0 && !AttackChosen)
         {
             AttackWaitTime = 0;
             AttackResetRefreshed = true;
-            CanMove = false;
+            
         }
 
     }
@@ -226,10 +233,14 @@ public class KaraBossAI : BossBase
 
     public void HornAttackMethod()
     {
-
-        if (!HornAttack.AttackCooldownActive)
+        if(HornAttack.AttackCooldownActive && PerformingAttack)
         {
             Debug.Log("Slashed Thy Horns");
+        }
+        else if (!HornAttack.AttackCooldownActive)
+        {
+            
+            ActionLockoutTime = HornAttack.LockoutTime;
             StartCoroutine(HornAttack.AttackCooldown());
             PerformingAttack = true;
         }
@@ -237,9 +248,14 @@ public class KaraBossAI : BossBase
 
     private void CoalAttackMethod()
     {
-        if (!CoalAttack.AttackCooldownActive)
+        if (CoalAttack.AttackCooldownActive && PerformingAttack)
         {
             Debug.Log("Feel the cancer rocks");
+
+        }
+        else if (!CoalAttack.AttackCooldownActive)
+        {
+            ActionLockoutTime = CoalAttack.LockoutTime;
             StartCoroutine(CoalAttack.AttackCooldown());
             PerformingAttack = true;
         }
@@ -250,6 +266,7 @@ public class KaraBossAI : BossBase
         if (!EarthAttack.AttackCooldownActive)
         {
             Debug.Log("HAMMER DOWN MOTHER FU-");
+            ActionLockoutTime = EarthAttack.LockoutTime;
             StartCoroutine(EarthAttack.AttackCooldown());
             PerformingAttack = true;
         }
@@ -260,9 +277,10 @@ public class KaraBossAI : BossBase
         PlayerDistance = Vector3.Distance(PlayerRef.transform.position, transform.position);
         if(PlayerDistance>StoppingDistance && PlayerDistance <= CloseRangeDistance)
         {
+            Debug.Log("Check");
             CloseRange = true;
         }
-        if(PlayerDistance<=LongRangeDistance && PlayerDistance > CloseRangeDistance)
+        if (PlayerDistance <= LongRangeDistance && PlayerDistance > CloseRangeDistance) 
         {
             CloseRange = false;
         }
@@ -299,6 +317,8 @@ public class KaraBossAI : BossBase
 
         public bool AttackCooldownActive;
 
+
+        
 
         public IEnumerator AttackCooldown()
         {

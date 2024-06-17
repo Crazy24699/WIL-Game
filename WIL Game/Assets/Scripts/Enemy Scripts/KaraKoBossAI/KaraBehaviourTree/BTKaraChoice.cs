@@ -17,8 +17,9 @@ public class BTKaraChoice : BTNodeBase
 
     public override NodeStateOptions RunLogicAndState()
     {
-        if (KaraScript.CanPerformAction)
+        if (KaraScript.CanPerformAction && !KaraScript.AttackChosen)
         {
+
             ChooseAttack();
             return NodeStateOptions.Running;
         }
@@ -41,7 +42,7 @@ public class BTKaraChoice : BTNodeBase
 
     private void ChooseAttack()
     {
-
+        Debug.Log("Runner   "); 
         float AttackRange = KaraScript.PlayerDistance;
         KaraScript.CheckDistance();
 
@@ -49,6 +50,7 @@ public class BTKaraChoice : BTNodeBase
         {
             case true:
                 ChooseCloseRangeAttack(AttackRange);
+                Debug.Log("Forbiden rites");
                 break;
 
             case false:
@@ -63,7 +65,8 @@ public class BTKaraChoice : BTNodeBase
                 break;  
         }
         KaraScript.AttackChosen = true;
-        KaraScript.RunChosenAttack();
+        KaraScript.PerformingAttack = true;
+        //KaraScript.RunChosenAttack();
 
 
     }
@@ -79,17 +82,21 @@ public class BTKaraChoice : BTNodeBase
                     if (KaraScript.HornAttack.AttackCooldownActive)
                     {
                         PickAlternateAttack(KaraBossAI.AttackOptions.HornSwipe);
+                        //Debug.Log("Trying to rescue");
                         return;
                     }
                     KaraScript.ChosenAttack = KaraBossAI.AttackOptions.HornSwipe;
+                    //Debug.Log("Pop cult crusifiction");
                     break;
 
                 case 1:
                     if (KaraScript.EarthAttack.AttackCooldownActive)
                     {
-                        PickAlternateAttack(KaraBossAI.AttackOptions.HornSwipe);
+                        PickAlternateAttack(KaraBossAI.AttackOptions.EarthShaker);
+                        //Debug.Log("Now youir ink is bleeding red");
                         return;
                     }
+                    //Debug.Log("the headlines are going dead");
                     KaraScript.ChosenAttack = KaraBossAI.AttackOptions.EarthShaker;
                     break;
             }
@@ -98,13 +105,15 @@ public class BTKaraChoice : BTNodeBase
 
     private void PickAlternateAttack(KaraBossAI.AttackOptions InvalidAttack)
     {
+        Debug.Log("Love bites       "+InvalidAttack);
         if(KaraScript.EarthAttack.AttackCooldownActive && KaraScript.HornAttack.AttackCooldownActive)
         {
             KaraScript.ResetAttackLockout(5.5f);
             KaraScript.CanMove = true;
+            Debug.Log("for moon lit nightss");
+
             return;
         }
-
         switch (InvalidAttack)
         {
 
