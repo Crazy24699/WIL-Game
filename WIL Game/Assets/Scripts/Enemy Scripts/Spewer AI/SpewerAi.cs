@@ -77,7 +77,7 @@ public class SpewerAi : EnemyBase
         GameObject SpawnedDropplet = Instantiate(Dropplet, SpewPoint.transform.position, SpewPoint.transform.rotation);
         SpawnedDropplet.GetComponent<ProjectileBase>().LifeStartup(transform.forward, 100);
         CanAttackPlayer = false;
-        StartCoroutine(AttackCooldown());
+        StartCoroutine(AttackCooldown(2.5f));
         StartCoroutine(TempAttackCooldownLock());
     }
 

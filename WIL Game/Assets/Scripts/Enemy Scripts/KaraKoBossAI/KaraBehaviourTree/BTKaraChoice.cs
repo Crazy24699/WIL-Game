@@ -17,7 +17,7 @@ public class BTKaraChoice : BTNodeBase
 
     public override NodeStateOptions RunLogicAndState()
     {
-        if (KaraScript.CanPerformAction && !KaraScript.AttackChosen)
+        if (KaraScript.CanPerformAction && !KaraScript.AttackChosen && !KaraScript.PerformingAttack)
         {
 
             ChooseAttack();
@@ -60,7 +60,7 @@ public class BTKaraChoice : BTNodeBase
                     KaraScript.ChosenAttack=KaraBossAI.AttackOptions.CoalBarrage;
                     break;
                 }
-                ChooseCloseRangeAttack(AttackRange);
+                //ChooseCloseRangeAttack(AttackRange);
 
                 break;  
         }
@@ -108,7 +108,7 @@ public class BTKaraChoice : BTNodeBase
         Debug.Log("Love bites       "+InvalidAttack);
         if(KaraScript.EarthAttack.AttackCooldownActive && KaraScript.HornAttack.AttackCooldownActive)
         {
-            KaraScript.ResetAttackLockout(5.5f);
+            //KaraScript.ResetAttackLockout(5.5f);
             KaraScript.CanMove = true;
             Debug.Log("for moon lit nightss");
 

@@ -20,6 +20,9 @@ public class PlayerAttacks : MonoBehaviour
 
     [Space(5)]
     public GameObject FreeLookCam;
+    public GameObject TailSlashObject;
+    public GameObject TailFirePoint;
+
     [Space(5)]
     public Animator AttackAnimation;
 
@@ -178,6 +181,8 @@ public class PlayerAttacks : MonoBehaviour
         Debug.Log("We");
         HandleMovementState(false);
         HandleCameraState(false);
+        GameObject SpawnedSlash = Instantiate(TailSlashObject, TailFirePoint.transform.position, TailFirePoint.transform.rotation);
+        SpawnedSlash.GetComponent<ProjectileBase>().LifeStartup(TailFirePoint.transform.forward, 200);
         IsAttacking = true;
     }
 

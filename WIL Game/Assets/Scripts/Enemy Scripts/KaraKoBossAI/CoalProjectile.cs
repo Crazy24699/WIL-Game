@@ -65,7 +65,12 @@ public class CoalProjectile : ProjectileBase
     {
         if (ObjectCollision.gameObject.CompareTag("Ground"))
         {
-            //Destroy(gameObject);
+            Destroy(gameObject);
+        }
+
+        if (ObjectCollision.gameObject.CompareTag("Player"))
+        {
+            ObjectCollision.gameObject.GetComponentInParent<PlayerInteraction>().HandleHealth(-1);
         }
     }
 

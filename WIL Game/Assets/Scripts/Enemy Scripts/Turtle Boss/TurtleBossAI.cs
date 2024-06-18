@@ -24,7 +24,7 @@ public class TurtleBossAI : BossBase
     [SerializeField] private float TurnSpeed = 0.0f;
     public float Distance;
 
-
+    [SerializeField]private Animator TurtleAnimation;
 
     public enum TurtleAttacks
     {
@@ -46,6 +46,9 @@ public class TurtleBossAI : BossBase
             TurnSpeed = 4.5f;
         }
         CurrentHealth = MaxHealth;
+
+        TurtleAnimation = transform.GetComponentInChildren<Animator>();
+
         CreateBehaviourTree();
     }
 
@@ -161,10 +164,14 @@ public class TurtleBossAI : BossBase
         MoveToPlayer = false;
         Debug.Log("Afluvian");
         BucketAttackClass.BucketBash();
+        ActiveAttack("BucketAttack");
+
         CanPerformAction = false;
         CurrentActionCooldown = ActionCooldown;
         PerformingAttack = false;
         AttackActive = false;
+        TurtleAnimation.SetBool("IsMoving", true);
+
         StartCoroutine(BucketAttackClass.AttackCooldown());
 
     }
@@ -183,10 +190,17 @@ public class TurtleBossAI : BossBase
 
     #endregion
 
+    private void ActiveAttack(string AttackTrigger)
+    {
+        TurtleAnimation.SetTrigger(AttackTrigger);
+        TurtleAnimation.SetBool("IsMoving", false);
 
+    }
 
     private IEnumerator BubbleShotFunctionality()
     {
+        ActiveAttack("BubbleAttack");
+        yield return new WaitForSeconds(1.75f);
         string ShotNumber = "";
         for (int i = 0; i < 4; i++)
         {
@@ -205,6 +219,8 @@ public class TurtleBossAI : BossBase
         PerformingAttack = false;
         AttackActive = false;
         StartCoroutine(BubbleAttackClass.AttackCooldown());
+        TurtleAnimation.SetBool("IsMoving", true);
+
     }
 
 

@@ -16,7 +16,7 @@ public class BTTurtleAttack : BTNodeBase
     public override NodeStateOptions RunLogicAndState()
     {
         //Debug.Log("Nullberries");
-        if (BossScript.CanPerformAction && BossScript.Distance <= 70 && !BossScript.PerformingAttack) 
+        if (BossScript.CanPerformAction && BossScript.Distance <= 70 && !BossScript.PerformingAttack ) 
         {
             SetAttack();
             Debug.Log("Nullberries");
@@ -34,14 +34,20 @@ public class BTTurtleAttack : BTNodeBase
         {
             case <= 10.0f:
 
+                
                 if (!BossScript.BucketAttackClass.AttackCooldownActive)
                 {
                     BossScript.ChosenAttack = TurtleBossAI.TurtleAttacks.BucketBasher;
+                    BossScript.PerformingAttack = true;
                 }
-                else if (BossScript.BucketAttackClass.AttackCooldownActive)
+                else
                 {
-                    BossScript.ChosenAttack = TurtleBossAI.TurtleAttacks.BubbleBlast;
+                    BossScript.MoveToPlayer = true;
                 }
+                //else if (BossScript.BucketAttackClass.AttackCooldownActive)
+                //{
+                //    BossScript.ChosenAttack = TurtleBossAI.TurtleAttacks.BubbleBlast;
+                //}
 
                 break;
 
@@ -50,16 +56,21 @@ public class BTTurtleAttack : BTNodeBase
                 if (!BossScript.BubbleAttackClass.AttackCooldownActive)
                 {
                     BossScript.ChosenAttack = TurtleBossAI.TurtleAttacks.BubbleBlast;
+                    BossScript.PerformingAttack = true;
                 }
-                else if (BossScript.BubbleAttackClass.AttackCooldownActive)
+                else
                 {
-                    BossScript.ChosenAttack = TurtleBossAI.TurtleAttacks.BucketBasher;
+                    BossScript.MoveToPlayer = true;
                 }
+                //else if (BossScript.BubbleAttackClass.AttackCooldownActive)
+                //{
+                //    BossScript.ChosenAttack = TurtleBossAI.TurtleAttacks.BucketBasher;
+                //}
 
                 break;
         }
 
-        BossScript.PerformingAttack = true;
+
     }
 
 }

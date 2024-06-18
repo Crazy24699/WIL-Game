@@ -13,6 +13,8 @@ public class BossBase : MonoBehaviour
     [HideInInspector] public List<BTNodeBase> AllNodeChoices;
 
 
+    
+
     public virtual void BossStartup()
     {
 

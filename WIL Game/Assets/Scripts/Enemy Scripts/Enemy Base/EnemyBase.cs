@@ -145,6 +145,14 @@ public class EnemyBase : MonoBehaviour
         Debug.Log("Love gone wrong");
     }
 
+    public void DistableAttack()
+    {
+        Vector3 NewPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z) - (Vector3.forward * -2);
+        transform.position = NewPosition;
+        CanAttackPlayer = false;
+        StartCoroutine(AttackCooldown(3.5f));
+    }
+
     protected void HandleForce()
     {
         //Debug.Log(Rigidbody.velocity.x + " " + Mathf.Abs(Rigidbody.velocity.y) +" "+Mathf.Abs(Rigidbody.velocity.z));
@@ -227,9 +235,9 @@ public class EnemyBase : MonoBehaviour
     }
 
 
-    protected IEnumerator AttackCooldown()
+    protected IEnumerator AttackCooldown(float AttackCooldown)
     {
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(AttackCooldown);
         CanAttackPlayer = true;
     }
 

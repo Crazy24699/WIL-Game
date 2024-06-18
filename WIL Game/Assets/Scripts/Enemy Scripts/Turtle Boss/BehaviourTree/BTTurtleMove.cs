@@ -21,18 +21,35 @@ public class BTTurtleMove : BTNodeBase
 
     public override NodeStateOptions RunLogicAndState()
     {
-        //Debug.Log("Dieeee");
-        if (BossScript.BubbleAttackClass.AttackCooldownActive && BossScript.BubbleAttackClass.AttackCooldownActive && BossScript.Distance > 20) 
-        {
-            Debug.Log("So you can spit the truth a littlt");
-            BossScript.MoveToPlayer = true;
-        }
-        else if (BossScript.Distance <= 18)
+        if (BossScript.PerformingAttack)
         {
             BossScript.MoveToPlayer = false;
             TurtleDestination = BossObjectRef.transform;
             BossScript.SetDestination(TurtleDestination);
             LocationChosen = true;
+            return NodeStateOptions.Running;
+        }
+        //Debug.Log("Dieeee");
+        
+        
+        if (BossScript.BubbleAttackClass.AttackCooldownActive && BossScript.BubbleAttackClass.AttackCooldownActive && BossScript.Distance > 20) 
+        {
+            Debug.Log("So you can spit the truth a littlt");
+            BossScript.MoveToPlayer = true;
+        }
+        else if (BossScript.Distance <= 10)
+        {
+            BossScript.MoveToPlayer = false;
+            TurtleDestination = BossObjectRef.transform;
+            BossScript.SetDestination(TurtleDestination);
+            LocationChosen = true;
+            return NodeStateOptions.Running;
+        }
+
+        if (BossScript.MoveToPlayer)
+        {
+            TurtleDestination = BossScript.PlayerRef.transform;
+            BossScript.SetDestination(BossScript.PlayerRef.transform);
             return NodeStateOptions.Running;
         }
 

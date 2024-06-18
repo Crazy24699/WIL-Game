@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BubbleProjectile : ProjectileBase
@@ -14,6 +13,9 @@ public class BubbleProjectile : ProjectileBase
     [SerializeField] private Material BubbleMaterialRef;
     private Material BubbleMaterialClone;
     private Color MaterialColour;
+
+    private bool ProjectileActive = false;
+
     protected override void CustomBehaviour()
     {
         Damage = 1;
@@ -30,7 +32,7 @@ public class BubbleProjectile : ProjectileBase
         CustomLifeTimer = true;
         MaterialColour = BubbleMaterialRef.color;
 
-
+        StartCoroutine(ProjectileActivator());
     }
 
     private void Start()
@@ -86,11 +88,27 @@ public class BubbleProjectile : ProjectileBase
 
     private void OnTriggerEnter(Collider Collision)
     {
+        if (!ProjectileActive)
+        {
+            return;
+        }
+
         if (Collision.CompareTag("Player"))
         {
-            Collision.GetComponent<PlayerInteraction>().HandleHealth(-1);
+            if (Collision.GetComponent<PlayerInteraction>() == null) 
+            {
+                Collision.transform.GetComponentInChildren<PlayerInteraction>().HandleHealth(-1);
+            }
+            
         }
+
         Destroy(gameObject);
+    }
+
+    private IEnumerator ProjectileActivator()
+    {
+        yield return new WaitForSeconds(0.85f);
+        ProjectileActive = true;
     }
 
 }

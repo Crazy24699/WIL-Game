@@ -28,6 +28,7 @@ public class AttackBase : MonoBehaviour
 
             EnemyBaseScript.HandleHealth(PlayerAttackRef.Damage);
             EnemyBaseScript.ApplyKnockback();
+            EnemyBaseScript.DistableAttack();
         }
     }
 }
