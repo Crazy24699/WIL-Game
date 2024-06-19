@@ -41,6 +41,7 @@ public class TurtleBossAI : BossBase
 
     public override void BossStartup()
     {
+        MaxHealth = 16;
         if (TurnSpeed == 0.0f)
         {
             TurnSpeed = 4.5f;
@@ -48,12 +49,19 @@ public class TurtleBossAI : BossBase
         CurrentHealth = MaxHealth;
 
         TurtleAnimation = transform.GetComponentInChildren<Animator>();
+        PlayerRef = FindObjectOfType<PlayerInteraction>().gameObject;
+
+        Alive = true;
 
         CreateBehaviourTree();
     }
 
     private void FixedUpdate()
     {
+        if (Alive == false)
+        {
+            return;
+        }
         UpdateRange();
         RootNode.RunLogicAndState();
     }
@@ -101,6 +109,12 @@ public class TurtleBossAI : BossBase
                     break;
 
             }
+        }
+
+        if (CurrentHealth <= 0)
+        {
+            Alive = false;
+            Destroy(gameObject);
         }
 
         #region Active Action Cooldown
@@ -204,8 +218,9 @@ public class TurtleBossAI : BossBase
         string ShotNumber = "";
         for (int i = 0; i < 4; i++)
         {
-            for (int y = 0; y < BubbleAttackClass.ShootPointRotations.Length;)
+            for (int y = 0; y < 10;)
             {
+                BubbleAttackClass.ShootPoint.transform.LookAt(PlayerRef.transform.position);
                 ShotNumber = i.ToString() + y.ToString();
                 BubbleAttackClass.BubbleShot(y, ShotNumber);
                 yield return new WaitForSeconds(0.05f);
@@ -243,15 +258,24 @@ public class TurtleBossAI : BossBase
 
         private Vector3[] BubbleShootRotations =
         {
-            new Vector3 (0, 0, 0),
-            new Vector3 (-10, 0, 0),
-            new Vector3 (-10, -10, 0),
-            new Vector3 (0, -10, 0),
-            new Vector3 (10, -10, 0),
-            new Vector3 (10, 0, 0),
-            new Vector3 (10, 10, 0),
-            new Vector3 (0, 10, 0),
-            new Vector3 (-10, 10, 0),
+            //new Vector3 (0, 0, 0),
+            //new Vector3 (0, 0, 0),
+            //new Vector3 (0, 0, 0),
+            //new Vector3 (0, 0, 0),
+            //new Vector3 (0, 0, 0),
+            //new Vector3 (0, 0, 0),
+            //new Vector3 (0, 0, 0),
+            //new Vector3 (0, 0, 0),
+            //new Vector3 (0, 0, 0),
+            //new Vector3 (0, 0, 0),
+            //new Vector3 (-10, 0, 0),
+            //new Vector3 (-10, -10, 0),
+            //new Vector3 (0, -10, 0),
+            //new Vector3 (10, -10, 0),
+            //new Vector3 (10, 0, 0),
+            //new Vector3 (10, 10, 0),
+            //new Vector3 (0, 10, 0),
+            //new Vector3 (-10, 10, 0),
         };
 
         public Vector3[] ShootPointRotations;
@@ -270,7 +294,7 @@ public class TurtleBossAI : BossBase
                 ShootPointRotations = BubbleShootRotations;
             }
             //ShootPoint.transform.localPosition = BubbleShootPoints[ShotIndex];
-            ShootPoint.transform.localRotation = Quaternion.Euler(BubbleShootRotations[ShotIndex]);
+            //ShootPoint.transform.localRotation = Quaternion.Euler(BubbleShootRotations[ShotIndex]);
 
             GameObject BubbleShotObejct = Instantiate(BubblePrefab, ShootPoint.transform.position, ShootPoint.transform.rotation);
             BubbleShotObejct.GetComponent<ProjectileBase>().LifeStartup(ShootPoint.transform.forward, 300);
@@ -307,7 +331,7 @@ public class TurtleBossAI : BossBase
             BucketCollider.enabled = true;
 
             Debug.Log("Love Bites");
-            BucketCollider.enabled = false;
+            //BucketCollider.enabled = false;
         }
 
         public IEnumerator AttackCooldown()

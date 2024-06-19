@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class AttackBase : MonoBehaviour
 {
-    protected PlayerAttacks PlayerAttackRef;
-    protected PlayerMovement PlayerMoveScript;
+    [SerializeField]protected PlayerAttacks PlayerAttackRef;
+    [SerializeField] protected PlayerMovement PlayerMoveScript;
 
 
     [SerializeField] protected Collider AttackCollider;
 
     public void Start()
     {
-        PlayerAttackRef = transform.GetComponentInParent<PlayerAttacks>();
+        PlayerAttackRef = FindObjectOfType<PlayerAttacks>();
         if(PlayerMoveScript == null)
         {
             PlayerMoveScript = transform.GetComponentInParent<PlayerMovement>();
@@ -29,6 +29,14 @@ public class AttackBase : MonoBehaviour
             EnemyBaseScript.HandleHealth(PlayerAttackRef.Damage);
             EnemyBaseScript.ApplyKnockback();
             EnemyBaseScript.DistableAttack();
+        }
+        if (Collision.CompareTag("Boss") && PlayerAttackRef != null && this.isActiveAndEnabled)
+        {
+            Debug.Log(Collision.name);
+            BossBase EnemyBaseScript = Collision.GetComponent<BossBase>();
+
+            EnemyBaseScript.HandleHealth(-PlayerAttackRef.Damage);
+
         }
     }
 }

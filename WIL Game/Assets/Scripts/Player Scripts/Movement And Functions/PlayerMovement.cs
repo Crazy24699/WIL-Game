@@ -63,6 +63,18 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            SpeedMultiplier = 2.5f;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            SpeedMultiplier = 0;
+        }
+    }
+
     protected void MovePlayer()
     {
         PlayerVelocity = new Vector3(Rigidbody.velocity.x, Rigidbody.velocity.y, Rigidbody.velocity.z);
@@ -83,7 +95,7 @@ public class PlayerMovement : MonoBehaviour
 
         MoveDirection = PlayerOrientation.forward * MoveDirection.z + PlayerOrientation.right * MoveDirection.x;
 
-        Rigidbody.AddForce(new Vector3(MoveDirection.x, MoveDirection.y, MoveDirection.z) * BaseMoveSpeed * 10f, ForceMode.Force);
+        Rigidbody.AddForce(new Vector3(MoveDirection.x, MoveDirection.y, MoveDirection.z) * (BaseMoveSpeed+SpeedMultiplier) * 10f, ForceMode.Force);
         CurrentSpeed = Rigidbody.velocity.magnitude;
     }
 

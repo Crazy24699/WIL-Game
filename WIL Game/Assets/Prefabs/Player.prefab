@@ -428,6 +428,8 @@ MonoBehaviour:
   AttackSpeed: 0
   IsAttacking: 0
   FreeLookCam: {fileID: 0}
+  TailSlashObject: {fileID: 2634569506789079021, guid: 75d702f365cd6964aa8b8826d35b6c60, type: 3}
+  TailFirePoint: {fileID: 6949211510665444643}
   AttackAnimation: {fileID: 1204256617138220719}
   Attacks:
   - {fileID: 3713011630793813009}
@@ -970,7 +972,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77514dcd896b4f142aa7e0e609666d18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackCollider: {fileID: 8892741959320010314}
+  ForceChanges: {x: 0, y: 0, z: 0}
 --- !u!1 &3498842209747252132
 GameObject:
   m_ObjectHideFlags: 0

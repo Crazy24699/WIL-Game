@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class BossBase : MonoBehaviour
 {
-    [SerializeField] protected int MaxHealth;
-    protected int CurrentHealth;
+    protected int MaxHealth;
+    [SerializeField]protected int CurrentHealth;
 
     public GameObject PlayerRef;
 
     [HideInInspector] public BTNodeBase RootNode;
     [HideInInspector] public List<BTNodeBase> AllNodeChoices;
 
-
+    protected bool Alive = true;
     
 
     public virtual void BossStartup()
@@ -20,7 +20,7 @@ public class BossBase : MonoBehaviour
 
     }
 
-    protected void HandleHealth(int HealthChange)
+    public void HandleHealth(int HealthChange)
     {
         int ChangedHealth = (CurrentHealth + HealthChange);
         Die(ChangedHealth);

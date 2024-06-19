@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,6 +17,14 @@ public class PlayerInteraction : MonoBehaviour
 
     public int MaxHealth;
     public int CurrentHealth;
+    private int OldHealth;
+
+    private WorldHandler WorldHandlerScript;
+
+
+    public GameObject[] HeartImages;
+    public GameObject PauseScreen;
+    public GameObject DeathScreen;
 
     // Start is called before the first frame update
     void Awake()
@@ -24,6 +34,8 @@ public class PlayerInteraction : MonoBehaviour
         PlayerInputRef = new PlayerInput();
 
         CurrentHealth = MaxHealth;
+
+        WorldHandlerScript = FindObjectOfType<WorldHandler>();
     }
 
     public void OnEnable()
@@ -42,6 +54,28 @@ public class PlayerInteraction : MonoBehaviour
         PlayerInputRef.PlayerInteraction.ShowMenu.Disable();
     }
 
+    public void ChangeMenu()
+    {
+        switch (MenuActive)
+        {
+            default:
+            case false:
+                Cursor.lockState = CursorLockMode.None;
+                PauseScreen.SetActive(true);
+
+                MenuActive = true;
+                break;
+
+
+            case true:
+                Cursor.lockState = CursorLockMode.Locked;
+                PauseScreen.SetActive(false);
+
+                MenuActive = false;
+                break;
+        }
+    }
+
     public void ChangeMenuState(InputAction.CallbackContext InputCallBack)
     {
         
@@ -50,14 +84,33 @@ public class PlayerInteraction : MonoBehaviour
             default:
             case false:
                 Cursor.lockState = CursorLockMode.None;
+                PauseScreen.SetActive(true);
+
                 MenuActive = true ;
                 break;
 
 
             case true:
                 Cursor.lockState = CursorLockMode.Locked;
+                PauseScreen.SetActive(false);
+
                 MenuActive = false ;
                 break;
+        }
+    }
+
+    private void Update()
+    {
+        DeathCheck();
+    }
+
+    private void DeathCheck()
+    {
+        if (CurrentHealth <= 0)
+        {
+            CurrentHealth = 0;
+            DeathScreen.SetActive(true);
+            Time.timeScale = 0;
         }
     }
 
@@ -67,13 +120,43 @@ public class PlayerInteraction : MonoBehaviour
         {
             return;
         }
+        Debug.Log("Damaghe");
         CurrentHealth += HealthChange;
-        if (CurrentHealth <= 0)
+        DeathCheck();
+        HandleHeartChanges();
+    }
+
+    private void HandleHeartChanges()
+    {
+        if (HeartImages == null)
         {
-            CurrentHealth = 0;
-            Time.timeScale = 0;
+            return;
+        }
+
+        if (OldHealth < CurrentHealth)
+        {
+            HeartImages[CurrentHealth].SetActive(false);
+        }
+        if(OldHealth> CurrentHealth)
+        {
+            HeartImages[CurrentHealth].SetActive(true);
+
         }
     }
 
+    private void OnTriggerEnter(Collider Collision)
+    {
+        if (Collision.CompareTag("NextArea"))
+        {
+            if (Collision.name.Equals("Boss 1 Area"))
+            {
+                WorldHandlerScript.SetActiveArea("Boss 1 Area");
+            }
+            if (Collision.name.Equals("Final Boss Area"))
+            {
+                WorldHandlerScript.SetActiveArea("Final Boss Area");
+            }
+        }
+    }
 
 }

@@ -5,9 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+
+    public GameObject OptionsMenuObject;
+    public GameObject MainMenuObject;
+
+
    public void PlayGame()
     {
-        SceneManager.LoadScene("Test Scene"); 
+        SceneManager.LoadScene("Level 1 Greybox"); 
         Time.timeScale = 1.0f;
     }
 
@@ -15,5 +20,10 @@ public class MainMenu : MonoBehaviour
     {
         Debug.Log("Quit!");
         Application.Quit();
+    }
+
+    public void ShowOptions()
+    {
+        MainMenuObject.SetActive(false);
     }
 }

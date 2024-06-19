@@ -42,6 +42,7 @@ public class BTPatrol : BTNodeBase
         if(EnemyScript.PatrolActive)
         {
             EnemyScript.SetDestination(EnemyScript.WaypointPosition);
+            Debug.Log("Pullling me in");
             return NodeStateOptions.Passed;
         }
 
@@ -50,6 +51,7 @@ public class BTPatrol : BTNodeBase
 
             //have this set a patrol point to a place where the player was, when the player makes a sound
             EnemyScript.SetDestination(EnemyScript.WaypointPosition);
+            Debug.Log("Pullling me in");
             return NodeStateOptions.Passed;
         }
 

@@ -36,6 +36,8 @@ public class KaraBossAI : BossBase
     [Space(5)]
     public Transform ChosenLocation;
     private Transform PositionLock;
+    public GameObject HornAttackTriger;
+    public GameObject EarthAttackTriger;
 
     [Space(10)]
     public AttackOptions ChosenAttack;
@@ -71,12 +73,17 @@ public class KaraBossAI : BossBase
             PlayerRef = GameObject.Find("Player");
         }
         NavMeshRef=GetComponent<NavMeshAgent>();
-        MaxHealth = 300;
+        MaxHealth = 30;
         CurrentHealth = MaxHealth;
 
         AttackChosen = false;
         PerformingAttack = false;
 
+        PlayerRef = FindObjectOfType<PlayerInteraction>().gameObject;
+
+
+        Alive = true;
+        ActionLockoutTime = 5;
         AttackWaitTime = 15f;
         KaraAnimations = transform.GetComponentInChildren<Animator>();
         CreateBehaviourTree();
@@ -107,6 +114,11 @@ public class KaraBossAI : BossBase
         //    return;
         //}
 
+        if (Alive == false)
+        {
+            return;
+        }
+
         CheckDistance();
         AttackChecker();
         RootNode.RunLogicAndState();
@@ -119,6 +131,21 @@ public class KaraBossAI : BossBase
         //{
         //    return;
         //}
+
+        if (AllAttacksDown)
+        {
+            CanPerformAction = false;
+        }
+        //else
+        //{
+        //    CanPerformAction = true;
+        //}
+
+        if (CurrentHealth <= 0)
+        {
+            Alive = false;
+            Destroy(gameObject);
+        }
 
         ActiveActionCooldown();
     }
@@ -152,6 +179,15 @@ public class KaraBossAI : BossBase
         //PerformingAttack = true;
     }
 
+    private IEnumerator ObjectLifetime(GameObject ActiveObject, float ActiveTime)
+    {
+        yield return new WaitForSeconds(ActiveTime);
+        ActiveObject.SetActive(true);
+        yield return new WaitForSeconds(ActiveTime+2);
+        ActiveObject.SetActive(false);
+        
+    }
+
     public void ResetAttackLockout(float AttackLockoutTime)
     {
         if (!AttackResetRefreshed)
@@ -168,7 +204,7 @@ public class KaraBossAI : BossBase
         {
             ActionLockoutTime -= Time.deltaTime;
         }
-        else if (!CanPerformAction && ActionLockoutTime <= 0 && AttackChosen)
+        else if (!CanPerformAction && ActionLockoutTime <= 0 )
         {
             ActionLockoutTime = 0;
             CanPerformAction = true;
@@ -251,6 +287,7 @@ public class KaraBossAI : BossBase
     {
         if(HornAttack.AttackCooldownActive && PerformingAttack && !AttackActive)
         {
+            StartCoroutine(ObjectLifetime(HornAttackTriger, 0.5f));
             ActivateAnimation("HornAttack");
             Debug.Log("Slashed Thy Horns");
             AttackActive = true;
@@ -291,6 +328,7 @@ public class KaraBossAI : BossBase
     {
         if(HornAttack.AttackCooldownActive && PerformingAttack && !AttackActive)
         {
+            StartCoroutine(ObjectLifetime(EarthAttackTriger, 1.0f));
             ActivateAnimation("EarthAttack");
             Debug.Log("HAMMER DOWN MOTHER FU-");
             ActionLockoutTime = EarthAttack.LockoutTime;

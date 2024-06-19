@@ -1,9 +1,7 @@
-using Pathfinding;
+
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
+
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -57,7 +55,7 @@ public class EnemyBase : MonoBehaviour
     public bool PlayerEscaped = false;
     public bool AtEndOfPath = false;
     protected bool StartupRan = false;
-
+    public bool Alive = true;
     public bool PatrolActive = false;
 
     public bool AttackPlayer;
@@ -67,7 +65,7 @@ public class EnemyBase : MonoBehaviour
     #endregion
 
     //Vectors
-    protected Vector3 PositionLock;
+    [SerializeField]protected Vector3 PositionLock;
     protected Vector3 ViewLock;
 
     #region Scripts
@@ -103,19 +101,24 @@ public class EnemyBase : MonoBehaviour
         int RandomSpire = Random.Range(1, WorldHandlerScript.AllSpires.Count);
         List<SpireObject> SpireListChosen = WorldHandlerScript.AllSpires[RandomSpire];
         SpireLoaction = SpireListChosen[RandomSpire];
-        WaypointParent = SpireLoaction.transform.GetComponentInParent<SpireObject>().transform;
+        WaypointParent = SpireLoaction.transform.GetComponentInParent<SpireObject>().WaypointSpot;
+        WaypointPosition = WaypointParent;
 
         if (NavMeshRef == null)
         {
             NavMeshRef = GetComponent<NavMeshAgent>();
         }
-        SetDestination(WaypointPosition);
+        CustomStartup();
 
         CanTakeDamage = true;
         StartupRan = true;
     }
 
 
+    protected virtual void CustomStartup()
+    {
+
+    }
 
     public int HandleHealth(int HealthChange)
     {
@@ -262,7 +265,8 @@ public class EnemyBase : MonoBehaviour
 
     protected void Die()
     {
-
+        Alive = false;
+        WorldHandlerScript.SetNextActive(this.gameObject);
         //After the death animation has played, the enemy will destroy itself
     }
 
@@ -273,6 +277,9 @@ public class EnemyBase : MonoBehaviour
             SeenPlayer = true;
             PlayerTarget = Collision.gameObject.transform;
         }
+
+
+
     }
 
 

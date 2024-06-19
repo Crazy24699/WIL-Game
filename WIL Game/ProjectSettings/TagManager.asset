@@ -10,6 +10,8 @@ TagManager:
   - Spire
   - DamageObject
   - Ground
+  - Boss
+  - NextArea
   layers:
   - Default
   - TransparentFX
@@ -20,9 +22,9 @@ TagManager:
   - Wall
   - MovingObjects
   - GroundLayer
-  - 
-  - 
-  - 
+  - Projectiles
+  - Environment
+  - Attack Layer
   - 
   - 
   - 

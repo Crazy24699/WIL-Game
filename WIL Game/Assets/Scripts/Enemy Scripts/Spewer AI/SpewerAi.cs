@@ -15,6 +15,9 @@ public class SpewerAi : EnemyBase
 
     private void Start()
     {
+        
+        //int RandomWayPoint = Random.Range(0, WorldHandlerScript.AllSpires.Count);
+        //WaypointPosition = WorldHandlerScript.AllSpires[RandomWayPoint][RandomWayPoint].ThisSpire.transform;
         StartCoroutine(BaseStartup());
 
         StartCoroutine(StartupDelay());
@@ -23,6 +26,8 @@ public class SpewerAi : EnemyBase
         {
             EnemyAnimator = transform.GetComponentInChildren<Animator>();
         }
+
+        
     }
 
     // Update is called once per frame
@@ -31,6 +36,13 @@ public class SpewerAi : EnemyBase
         if (!StartupRan)
         {
             return;
+        }
+
+        
+        if (CurrentHealth <= 0)
+        {
+            Die();
+            Destroy(gameObject);
         }
         HandleForce();
 
@@ -44,12 +56,23 @@ public class SpewerAi : EnemyBase
             CanAttackPlayer = true;
         }
 
+
         CurrentMoveSpeed = NavMeshRef.velocity.magnitude;
         //Debug.Log(CurrentMoveSpeed);
         CurrentMoveSpeed = (float)System.Math.Round(CurrentMoveSpeed, 2);
-        //Debug.Log(CurrentMoveSpeed);
-        RootNode.RunLogicAndState();
+        //Debug.Log(CurrentMoveSpeed); 
         PlayAnimation();
+
+        if (Alive)
+        {
+            RootNode.RunLogicAndState();
+        }
+        
+    }
+
+    protected override void CustomStartup()
+    {
+        WorldHandlerScript.AllEnemies.Add(this);
     }
 
     private IEnumerator StartupDelay()
@@ -96,7 +119,6 @@ public class SpewerAi : EnemyBase
         AttackSequence.SetSequenceValues(new List<BTNodeBase> { AttackNode });
 
         RootNode = new BTNodeSelector(new List<BTNodeBase> { PatrolSequence, PersuePlayerSequence, AttackSequence });
-
     }
 
 }

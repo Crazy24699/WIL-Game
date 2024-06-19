@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyAttackCollider : MonoBehaviour
 {
-
+    public int AttackDamage;
 
     private void OnTriggerEnter(Collider Collision)
     {
@@ -12,14 +12,17 @@ public class EnemyAttackCollider : MonoBehaviour
         {
             return;
         }
+        Debug.Log(Collision.name);
         if (Collision.CompareTag("Player"))
         {
+        Debug.Log("This Player");
             PlayerInteraction PlayerHealth = Collision.GetComponent<PlayerInteraction>();
             if (PlayerHealth == null)
             {
                 PlayerHealth=Collision.transform.GetComponentInParent<PlayerInteraction>();
             }
-            PlayerHealth.HandleHealth(-1);
+            PlayerHealth.HandleHealth(AttackDamage);
+        Debug.Log("Takes Damage");
 
         }
     }

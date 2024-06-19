@@ -95,9 +95,12 @@ public class BubbleProjectile : ProjectileBase
 
         if (Collision.CompareTag("Player"))
         {
+            Debug.Log("The player");
             if (Collision.GetComponent<PlayerInteraction>() == null) 
             {
-                Collision.transform.GetComponentInChildren<PlayerInteraction>().HandleHealth(-1);
+                PlayerInteraction Script=FindObjectOfType<PlayerInteraction>();
+                Script.HandleHealth(-1);
+                //Collision.transform.GetComponentInChildren<PlayerInteraction>().HandleHealth(-1);
             }
             
         }
@@ -107,7 +110,7 @@ public class BubbleProjectile : ProjectileBase
 
     private IEnumerator ProjectileActivator()
     {
-        yield return new WaitForSeconds(0.85f);
+        yield return new WaitForSeconds(0.5f);
         ProjectileActive = true;
     }
 

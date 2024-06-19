@@ -13,6 +13,7 @@ public class TailWhipAttack : ProjectileBase
         Damage = 2;
 
         LifeTime = 10;
+        CurrentLifeTime = LifeTime;
 
         CustomLifeTimer = true;
 
@@ -26,6 +27,20 @@ public class TailWhipAttack : ProjectileBase
             CurrentLifeTime = 0;
             Destroy(gameObject);
         }
+    }
+
+    private void OnTriggerEnter(Collider Collision)
+    {
+        if (Collision.CompareTag("Enemy"))
+        {
+            Collision.GetComponent<EnemyBase>().HandleHealth(1);
+        }
+
+        if (Collision.CompareTag("Boss"))
+        {
+            Collision.GetComponent<BossBase>().HandleHealth(-1);
+        }
+
     }
 
 }
