@@ -6,23 +6,14 @@ public class PlayerAnimLink : MonoBehaviour
 {
 
     private Animator PlayerAnimation;
+    private PlayerAttacks PlayerAttackScript;
 
     //Change this to a custom start
     private void Start()
     {
         PlayerAnimation = GetComponent<Animator>();
+        PlayerAttackScript = FindObjectOfType<PlayerAttacks>();
     }
 
-    [SerializeField]
-    private void LockAttack()
-    {
-        PlayerAnimation.SetBool("IsAttacking", true);
-    }
-
-    [SerializeField]
-    private void UnlockAttack()
-    {
-        PlayerAnimation.SetBool("IsAttacking", false);
-    }
 
 }

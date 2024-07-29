@@ -8,8 +8,6 @@ using UnityEngine.Rendering.UI;
 
 public class PlayerAttacks : MonoBehaviour
 {
-    public string Name;
-
     public int Damage;
     public int AttackSpeed;
 
@@ -58,6 +56,18 @@ public class PlayerAttacks : MonoBehaviour
         Third
     }
 
+
+    [SerializeField]
+    private void LockAttack()
+    {
+        AttackAnimation.SetBool("IsAttacking", true);
+    }
+
+    [SerializeField]
+    private void UnlockAttack()
+    {
+        AttackAnimation.SetBool("IsAttacking", false);
+    }
 
     // Start is called before the first frame update
     void Awake()
@@ -133,10 +143,10 @@ public class PlayerAttacks : MonoBehaviour
             Debug.Log("Victorious");
             //SetActiveAttack(AllAttacks.TailWhip, AttackTypes.Primary);
         }
-        //AttackAnimation.SetBool("IsAttacking", IsAttacking);
+        IsAttacking = AttackAnimation.GetBool("IsAttacking");
     }
 
-    public void PerformAttack(AllAttacks SetAttck)
+    private void PerformAttack(AllAttacks SetAttck)
     {
 
         if (IsAttacking && NextAttack == AllAttacks.None) 
@@ -188,28 +198,29 @@ public class PlayerAttacks : MonoBehaviour
     private void SlashAttackFunction()
     {
         PlayAttackAnim("SlashAttackTrigger");
-        IsAttacking = true;
+        HandleMovementState(false);
         Debug.Log("rise");
     }
 
     private void TailWhipFunction()
     {
         PlayAttackAnim("TailWhip");
-        Debug.Log("We");
+
         HandleMovementState(false);
         HandleCameraState(false);
-        GameObject SpawnedSlash = Instantiate(TailSlashObject, TailFirePoint.transform.position, TailFirePoint.transform.rotation);
-        SpawnedSlash.GetComponent<ProjectileBase>().LifeStartup(TailFirePoint.transform.forward, 200);
-        IsAttacking = true;
     }
 
+    public void SpawnTailProjectile()
+    {
+        GameObject SpawnedSlash = Instantiate(TailSlashObject, TailFirePoint.transform.position, transform.rotation);
+        SpawnedSlash.GetComponent<ProjectileBase>().LifeStartup(TailFirePoint.transform.forward, 200);
+    }
 
     private void BiteAttackFunction()
     {
         PlayAttackAnim("BiteAttack");
         HandleMovementState(false);
         StartCoroutine(AttackBoxLifetime(2.5f, Attacks[0]));
-        IsAttacking = true;
     }
 
     private IEnumerator AttackBoxLifetime(float LifeTime, AttackBase AttackScript)
@@ -232,13 +243,13 @@ public class PlayerAttacks : MonoBehaviour
         if (NextAttack != AllAttacks.None) 
         {
             CurrentAttack = NextAttack;
-            PerformAttack(CurrentAttack);
             NextAttack = AllAttacks.None;
+            PerformAttack(CurrentAttack);
             Debug.Log("None");
             yield return null;
         }
         yield return new WaitForSeconds(1.75f);
-        IsAttacking = false;
+
         PlayerInteractionScript.CanTakeDamage = true;
         HandleCameraState(true);
         HandleMovementState(true);

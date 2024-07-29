@@ -50,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
         MovePlayer();
-        switch (MoveDirection.magnitude)
+        switch (CurrentSpeed)
         {
             case <= 0.1f:
                 PlayerAnimations.SetBool("Is Moving", false);
@@ -79,13 +79,14 @@ public class PlayerMovement : MonoBehaviour
     {
         PlayerVelocity = new Vector3(Rigidbody.velocity.x, Rigidbody.velocity.y, Rigidbody.velocity.z);
         MoveDirection = PlayerActionMap.action.ReadValue<Vector3>();
+        CurrentSpeed = Rigidbody.velocity.magnitude;
 
-        if(MoveDirection.magnitude <= 0.1f)
+        if (MoveDirection.magnitude <= 0.1f)
         {
             Rigidbody.velocity = Vector3.zero;
             return;
         }
-
+        
         if (PlayerVelocity.magnitude > BaseMoveSpeed) 
         {
             Vector3 VelocityCap = PlayerVelocity.normalized * BaseMoveSpeed;
@@ -96,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
         MoveDirection = PlayerOrientation.forward * MoveDirection.z + PlayerOrientation.right * MoveDirection.x;
 
         Rigidbody.AddForce(new Vector3(MoveDirection.x, MoveDirection.y, MoveDirection.z) * (BaseMoveSpeed+SpeedMultiplier) * 10f, ForceMode.Force);
-        CurrentSpeed = Rigidbody.velocity.magnitude;
+
     }
 
 }
