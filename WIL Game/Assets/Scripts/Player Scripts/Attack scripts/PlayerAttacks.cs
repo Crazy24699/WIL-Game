@@ -13,9 +13,7 @@ public class PlayerAttacks : MonoBehaviour
     public int Damage;
     public int AttackSpeed;
 
-    private bool AttackOneActive;
-    private bool AttackTwoActive;
-    private bool AttackThreeActive;
+    //May need to remove this
     [SerializeField] protected bool IsAttacking = false;
 
     [Space(5)]
@@ -135,7 +133,7 @@ public class PlayerAttacks : MonoBehaviour
             Debug.Log("Victorious");
             //SetActiveAttack(AllAttacks.TailWhip, AttackTypes.Primary);
         }
-        AttackAnimation.SetBool("IsAttacking", IsAttacking);
+        //AttackAnimation.SetBool("IsAttacking", IsAttacking);
     }
 
     public void PerformAttack(AllAttacks SetAttck)
@@ -167,6 +165,25 @@ public class PlayerAttacks : MonoBehaviour
         
 
     }
+
+    #region PLAYER ATTACK TESTING
+    public void TailWhipAttack()
+    {
+        TailWhipFunction();
+    }
+
+    public void SlashAttack()
+    {
+        SlashAttackFunction();
+    }
+
+    public void BiteAttack()
+    {
+        BiteAttackFunction();
+    }
+
+    #endregion
+
 
     private void SlashAttackFunction()
     {
