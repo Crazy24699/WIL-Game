@@ -5,25 +5,24 @@ using UnityEngine;
 public class PlayerAnimLink : MonoBehaviour
 {
 
-
-    private PlayerAttacks PlayerAttackScript;
+    private Animator PlayerAnimation;
 
     //Change this to a custom start
     private void Start()
     {
-        PlayerAttackScript = FindAnyObjectByType<PlayerAttacks>();
+        PlayerAnimation = GetComponent<Animator>();
     }
 
     [SerializeField]
     private void LockAttack()
     {
-        
+        PlayerAnimation.SetBool("IsAttacking", true);
     }
 
     [SerializeField]
     private void UnlockAttack()
     {
-
+        PlayerAnimation.SetBool("IsAttacking", false);
     }
 
 }
