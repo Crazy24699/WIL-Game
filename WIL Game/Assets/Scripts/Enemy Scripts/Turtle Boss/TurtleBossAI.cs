@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -23,6 +24,9 @@ public class TurtleBossAI : BossBase
 
     [SerializeField] private float TurnSpeed = 0.0f;
     public float Distance;
+
+    private float BubbleShotDelay=0.01f;
+    private float CurrentDelay;
 
     [SerializeField]private Animator TurtleAnimation;
 
@@ -82,15 +86,19 @@ public class TurtleBossAI : BossBase
         
     }
 
+
+
     // Update is called once per frame
     void Update()
     {
-        
+        BubbleAttackMethods();
         if (Input.GetKeyDown(KeyCode.V))
         {
             Debug.Log("Hello");
-            BubbleAttackMethod();
-            PerformingAttack = true;
+            //BubbleAttackMethod();
+            ActiveAttack("BubbleAttack");
+
+            //PerformingAttack = true;
         }
 
         if (PerformingAttack) 
@@ -100,12 +108,12 @@ public class TurtleBossAI : BossBase
             {
                 default:
                 case TurtleAttacks.BubbleBlast:
-                    BubbleAttackMethod();
+                    //BubbleAttackMethod();
                     break;
 
 
                 case TurtleAttacks.BucketBasher:
-                    BucketBashMethod();
+                    //BucketBashMethod();
                     break;
 
             }
@@ -165,6 +173,26 @@ public class TurtleBossAI : BossBase
         }
 
 
+    }
+
+    private void BucketBash()
+    {
+
+    }
+
+    private void BubbleAttackMethods()
+    {
+        if (BubbleAttackClass.SpewBubbles)
+        {
+            CurrentDelay -= Time.deltaTime;
+            if (CurrentDelay <= 0)
+            {
+                CurrentDelay = BubbleShotDelay;
+                BubbleAttackClass.ShootingThing();
+                Debug.Log("Run mf run");
+            }
+
+        }
     }
 
     protected void BucketBashMethod()
@@ -242,41 +270,6 @@ public class TurtleBossAI : BossBase
     [System.Serializable]
     public class BubbleAttack
     {
-        //private Vector3[] ShootPointCords =
-        //{
-        //    new Vector3 (0, 0, 0),
-        //    new Vector3 (-0.225f, 0.75f, 0.765f),
-        //    new Vector3 (0, 0, 0),
-        //    new Vector3 (0, 0, 0),
-        //    new Vector3 (0, 0, 0),
-        //    new Vector3 (0, 0, 0),
-        //    new Vector3 (0, 0, 0),
-        //    new Vector3 (0, 0, 0),
-
-        //};
-        //public Vector3[] BubbleShootPoints;
-
-        private Vector3[] BubbleShootRotations =
-        {
-            //new Vector3 (0, 0, 0),
-            //new Vector3 (0, 0, 0),
-            //new Vector3 (0, 0, 0),
-            //new Vector3 (0, 0, 0),
-            //new Vector3 (0, 0, 0),
-            //new Vector3 (0, 0, 0),
-            //new Vector3 (0, 0, 0),
-            //new Vector3 (0, 0, 0),
-            //new Vector3 (0, 0, 0),
-            //new Vector3 (0, 0, 0),
-            //new Vector3 (-10, 0, 0),
-            //new Vector3 (-10, -10, 0),
-            //new Vector3 (0, -10, 0),
-            //new Vector3 (10, -10, 0),
-            //new Vector3 (10, 0, 0),
-            //new Vector3 (10, 10, 0),
-            //new Vector3 (0, 10, 0),
-            //new Vector3 (-10, 10, 0),
-        };
 
         public Vector3[] ShootPointRotations;
 
@@ -286,13 +279,11 @@ public class TurtleBossAI : BossBase
 
         [Space(1)]
         public bool AttackCooldownActive = false;
+        public bool SpewBubbles = false;
 
         public void BubbleShot(int ShotIndex, string NameNumbers)
         {
-            if (ShootPointRotations.Length != BubbleShootRotations.Length)
-            {
-                ShootPointRotations = BubbleShootRotations;
-            }
+            
             //ShootPoint.transform.localPosition = BubbleShootPoints[ShotIndex];
             //ShootPoint.transform.localRotation = Quaternion.Euler(BubbleShootRotations[ShotIndex]);
 
@@ -302,6 +293,12 @@ public class TurtleBossAI : BossBase
 
         }
 
+        public void ShootingThing()
+        {
+            GameObject BubbleShotObejct = Instantiate(BubblePrefab, ShootPoint.transform.position, ShootPoint.transform.rotation);
+            BubbleShotObejct.GetComponent<ProjectileBase>().LifeStartup(ShootPoint.transform.forward, 300);
+            BubbleShotObejct.name = "BubbleShot";
+        }
 
         public IEnumerator AttackCooldown()
         {
