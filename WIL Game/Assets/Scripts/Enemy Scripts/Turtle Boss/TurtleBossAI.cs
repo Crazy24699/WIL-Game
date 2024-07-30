@@ -12,11 +12,14 @@ public class TurtleBossAI : BossBase
     public BucketAttack BucketAttackClass;
     [SerializeField] private NavMeshAgent NavMeshRef;
 
-    private Vector3 PositionLockCords;
+    [SerializeField]private Vector3 PositionLockCords;
+    public Vector3 CurrentVelocity;
 
+    public bool Move;
     public bool CanPerformAction = true;
     public bool MoveToPlayer;
     public bool PerformingAttack = false;
+    [SerializeField] private bool LockMovement = false;
     [SerializeField] private bool AttackActive;
 
     private float ActionCooldown = 1.5f;
@@ -24,6 +27,7 @@ public class TurtleBossAI : BossBase
 
     [SerializeField] private float TurnSpeed = 0.0f;
     public float Distance;
+    public float CurrentMagnitude;
 
     private float BubbleShotDelay=0.01f;
     private float CurrentDelay;
@@ -91,6 +95,8 @@ public class TurtleBossAI : BossBase
     // Update is called once per frame
     void Update()
     {
+        ValueTracking();
+
         BubbleAttackMethods();
         if (Input.GetKeyDown(KeyCode.V))
         {
@@ -99,6 +105,12 @@ public class TurtleBossAI : BossBase
             ActiveAttack("BubbleAttack");
 
             //PerformingAttack = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            BucketBash();
+            
         }
 
         if (PerformingAttack) 
@@ -118,6 +130,8 @@ public class TurtleBossAI : BossBase
 
             }
         }
+
+        EnforcePositionLock();
 
         if (CurrentHealth <= 0)
         {
@@ -141,16 +155,45 @@ public class TurtleBossAI : BossBase
 
     }
 
-    private void LockPosition()
+    private void ValueTracking()
     {
-        if (PositionLockCords == Vector3.zero) 
+        CurrentVelocity = NavMeshRef.velocity;
+        CurrentMagnitude = NavMeshRef.velocity.normalized.magnitude;
+        TurtleAnimation.SetBool("IsMoving", CurrentMagnitude != 0);
+    }
+
+    public void ChangeLockState()
+    {
+        Debug.Log("Eve");
+        switch (LockMovement)
         {
-            Debug.Log("Wolves");
-            PositionLockCords = gameObject.transform.position;
-            return;
+            case true:
+                PositionLockCords = Vector3.zero;
+                LockMovement = false;
+                break;
+                
+            case false:
+                PositionLockCords = transform.position;
+                LockMovement = true;
+                break;
         }
+        NavMeshRef.isStopped = LockMovement;
+        Debug.Log("huh when reun");
+        MoveToPlayer = LockMovement;
 
     }
+
+
+    private void EnforcePositionLock()
+    {
+        if (LockMovement && PositionLockCords != Vector3.zero)
+        {
+            Debug.Log("Wolves");
+            gameObject.transform.position = PositionLockCords;
+            return;
+        }
+    }
+
 
     protected void BubbleAttackMethod()
     {
@@ -158,7 +201,7 @@ public class TurtleBossAI : BossBase
         {
             return;
         }
-        LockPosition();
+        //ChangeLockState();
         Debug.Log("Coral high");
         Vector3 RotationChange = PlayerRef.transform.position - transform.position;
         RotationChange.y = 0;
@@ -175,8 +218,10 @@ public class TurtleBossAI : BossBase
 
     }
 
-    private void BucketBash()
+    public void BucketBash()
     {
+        ActiveAttack("BucketAttack");
+        //ChangeLockState();
 
     }
 
@@ -201,7 +246,7 @@ public class TurtleBossAI : BossBase
         {
             return;
         }
-        LockPosition();
+        //ChangeLockState();
 
         MoveToPlayer = false;
         Debug.Log("Afluvian");
@@ -210,7 +255,7 @@ public class TurtleBossAI : BossBase
 
         CanPerformAction = false;
         CurrentActionCooldown = ActionCooldown;
-        PerformingAttack = false;
+        //PerformingAttack = false;
         AttackActive = false;
         TurtleAnimation.SetBool("IsMoving", true);
 
@@ -259,7 +304,7 @@ public class TurtleBossAI : BossBase
 
         CanPerformAction = false;
         CurrentActionCooldown = ActionCooldown;
-        PerformingAttack = false;
+        //PerformingAttack = false;
         AttackActive = false;
         StartCoroutine(BubbleAttackClass.AttackCooldown());
         TurtleAnimation.SetBool("IsMoving", true);
@@ -336,7 +381,7 @@ public class TurtleBossAI : BossBase
             if (!AttackCooldownActive)
             {
                 AttackCooldownActive = true;
-                yield return new WaitForSeconds(1.5f);
+                yield return new WaitForSeconds(0.75f);
                 AttackCooldownActive = false;
             }
 

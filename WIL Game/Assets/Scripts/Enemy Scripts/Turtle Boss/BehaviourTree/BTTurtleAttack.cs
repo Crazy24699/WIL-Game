@@ -38,11 +38,11 @@ public class BTTurtleAttack : BTNodeBase
                 if (!BossScript.BucketAttackClass.AttackCooldownActive)
                 {
                     BossScript.ChosenAttack = TurtleBossAI.TurtleAttacks.BucketBasher;
-                    BossScript.PerformingAttack = true;
+                    //BossScript.PerformingAttack = true;
                 }
                 else
                 {
-                    BossScript.MoveToPlayer = true;
+                    //BossScript.MoveToPlayer = true;
                 }
                 //else if (BossScript.BucketAttackClass.AttackCooldownActive)
                 //{
@@ -56,7 +56,7 @@ public class BTTurtleAttack : BTNodeBase
                 if (!BossScript.BubbleAttackClass.AttackCooldownActive)
                 {
                     BossScript.ChosenAttack = TurtleBossAI.TurtleAttacks.BubbleBlast;
-                    BossScript.PerformingAttack = true;
+                    //BossScript.PerformingAttack = true;
                 }
                 else
                 {

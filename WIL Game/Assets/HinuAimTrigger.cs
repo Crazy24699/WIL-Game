@@ -23,18 +23,24 @@ public class HinuAimTrigger : MonoBehaviour
     }
 
     [SerializeField]
-    private void TriggerHitBox()
+    private void TriggerBashAttack()
     {
+        Debug.Log("Run when");
         switch (HitBoxEngaged)
         {
             case true:
-
                 HitBoxEngaged = false;
+                StartCoroutine(TurtleAttackScript.BucketAttackClass.AttackCooldown());
+
                 break;
 
             case false:
+                HitBoxEngaged = true;
                 break;
         }
+        
+        PunchHitBox.enabled = HitBoxEngaged;
+        TurtleAttackScript.ChangeLockState();
     }
 
 
