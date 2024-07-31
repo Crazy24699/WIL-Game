@@ -13,6 +13,8 @@ public class WorldHandler : MonoBehaviour
 
     public GameObject Boss1;
     public GameObject FinalBoss;
+    public float CurrentTimescale;
+
 
     void Start()
     {
@@ -22,7 +24,7 @@ public class WorldHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        CurrentTimescale = Time.timeScale;
     }
 
     private IEnumerator TempSetActiveEnemy()

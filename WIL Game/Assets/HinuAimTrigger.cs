@@ -5,7 +5,6 @@ using UnityEngine;
 public class HinuAimTrigger : MonoBehaviour
 {
 
-    private bool BubbleAttackEngaged = false;
     private bool HitBoxEngaged = false;
 
     [SerializeField] private Collider PunchHitBox;
@@ -22,42 +21,41 @@ public class HinuAimTrigger : MonoBehaviour
         TurtleAttackScript = FindObjectOfType<TurtleBossAI>();
     }
 
+    #region BashAttack
     [SerializeField]
-    private void TriggerBashAttack()
+    private void EndBashAttack()
     {
         Debug.Log("Run when");
-        switch (HitBoxEngaged)
-        {
-            case true:
-                HitBoxEngaged = false;
-                StartCoroutine(TurtleAttackScript.BucketAttackClass.AttackCooldown());
 
-                break;
+        HitBoxEngaged = false;
 
-            case false:
-                HitBoxEngaged = true;
-                break;
-        }
         
         PunchHitBox.enabled = HitBoxEngaged;
         TurtleAttackScript.ChangeLockState();
     }
 
+    [SerializeField]
+    private void StartBashAttack()
+    {
+        HitBoxEngaged = true;
+        StartCoroutine(TurtleAttackScript.BucketAttackClass.AttackCooldown());
+        TurtleAttackScript.ChangeLockState();
+    }
+    #endregion
+
+
+    #region Bubble Attack
+    [SerializeField]
+    private void StartBubbleAttack()
+    {
+        TurtleAttackScript.BubbleAttackClass.SpewBubbles = true;
+    }
+    #endregion
 
     [SerializeField]
-    private void TriggerBubbleAttack()
+    private void EndBubbleAttack()
     {
-        switch (BubbleAttackEngaged)
-        {
-            case true:
-                BubbleAttackEngaged = false;
-                break;
-
-            case false:
-                BubbleAttackEngaged = true;
-                break;
-        }
-        TurtleAttackScript.BubbleAttackClass.SpewBubbles = BubbleAttackEngaged;
+        TurtleAttackScript.BubbleAttackClass.SpewBubbles = false;        
     }
 
 }

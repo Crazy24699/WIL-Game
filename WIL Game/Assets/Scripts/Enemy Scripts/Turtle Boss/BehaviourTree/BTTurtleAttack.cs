@@ -16,7 +16,12 @@ public class BTTurtleAttack : BTNodeBase
     public override NodeStateOptions RunLogicAndState()
     {
         //Debug.Log("Nullberries");
-        if (BossScript.CanPerformAction && BossScript.DistanceToPlayer <= 100) 
+        if(!BossScript.AttacksAvaliable || BossScript.DistanceToPlayer>BossScript.MaxAttackRange)
+        {
+            return NodeStateOptions.Failed;
+        }
+
+        if (BossScript.DistanceToPlayer <= 100) 
         {
             SetAttack();
             Debug.Log("Nullberries");
@@ -32,7 +37,7 @@ public class BTTurtleAttack : BTNodeBase
         
         switch (PlayerDistance)
         {
-            case <= 10.0f:
+            case <= 15.0f:
 
                 
                 if (BossScript.BucketAttackClass.AttackCooldownActive)
@@ -43,10 +48,11 @@ public class BTTurtleAttack : BTNodeBase
                 }
                 BossScript.ChosenAttack = TurtleBossAI.TurtleAttacks.BucketBasher;
 
+                Debug.Log("building better worlds on the ashes of the past");
 
                 break;
 
-            case > 10.0f:
+            case > 15.0f:
 
                 if (BossScript.BubbleAttackClass.AttackCooldownActive)
                 {
@@ -54,7 +60,7 @@ public class BTTurtleAttack : BTNodeBase
                     return;
                 }
                 BossScript.ChosenAttack = TurtleBossAI.TurtleAttacks.BubbleBlast;
-
+                Debug.Log("consire");
                 break;
         }
         BossScript.PerformingAttack = true;

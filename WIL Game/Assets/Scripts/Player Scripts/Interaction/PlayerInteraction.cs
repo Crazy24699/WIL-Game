@@ -85,7 +85,7 @@ public class PlayerInteraction : MonoBehaviour
             case false:
                 Cursor.lockState = CursorLockMode.None;
                 PauseScreen.SetActive(true);
-
+                Time.timeScale = 0;
                 MenuActive = true ;
                 break;
 
@@ -93,6 +93,7 @@ public class PlayerInteraction : MonoBehaviour
             case true:
                 Cursor.lockState = CursorLockMode.Locked;
                 PauseScreen.SetActive(false);
+                Time.timeScale = 1;
 
                 MenuActive = false ;
                 break;
@@ -135,11 +136,11 @@ public class PlayerInteraction : MonoBehaviour
 
         if (OldHealth < CurrentHealth)
         {
-            HeartImages[CurrentHealth].SetActive(false);
+            HeartImages[CurrentHealth-1].SetActive(false);
         }
         if(OldHealth> CurrentHealth)
         {
-            HeartImages[CurrentHealth].SetActive(true);
+            HeartImages[CurrentHealth-1].SetActive(true);
 
         }
     }

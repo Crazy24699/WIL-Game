@@ -19240,14 +19240,14 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0
-    functionName: TriggerBashAttack
+    functionName: StartBashAttack
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 1.5166667
-    functionName: TriggerBashAttack
+    functionName: EndBashAttack
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
