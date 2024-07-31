@@ -49,13 +49,15 @@ public class HinuAimTrigger : MonoBehaviour
     private void StartBubbleAttack()
     {
         TurtleAttackScript.BubbleAttackClass.SpewBubbles = true;
+        TurtleAttackScript.ChangeLockState();
     }
     #endregion
 
     [SerializeField]
     private void EndBubbleAttack()
     {
-        TurtleAttackScript.BubbleAttackClass.SpewBubbles = false;        
+        TurtleAttackScript.BubbleAttackClass.SpewBubbles = false;
+        TurtleAttackScript.ChangeLockState();
     }
 
 }
