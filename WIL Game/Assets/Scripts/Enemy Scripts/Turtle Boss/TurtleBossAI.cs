@@ -26,7 +26,7 @@ public class TurtleBossAI : BossBase
     private float CurrentActionCooldown = 0.0f;
 
     [SerializeField] private float TurnSpeed = 0.0f;
-    public float Distance;
+    public float DistanceToPlayer;
     public float CurrentMagnitude;
 
     private float BubbleShotDelay=0.01f;
@@ -70,7 +70,8 @@ public class TurtleBossAI : BossBase
         {
             return;
         }
-        UpdateRange();
+        
+        UpdateDistance();
         RootNode.RunLogicAndState();
     }
 
@@ -113,22 +114,28 @@ public class TurtleBossAI : BossBase
             
         }
 
-        if (PerformingAttack) 
+
+        if (PerformingAttack)
         {
             //Debug.Log("Sneeze");
             switch (ChosenAttack)
             {
                 default:
                 case TurtleAttacks.BubbleBlast:
+                    ActiveAttack("BubbleAttack");
+                    StartCoroutine(BubbleAttackClass.AttackCooldown());
                     //BubbleAttackMethod();
                     break;
 
 
                 case TurtleAttacks.BucketBasher:
+                    BucketBash();
+                    StartCoroutine(BucketAttackClass.AttackCooldown());
                     //BucketBashMethod();
                     break;
 
             }
+            PerformingAttack = false;
         }
 
         EnforcePositionLock();
@@ -270,9 +277,9 @@ public class TurtleBossAI : BossBase
         NavMeshRef.SetDestination(ObjectLocation.transform.position);
     }
 
-    private void UpdateRange()
+    private void UpdateDistance()
     {
-        Distance = Vector3.Distance(PlayerRef.transform.position, transform.position);
+        DistanceToPlayer = Vector3.Distance(PlayerRef.transform.position, transform.position);
     }
 
     #endregion

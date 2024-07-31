@@ -32,12 +32,12 @@ public class BTTurtleMove : BTNodeBase
         //Debug.Log("Dieeee");
         
         
-        if (BossScript.BubbleAttackClass.AttackCooldownActive && BossScript.BubbleAttackClass.AttackCooldownActive && BossScript.Distance > 20) 
+        if (BossScript.BubbleAttackClass.AttackCooldownActive && BossScript.BubbleAttackClass.AttackCooldownActive && BossScript.DistanceToPlayer > 20) 
         {
             Debug.Log("So you can spit the truth a littlt");
             BossScript.MoveToPlayer = true;
         }
-        else if (BossScript.Distance <= 10)
+        else if (BossScript.DistanceToPlayer <= 10)
         {
             BossScript.MoveToPlayer = false;
             TurtleDestination = BossObjectRef.transform;
@@ -59,7 +59,7 @@ public class BTTurtleMove : BTNodeBase
         }
 
 
-        if (BossScript.Distance > 60 && BossScript.BubbleAttackClass.AttackCooldownActive) 
+        if (BossScript.DistanceToPlayer > 60 && BossScript.BubbleAttackClass.AttackCooldownActive) 
         {
             BossScript.MoveToPlayer = true;
         }

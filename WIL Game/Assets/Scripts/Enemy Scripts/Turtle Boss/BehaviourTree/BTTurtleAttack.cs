@@ -16,7 +16,7 @@ public class BTTurtleAttack : BTNodeBase
     public override NodeStateOptions RunLogicAndState()
     {
         //Debug.Log("Nullberries");
-        if (BossScript.CanPerformAction && BossScript.Distance <= 70 && !BossScript.PerformingAttack ) 
+        if (BossScript.CanPerformAction && BossScript.DistanceToPlayer <= 100) 
         {
             SetAttack();
             Debug.Log("Nullberries");
@@ -28,48 +28,36 @@ public class BTTurtleAttack : BTNodeBase
 
     private void SetAttack()
     {
-        float PlayerDistance = Vector3.Distance(BossScript.PlayerRef.transform.position, BossObjectRef.transform.position);
-        BossScript.MoveToPlayer = false;
+        float PlayerDistance = BossScript.DistanceToPlayer;
+        
         switch (PlayerDistance)
         {
             case <= 10.0f:
 
                 
-                if (!BossScript.BucketAttackClass.AttackCooldownActive)
+                if (BossScript.BucketAttackClass.AttackCooldownActive)
                 {
-                    BossScript.ChosenAttack = TurtleBossAI.TurtleAttacks.BucketBasher;
-                    //BossScript.PerformingAttack = true;
+                    BossScript.ChosenAttack = TurtleBossAI.TurtleAttacks.BubbleBlast;
+                    return;
+
                 }
-                else
-                {
-                    //BossScript.MoveToPlayer = true;
-                }
-                //else if (BossScript.BucketAttackClass.AttackCooldownActive)
-                //{
-                //    BossScript.ChosenAttack = TurtleBossAI.TurtleAttacks.BubbleBlast;
-                //}
+                BossScript.ChosenAttack = TurtleBossAI.TurtleAttacks.BucketBasher;
+
 
                 break;
 
             case > 10.0f:
 
-                if (!BossScript.BubbleAttackClass.AttackCooldownActive)
+                if (BossScript.BubbleAttackClass.AttackCooldownActive)
                 {
-                    BossScript.ChosenAttack = TurtleBossAI.TurtleAttacks.BubbleBlast;
-                    //BossScript.PerformingAttack = true;
+                    BossScript.ChosenAttack = TurtleBossAI.TurtleAttacks.BucketBasher;
+                    return;
                 }
-                else
-                {
-                    BossScript.MoveToPlayer = true;
-                }
-                //else if (BossScript.BubbleAttackClass.AttackCooldownActive)
-                //{
-                //    BossScript.ChosenAttack = TurtleBossAI.TurtleAttacks.BucketBasher;
-                //}
+                BossScript.ChosenAttack = TurtleBossAI.TurtleAttacks.BubbleBlast;
 
                 break;
         }
-
+        BossScript.PerformingAttack = true;
 
     }
 
