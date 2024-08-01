@@ -40,6 +40,7 @@ public class TailWhipAttack : ProjectileBase
         {
             Collision.GetComponent<BossBase>().HandleHealth(-1);
         }
+        Destroy(gameObject);
 
     }
 

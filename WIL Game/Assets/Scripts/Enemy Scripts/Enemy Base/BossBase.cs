@@ -11,6 +11,7 @@ public class BossBase : MonoBehaviour
 
     [HideInInspector] public BTNodeBase RootNode;
     [HideInInspector] public List<BTNodeBase> AllNodeChoices;
+    protected bool StartupRan;
 
     protected bool Alive = true;
     
