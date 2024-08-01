@@ -41,7 +41,7 @@ public class PlayerTesting : MonoBehaviour
         }
         if (CycleAttacks)
         {
-            CycleAllAttacks();
+            //CycleAllAttacks();
         }
     }
 

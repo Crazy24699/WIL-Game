@@ -103,6 +103,7 @@ public class PlayerInteraction : MonoBehaviour
     private void Update()
     {
         DeathCheck();
+        HandleInputTest();
     }
 
     private void DeathCheck()
@@ -111,7 +112,16 @@ public class PlayerInteraction : MonoBehaviour
         {
             CurrentHealth = 0;
             DeathScreen.SetActive(true);
+            Cursor.lockState = CursorLockMode.None;
             Time.timeScale = 0;
+        }
+    }
+
+    private void HandleInputTest()
+    {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            HandleHealth(-1);
         }
     }
 
@@ -136,11 +146,11 @@ public class PlayerInteraction : MonoBehaviour
 
         if (OldHealth < CurrentHealth)
         {
-            HeartImages[CurrentHealth-1].SetActive(false);
+            HeartImages[CurrentHealth].SetActive(false);
         }
         if(OldHealth> CurrentHealth)
         {
-            HeartImages[CurrentHealth-1].SetActive(true);
+            HeartImages[CurrentHealth].SetActive(true);
 
         }
     }

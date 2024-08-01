@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class EnemyBase : MonoBehaviour
 {
@@ -47,23 +48,25 @@ public class EnemyBase : MonoBehaviour
     [HideInInspector] public Transform PlayerTarget;
     #endregion
 
+    [Header("Booleans"), Space(5)]
+    public bool IsAttacking;
     #region Bools
-    [Space(5)]
     protected bool CanTakeDamage = true;
     [SerializeField] protected bool ReduceKnockbackForce = true;
-    public bool SeenPlayer = false;
-    public bool PlayerEscaped = false;
-    public bool AtEndOfPath = false;
+    [HideInInspector]public bool SeenPlayer = false;
+    [HideInInspector] public bool PlayerEscaped = false;
+
     protected bool StartupRan = false;
-    public bool Alive = true;
+    protected bool Alive = true;
     public bool PatrolActive = false;
 
     public bool AttackPlayer;
     public bool CanAttackPlayer;
     //if the Ai is currently attacking the player, used for making sure it cant move or chain attacks
-    public bool IsAttacking;
+    
     #endregion
 
+    [Header("Vectors"), Space(5)]
     //Vectors
     [SerializeField]protected Vector3 PositionLock;
     protected Vector3 ViewLock;
@@ -77,8 +80,9 @@ public class EnemyBase : MonoBehaviour
     //[HideInInspector] public Seeker AISeeker;
 
     protected NavMeshAgent NavMeshRef;
-    public SpireObject SpireLoaction;
-    public WorldHandler WorldHandlerScript;
+    [HideInInspector]public SpireObject SpireLoaction;
+    protected WorldHandler WorldHandlerScript;
+    [SerializeField] protected Slider HealthBar;
 
     [Space(10)]
     protected Rigidbody Rigidbody;
@@ -112,6 +116,11 @@ public class EnemyBase : MonoBehaviour
 
         CanTakeDamage = true;
         StartupRan = true;
+        if (HealthBar == null)
+        {
+            HealthBar = transform.GetComponentInChildren<Slider>();
+        }
+        
     }
 
 

@@ -107,6 +107,8 @@ public class KaraBossAI : BossBase
 
     }
 
+
+
     private void FixedUpdate()
     {
         //if (!StartupRan)

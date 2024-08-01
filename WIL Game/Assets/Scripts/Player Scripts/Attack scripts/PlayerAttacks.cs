@@ -90,6 +90,16 @@ public class PlayerAttacks : MonoBehaviour
         SetActiveAttack(AllAttacks.BiteAttack, AttackTypes.Third);
     }
 
+    private void OnEnable()
+    {
+        PlayerInputRef.Enable();
+    }
+
+    private void OnDisable()
+    {
+        PlayerInputRef.Disable();
+    }
+
     private void PopulateAttacks()
     {
         foreach (AllAttacks Attack in System.Enum.GetValues(typeof(AllAttacks)))
@@ -130,9 +140,6 @@ public class PlayerAttacks : MonoBehaviour
             default:
                 break;
         }
-        
-        
-
         
     }
 
@@ -179,17 +186,17 @@ public class PlayerAttacks : MonoBehaviour
     #region PLAYER ATTACK TESTING
     public void TailWhipAttack()
     {
-        TailWhipFunction();
+        //TailWhipFunction();
     }
 
     public void SlashAttack()
     {
-        SlashAttackFunction();
+        //SlashAttackFunction();
     }
 
     public void BiteAttack()
     {
-        BiteAttackFunction();
+        //BiteAttackFunction();
     }
 
     #endregion

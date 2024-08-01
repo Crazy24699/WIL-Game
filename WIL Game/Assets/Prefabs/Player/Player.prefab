@@ -1117,8 +1117,8 @@ MonoBehaviour:
     m_Radius: 30
   - m_Height: 2.51
     m_Radius: 11.17
-  - m_Height: 0.4
-    m_Radius: 4.28
+  - m_Height: 1.4
+    m_Radius: 9
   m_LegacyHeadingBias: 3.4028235e+38
   m_Rigs:
   - {fileID: 6744108565726545133}
@@ -1852,7 +1852,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4490988748872957721}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.07820309, y: -0.000000004288421, z: 3.3639805e-10, w: 0.99693745}
+  m_LocalRotation: {x: 0.07820309, y: 0.000000004288421, z: -3.3639805e-10, w: 0.99693745}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2305,15 +2305,15 @@ MonoBehaviour:
   Damage: 10
   AttackSpeed: 0
   IsAttacking: 0
-  FreeLookCam: {fileID: 0}
+  FreeLookCam: {fileID: 3171735335483692485}
   TailSlashObject: {fileID: 2634569506789079021, guid: 75d702f365cd6964aa8b8826d35b6c60, type: 3}
   TailFirePoint: {fileID: 6949211510665444643}
   AttackAnimation: {fileID: 1204256617138220719}
   Attacks:
   - {fileID: 3713011630793813009}
   PlayerMoveScript: {fileID: 1242344083140566919}
-  CinemachineBrainScript: {fileID: 0}
-  CamFunctionScript: {fileID: 0}
+  CinemachineBrainScript: {fileID: 8487017906920466996}
+  CamFunctionScript: {fileID: 2307574600013674499}
   CurrentAttack: 0
   NextAttack: 0
 --- !u!1 &5954147792526298526

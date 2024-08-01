@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ProgramManager : MonoBehaviour
 {
 
     public static ProgramManager ProgramManagerInstance;
+    public InputActionReference PlayerActionMap;
 
     public void Start()
     {
@@ -18,5 +20,6 @@ public class ProgramManager : MonoBehaviour
 
         Destroy(ProgramManagerInstance);
     }
+
 
 }
