@@ -62,7 +62,7 @@ public class PlayerInteraction : MonoBehaviour
             case false:
                 Cursor.lockState = CursorLockMode.None;
                 PauseScreen.SetActive(true);
-
+                Time.timeScale = 0;
                 MenuActive = true;
                 break;
 
@@ -70,7 +70,7 @@ public class PlayerInteraction : MonoBehaviour
             case true:
                 Cursor.lockState = CursorLockMode.Locked;
                 PauseScreen.SetActive(false);
-
+                Time.timeScale = 1;
                 MenuActive = false;
                 break;
         }

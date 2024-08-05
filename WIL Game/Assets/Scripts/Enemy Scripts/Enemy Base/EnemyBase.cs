@@ -96,7 +96,7 @@ public class EnemyBase : MonoBehaviour
 
         CurrentRangeTime = OutOfRangeTimer;
 
-        CurrentHealth = MaxHealth;
+    
         Rigidbody = GetComponent<Rigidbody>();
         EnemyObjectRef = this.gameObject;
         PlayerRef = GameObject.FindGameObjectWithTag("Player");
@@ -113,6 +113,7 @@ public class EnemyBase : MonoBehaviour
             NavMeshRef = GetComponent<NavMeshAgent>();
         }
         CustomStartup();
+        CurrentHealth = MaxHealth;
 
         CanTakeDamage = true;
         StartupRan = true;
@@ -120,6 +121,7 @@ public class EnemyBase : MonoBehaviour
         {
             HealthBar = transform.GetComponentInChildren<Slider>();
         }
+        HealthBar.maxValue = MaxHealth;
         
     }
 
@@ -135,7 +137,7 @@ public class EnemyBase : MonoBehaviour
         {
             CurrentHealth -= HealthChange;
             StartCoroutine(ImmunityTimer());
-
+            Debug.Log(HealthChange+"son" + CurrentHealth);
             //Play health gained particle effect
             return CurrentHealth;
         }
@@ -153,7 +155,8 @@ public class EnemyBase : MonoBehaviour
 
     public void ApplyKnockback()
     {
-        Rigidbody.AddForce(Vector3.forward * -1 * KnockbackPower, ForceMode.Impulse);
+        Vector3 ForceDirection = (PlayerRef.transform.position - transform.position).normalized;
+        Rigidbody.AddForce(ForceDirection * -1 * KnockbackPower, ForceMode.Impulse);
         Debug.Log("Love gone wrong");
     }
 

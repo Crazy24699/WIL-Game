@@ -29,6 +29,12 @@ public class SpewerAi : EnemyBase
 
         
     }
+    protected override void CustomStartup()
+    {
+        WorldHandlerScript.AllEnemies.Add(this);
+        MaxHealth = 10;
+        
+    }
 
     // Update is called once per frame
     void Update()
@@ -38,7 +44,7 @@ public class SpewerAi : EnemyBase
             return;
         }
 
-        
+        HealthBar.value = CurrentHealth;
         if (CurrentHealth <= 0)
         {
             Die();
@@ -70,10 +76,6 @@ public class SpewerAi : EnemyBase
         
     }
 
-    protected override void CustomStartup()
-    {
-        WorldHandlerScript.AllEnemies.Add(this);
-    }
 
     private IEnumerator StartupDelay()
     {
