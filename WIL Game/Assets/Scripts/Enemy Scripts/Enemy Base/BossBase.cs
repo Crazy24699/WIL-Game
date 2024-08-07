@@ -7,7 +7,7 @@ public class BossBase : MonoBehaviour
     protected int MaxHealth;
     [SerializeField]protected int CurrentHealth;
 
-    public GameObject PlayerRef;
+    [HideInInspector]public GameObject PlayerRef;
 
     [HideInInspector] public BTNodeBase RootNode;
     [HideInInspector] public List<BTNodeBase> AllNodeChoices;

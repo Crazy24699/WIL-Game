@@ -9,12 +9,14 @@ public class PlayerMovement : MonoBehaviour
 
     public Rigidbody Rigidbody;
     public InputActionReference PlayerActionMap;
+    [SerializeField] private PlayerInput PlayerInputRef;
 
     public Transform MainCamera; 
 
     public float BaseMoveSpeed;
     public float SpeedMultiplier;
     public float CurrentSpeed;
+    public float Speed;
 
     protected float TurnSmoothingVel;
     public float TurnTime = 0.1f;
@@ -35,6 +37,12 @@ public class PlayerMovement : MonoBehaviour
     {
         Rigidbody = GetComponent<Rigidbody>();
         CurrentSpeed = 0;
+
+        PlayerInputRef = new PlayerInput();
+        PlayerInputRef.Enable();
+        PlayerInputRef.BasePlayerMovement.MovementModifiers.performed += Context => Sprint(2.5f);
+        PlayerInputRef.BasePlayerMovement.MovementModifiers.canceled += Context => Sprint(1f);
+
     }
 
     private void FixedUpdate()
@@ -65,20 +73,26 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            SpeedMultiplier = 2.5f;
-        }
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            SpeedMultiplier = 0;
-        }
+        //if (Input.GetKeyDown(KeyCode.LeftShift))
+        //{
+        //    SpeedMultiplier = 2.5f;
+        //}
+        //if (Input.GetKeyUp(KeyCode.LeftShift))
+        //{
+        //    SpeedMultiplier = 0;
+        //}
+        Speed = BaseMoveSpeed * SpeedMultiplier;
+    }
+
+    private void Sprint(float Multiplier)
+    {
+        SpeedMultiplier = Multiplier;
     }
 
     protected void MovePlayer()
     {
         PlayerVelocity = new Vector3(Rigidbody.velocity.x, Rigidbody.velocity.y, Rigidbody.velocity.z);
-        MoveDirection = PlayerActionMap.action.ReadValue<Vector3>();
+        MoveDirection = PlayerActionMap.action.ReadValue<Vector3>().normalized;
         CurrentSpeed = Rigidbody.velocity.magnitude;
 
         if (MoveDirection.magnitude <= 0.1f)
@@ -87,16 +101,16 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
         
-        if (PlayerVelocity.magnitude > BaseMoveSpeed) 
+        if (PlayerVelocity.magnitude > Speed) 
         {
-            Vector3 VelocityCap = PlayerVelocity.normalized * BaseMoveSpeed;
+            Vector3 VelocityCap = PlayerVelocity.normalized * Speed;
             Rigidbody.velocity = new Vector3(VelocityCap.x, 0
                 , VelocityCap.z);
         }
 
         MoveDirection = PlayerOrientation.forward * MoveDirection.z + PlayerOrientation.right * MoveDirection.x;
-
-        Rigidbody.AddForce(new Vector3(MoveDirection.x, MoveDirection.y, MoveDirection.z) * (BaseMoveSpeed+SpeedMultiplier) * 10f, ForceMode.Force);
+        //Speed = BaseMoveSpeed * SpeedMultiplier;
+        Rigidbody.AddForce(new Vector3(MoveDirection.x, MoveDirection.y, MoveDirection.z) * 10f * (Speed) , ForceMode.Force);
 
     }
 

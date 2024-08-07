@@ -12,6 +12,7 @@ public class ProjectileBase : MonoBehaviour
 
     protected float LifeTime;
     protected int Damage;
+    protected bool CanDestory = false;
 
     public void LifeStartup(Vector3 DirectionalForce, float InitalForce)
     {

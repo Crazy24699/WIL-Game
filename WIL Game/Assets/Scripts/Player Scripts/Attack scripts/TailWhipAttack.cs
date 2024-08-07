@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TailWhipAttack : ProjectileBase
 {
 
     private float CurrentLifeTime = 0.0f;
-    
+    [SerializeField]private List<string> ColliderExceptions = new List<string>();
 
     protected override void CustomBehaviour()
     {
@@ -16,7 +17,7 @@ public class TailWhipAttack : ProjectileBase
         CurrentLifeTime = LifeTime;
 
         CustomLifeTimer = true;
-
+        
     }
 
 
@@ -40,7 +41,10 @@ public class TailWhipAttack : ProjectileBase
         {
             Collision.GetComponent<BossBase>().HandleHealth(-1);
         }
-        Destroy(gameObject);
+        if (!ColliderExceptions.Contains(Collision.tag))
+        {
+            Destroy(gameObject);
+        }
 
     }
 

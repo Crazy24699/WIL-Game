@@ -63,6 +63,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Movement Modifiers"",
+                    ""type"": ""Button"",
+                    ""id"": ""bcbba67b-7cbd-41cd-99f1-ef74cdd606a4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -142,6 +151,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b5e94c5b-576a-4a89-9088-df47c235bd07"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": ""Hold(duration=0.25,pressPoint=0.25)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement Modifiers"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -234,6 +254,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         // Base Player Movement
         m_BasePlayerMovement = asset.FindActionMap("Base Player Movement", throwIfNotFound: true);
         m_BasePlayerMovement_Movement = m_BasePlayerMovement.FindAction("Movement", throwIfNotFound: true);
+        m_BasePlayerMovement_MovementModifiers = m_BasePlayerMovement.FindAction("Movement Modifiers", throwIfNotFound: true);
         // PlayerAttack
         m_PlayerAttack = asset.FindActionMap("PlayerAttack", throwIfNotFound: true);
         m_PlayerAttack_PrimaryAttack = m_PlayerAttack.FindAction("Primary Attack", throwIfNotFound: true);
@@ -347,11 +368,13 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_BasePlayerMovement;
     private List<IBasePlayerMovementActions> m_BasePlayerMovementActionsCallbackInterfaces = new List<IBasePlayerMovementActions>();
     private readonly InputAction m_BasePlayerMovement_Movement;
+    private readonly InputAction m_BasePlayerMovement_MovementModifiers;
     public struct BasePlayerMovementActions
     {
         private @PlayerInput m_Wrapper;
         public BasePlayerMovementActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_BasePlayerMovement_Movement;
+        public InputAction @MovementModifiers => m_Wrapper.m_BasePlayerMovement_MovementModifiers;
         public InputActionMap Get() { return m_Wrapper.m_BasePlayerMovement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -364,6 +387,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Movement.started += instance.OnMovement;
             @Movement.performed += instance.OnMovement;
             @Movement.canceled += instance.OnMovement;
+            @MovementModifiers.started += instance.OnMovementModifiers;
+            @MovementModifiers.performed += instance.OnMovementModifiers;
+            @MovementModifiers.canceled += instance.OnMovementModifiers;
         }
 
         private void UnregisterCallbacks(IBasePlayerMovementActions instance)
@@ -371,6 +397,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Movement.started -= instance.OnMovement;
             @Movement.performed -= instance.OnMovement;
             @Movement.canceled -= instance.OnMovement;
+            @MovementModifiers.started -= instance.OnMovementModifiers;
+            @MovementModifiers.performed -= instance.OnMovementModifiers;
+            @MovementModifiers.canceled -= instance.OnMovementModifiers;
         }
 
         public void RemoveCallbacks(IBasePlayerMovementActions instance)
@@ -466,6 +495,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     public interface IBasePlayerMovementActions
     {
         void OnMovement(InputAction.CallbackContext context);
+        void OnMovementModifiers(InputAction.CallbackContext context);
     }
     public interface IPlayerAttackActions
     {

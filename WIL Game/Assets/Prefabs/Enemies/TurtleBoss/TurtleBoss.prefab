@@ -84,8 +84,8 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -4621839431611093602, guid: 1f8149bccfb4b644f8818c3bcfef4dde, type: 3}
-  - {fileID: 6719245597448002910, guid: 1f8149bccfb4b644f8818c3bcfef4dde, type: 3}
+  - {fileID: 2100000, guid: a3b25d2a9e7be214289f88b81e081676, type: 2}
+  - {fileID: 2100000, guid: 612252e022598444881a70b7cb36b997, type: 2}
   - {fileID: -876546973899608171, guid: 1f8149bccfb4b644f8818c3bcfef4dde, type: 3}
   - {fileID: 3601971768245606473, guid: 1f8149bccfb4b644f8818c3bcfef4dde, type: 3}
   - {fileID: 4820188284070134260, guid: 1f8149bccfb4b644f8818c3bcfef4dde, type: 3}
@@ -327,7 +327,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1506782523556837807}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -657,7 +657,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 10
 --- !u!1 &4169930373082917441
 GameObject:
   m_ObjectHideFlags: 0
@@ -910,18 +910,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5041131245692844509}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -3.29e-13}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.07, y: 0.07, z: 0.07}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4237039032916486487}
   m_Father: {fileID: 7995269599830880024}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000022203, y: 0}
-  m_SizeDelta: {x: 142.86, y: 20}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 140, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4334401436067991404
 MonoBehaviour:
@@ -1303,6 +1303,7 @@ MonoBehaviour:
   DistanceToPlayer: 0
   CurrentMagnitude: 0
   TurtleAnimation: {fileID: 0}
+  HealthBar: {fileID: 4334401436067991404}
   ChosenAttack: 0
 --- !u!54 &3159698629855900052
 Rigidbody:
@@ -1542,8 +1543,8 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7217121138078277176}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.05}
-  m_LocalScale: {x: 0.49999988, y: 0.5, z: 0.49999988}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4467821743438621729}
@@ -1552,8 +1553,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.06, y: 2.48}
-  m_SizeDelta: {x: 11.1635, y: 3.3524}
+  m_AnchoredPosition: {x: 0, y: 2.5}
+  m_SizeDelta: {x: 10, y: 3}
   m_Pivot: {x: 0.49999997, y: 0.5}
 --- !u!223 &4288494463018777640
 Canvas:

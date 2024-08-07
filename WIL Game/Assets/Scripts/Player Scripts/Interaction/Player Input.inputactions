@@ -41,6 +41,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Movement Modifiers",
+                    "type": "Button",
+                    "id": "bcbba67b-7cbd-41cd-99f1-ef74cdd606a4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -120,6 +129,17 @@
                     "action": "Movement",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "b5e94c5b-576a-4a89-9088-df47c235bd07",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "Hold(duration=0.25,pressPoint=0.25)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Movement Modifiers",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
