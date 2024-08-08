@@ -290,6 +290,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurrentHealth: 0
+  SpireAreaNumber: 0
   ImmunityMaxTime: 0
   KnockbackPower: 100
   KnockbackTimer: 4
@@ -305,9 +306,10 @@ MonoBehaviour:
   WaypointParent: {fileID: 0}
   PlayerTarget: {fileID: 0}
   IsAttacking: 0
-  ReduceKnockbackForce: 1
+  ReduceKnockbackForce: 0
   SeenPlayer: 0
   PlayerEscaped: 0
+  Alive: 1
   PatrolActive: 0
   AttackPlayer: 1
   CanAttackPlayer: 0

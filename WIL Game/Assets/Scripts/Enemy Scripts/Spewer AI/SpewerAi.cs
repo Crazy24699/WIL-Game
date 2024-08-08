@@ -21,12 +21,12 @@ public class SpewerAi : EnemyBase
         StartCoroutine(BaseStartup());
 
         StartCoroutine(StartupDelay());
-        EnemyAnimator=GetComponent<Animator>();
+        EnemyAnimator = GetComponent<Animator>();
         if(EnemyAnimator == null)
         {
             EnemyAnimator = transform.GetComponentInChildren<Animator>();
         }
-
+        PatrolActive = true;
         
     }
     protected override void CustomStartup()
@@ -67,15 +67,21 @@ public class SpewerAi : EnemyBase
         //Debug.Log(CurrentMoveSpeed);
         CurrentMoveSpeed = (float)System.Math.Round(CurrentMoveSpeed, 2);
         //Debug.Log(CurrentMoveSpeed); 
-        PlayAnimation();
+        //PlayAnimation();
 
-        if (Alive)
-        {
-            RootNode.RunLogicAndState();
-        }
+        //SeenPlayer = PlayerEscaped;
         
     }
 
+
+    private void FixedUpdate()
+    {
+        if (StartupRan && Alive)
+        {
+            RootNode.RunLogicAndState();
+            EnemyAnimator.SetFloat("CurrentSpeed", CurrentMoveSpeed);
+        }
+    }
 
     private IEnumerator StartupDelay()
     {
@@ -83,28 +89,26 @@ public class SpewerAi : EnemyBase
         CreateBehaviourTree();
     }
 
-    private void PlayAnimation()
-    {
-        EnemyAnimator.SetFloat("CurrentSpeed", CurrentMoveSpeed);
-
-    }
-
-
     public override void Attack()
     {
-        //Play animation of attack
+        Debug.Log("Wishing lust for\r\nWicked ways");
         LockForAttack();
-
-        //if (IsAttacking)
-        //{
-        //}
         EnemyAnimator.SetTrigger("Attack");
+    }
+
+    public void SpawnDropplet()
+    {
         GameObject SpawnedDropplet = Instantiate(Dropplet, SpewPoint.transform.position, SpewPoint.transform.rotation);
         SpawnedDropplet.GetComponent<ProjectileBase>().LifeStartup(transform.forward, 100);
         CanAttackPlayer = false;
+    }
+
+    public void AttackCooldown()
+    {
         StartCoroutine(AttackCooldown(2.5f));
         StartCoroutine(TempAttackCooldownLock());
     }
+
 
     public void CreateBehaviourTree()
     {

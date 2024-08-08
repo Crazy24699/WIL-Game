@@ -28,7 +28,7 @@ public class AttackBase : MonoBehaviour
 
             EnemyBaseScript.HandleHealth(AppliedDamage);
             EnemyBaseScript.ApplyKnockback();
-            EnemyBaseScript.DistableAttack();
+            EnemyBaseScript.DisableAttack();
         }
         if (Collision.CompareTag("Boss") && PlayerAttackRef != null && this.isActiveAndEnabled)
         {

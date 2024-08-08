@@ -15,9 +15,12 @@ public class EnemySight : MonoBehaviour
 
     private void OnTriggerEnter(Collider Trigger)
     {
+        Debug.Log(Trigger.name+"        "+Trigger.tag);
         if (Trigger.CompareTag("Player"))
         {
             EnemyAIScript.SeenPlayer = true;
+            EnemyAIScript.PlayerEscaped = false;
+            EnemyAIScript.PatrolActive = false;
         }
     }
 
