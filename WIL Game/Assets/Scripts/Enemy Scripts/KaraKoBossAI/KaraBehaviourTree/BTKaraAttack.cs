@@ -51,18 +51,22 @@ public class BTKaraAttack : BTNodeBase
     {
 
         float Values = KaraScript.PlayerDistance;
-        if (Values > 60 && Values <= 215) 
+        if (Values > 100 && Values <= 215) 
         {
             ChosenAttack = "Coal";
+            KaraScript.ChosenAttack = KaraBossAI.AttackOptions.CoalBarrage;
         }
-        if(Values > 40 && Values <= 60)
+        if(Values > 40 && Values <= 100)
         {
             ChosenAttack = "GroundSlam";
+            KaraScript.ChosenAttack = KaraBossAI.AttackOptions.EarthShaker;
         }
-        if (Values >= 0 && Values < 40)
+        if (Values > 0 && Values <= 40)
         {
             ChosenAttack = "Horn attack";
+            KaraScript.ChosenAttack = KaraBossAI.AttackOptions.HornSwipe;
         }
+
         KaraScript.AttackChosen = true;
         return;
     }

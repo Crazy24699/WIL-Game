@@ -10,13 +10,15 @@ public class KaraBossAI : BossBase
     public bool PerformingAttack;
 
 
-     public bool CanMove = true;
-    public bool CanPerformAction;
+    
+    
     [HideInInspector] public bool CustomLocationChosen = false;
     public bool CloseRange;
     private bool AttackResetRefreshed = false;
-    
+
     //New Bools
+    public bool CanMove = true;
+    public bool CanPerformAction;
     private bool AttackActive;
     public bool BeyondAllAttack;
     public bool BeyondCloseAttack;
@@ -49,10 +51,10 @@ public class KaraBossAI : BossBase
     #endregion
 
     [Space(5)]
-    public Transform ChosenLocation;
-    private Transform PositionLock;
-    public GameObject HornAttackTriger;
-    public GameObject EarthAttackTriger;
+    //public Transform ChosenLocation;
+    //private Transform PositionLock;
+    //public GameObject HornAttackTriger;
+    //public GameObject EarthAttackTriger;
 
     [Space(10)]
     public AttackOptions ChosenAttack;
@@ -79,6 +81,7 @@ public class KaraBossAI : BossBase
     private void Start()
     {
         BossStartup();
+        StartCoroutine(AttackLockoutDelay(5));
     }
 
     public override void BossStartup()
@@ -106,6 +109,7 @@ public class KaraBossAI : BossBase
         CreateBehaviourTree();
 
         MaxAttackDistance = CoalAttack.AttackDistance;
+        StartupRan = true;
     }
 
     private void CreateBehaviourTree()
@@ -130,10 +134,10 @@ public class KaraBossAI : BossBase
 
     private void FixedUpdate()
     {
-        //if (!StartupRan)
-        //{
-        //    return;
-        //}
+        if (!StartupRan)
+        {
+            return;
+        }
 
         if (Alive == false)
         {
@@ -158,12 +162,8 @@ public class KaraBossAI : BossBase
 
         if (CanPerformAction)
         {
+            CanMove = true;
             RootNode.RunLogicAndState();
-        }
-
-        if (!CanAttack)
-        {
-
         }
 
         BeyondAllAttack = PlayerDistance > MaxAttackDistance;
@@ -205,18 +205,15 @@ public class KaraBossAI : BossBase
         }
     }
 
-    private void ActionRecoverTime()
+    private IEnumerator AttackLockoutDelay(float LockoutDelayTime)
     {
-
+        CanAttack = false;
+        yield return new WaitForSeconds(LockoutDelayTime);
+        CanAttack = true;
+        AttackChosen = false;
     }
 
-    private void AttackLockoutTimer()
-    {
-
-    }
-
-
-    public void RunLockoutLogic(bool LockoutAttack)
+    public void ActionLockoutLogic(bool LockoutAttack)
     {
         float LockoutTimeChosen = 0.0f;
         switch (LockoutAttack)
@@ -270,8 +267,10 @@ public class KaraBossAI : BossBase
                 break;
 
         }
-        RunLockoutLogic(true);
-        RunLockoutLogic(false);
+        ActionLockoutLogic(true);
+        StartCoroutine(AttackLockoutDelay(5));
+
+        ActionLockoutLogic(false);
         CanAttack = false;
         //AttackChosen = false;
 
@@ -304,100 +303,7 @@ public class KaraBossAI : BossBase
     }
 
 
-    //public void RunChosenAttack()
-    //{
-    //    if (ActionLockoutTime > 0 || !CanPerformAction)
-    //    {
-    //        return;
-    //    }
-    //    CanMove = false;
-    //    switch (ChosenAttack)
-    //    {
-    //        case AttackOptions.HornSwipe:
-    //            HornAttackMethod();
-    //            break;
-
-    //        case AttackOptions.CoalBarrage:
-    //            CoalAttackMethod();
-    //            break;
-
-    //        case AttackOptions.EarthShaker:
-    //            EarthAttackMethod();
-    //            Debug.Log("the sorrows");
-    //            break;
-
-    //    }
-    //    CanPerformAction = false;
-    //    //AttackChosen = false;
-
-    //    //PerformingAttack = true;
-    //}
-
-    //private IEnumerator ObjectLifetime(GameObject ActiveObject, float ActiveTime)
-    //{
-    //    yield return new WaitForSeconds(ActiveTime);
-    //    ActiveObject.SetActive(true);
-    //    yield return new WaitForSeconds(ActiveTime+2);
-    //    ActiveObject.SetActive(false);
-
-    //}
-
-    //public void ResetAttackLockout(float AttackLockoutTime)
-    //{
-    //    if (!AttackResetRefreshed)
-    //    {
-    //        return;
-    //    }
-    //    AttackWaitTime = AttackLockoutTime;
-    //}
-
-    //public void ActiveActionCooldown()
-    //{
-
-    //    if (!CanPerformAction && ActionLockoutTime > 0)
-    //    {
-    //        ActionLockoutTime -= Time.deltaTime;
-    //    }
-    //    else if (!CanPerformAction && ActionLockoutTime <= 0 )
-    //    {
-    //        ActionLockoutTime = 0;
-    //        CanPerformAction = true;
-    //        PerformingAttack = false;
-    //        AttackChosen = false;
-    //        CanMove = true;
-    //        AttackActive = false;
-    //    }
-
-    //    if (AttackWaitTime > 0)
-    //    {
-    //        AttackWaitTime -= Time.deltaTime;
-    //    }
-    //    if (AttackWaitTime <= 0 && !AttackChosen)
-    //    {
-    //        AttackWaitTime = 0;
-    //        AttackResetRefreshed = true;
-
-    //    }
-
-    //}
-
-    //private void ActivateAnimation(string AnimationName)
-    //{
-    //    KaraAnimations.SetTrigger(AnimationName);
-    //    //CanMove = false;
-    //}
-
-    //public void AttackChecker()
-    //{
-    //    if (HornAttack.AttackCooldownActive && CoalAttack.AttackCooldownActive && EarthAttack.AttackCooldownActive)
-    //    {
-    //        AllAttacksDown = true;
-    //        return;
-    //    }
-
-    //    AllAttacksDown = false;
-    //}
-
+   
     public void SetDestination(Transform ObjectLocation)
     {
 
@@ -409,94 +315,7 @@ public class KaraBossAI : BossBase
         NavMeshRef.SetDestination(ObjectLocation.transform.position);
     }
 
-    //public bool CheckAttackRange(AttackOptions CheckingAttack)
-    //{
-    //    bool InRange = false;
-    //    float AttackDistanceRef = 0.0f;
 
-    //    switch (CheckingAttack)
-    //    {
-    //        case AttackOptions.HornSwipe:
-    //            AttackDistanceRef = HornAttack.AttackDistance;
-    //            //ActionLockoutTime = HornAttack.LockoutTime;
-    //            break;
-
-    //        case AttackOptions.CoalBarrage:
-    //            AttackDistanceRef = CoalAttack.AttackDistance;
-    //            //ActionLockoutTime = CoalAttack.LockoutTime;
-    //            break;
-
-    //        case AttackOptions.EarthShaker:
-    //            AttackDistanceRef = EarthAttack.AttackDistance;
-    //            //ActionLockoutTime = EarthAttack.LockoutTime;
-    //            break;
-
-    //    }
-
-    //    InRange = (AttackDistanceRef <= PlayerDistance) ? true : false;
-    //    return InRange;
-    //}
-
-    //public void HornAttackMethod()
-    //{
-    //    if(HornAttack.AttackCooldownActive && PerformingAttack && !AttackActive)
-    //    {
-    //        StartCoroutine(ObjectLifetime(HornAttackTriger, 0.5f));
-    //        ActivateAnimation("HornAttack");
-    //        Debug.Log("Slashed Thy Horns");
-
-    //        AttackActive = true;
-    //        AttackLockoutTime = HornAttack.LockoutTime;
-    //    }
-    //    else if (!HornAttack.AttackCooldownActive)
-    //    {
-
-    //        StartCoroutine(HornAttack.AttackCooldown());
-    //        PerformingAttack = true;
-    //    }
-    ////}
-
-    ////private void CoalAttackMethod()
-    ////{
-    ////    if (!CoalAttack.AttackCooldownActive && !AttackActive)
-    ////    {
-    ////        Debug.Log("Feel the cancer rocks");
-    ////        ActivateAnimation("CoalAttack");
-
-    ////        CanMove = false;
-    ////        ChosenLocation = transform;
-
-    ////        SetDestination(PositionLock);
-    ////        StartCoroutine(CoalAttack.CoalBarrage());
-
-    ////        AttackLockoutTime = CoalAttack.LockoutTime;
-    ////        AttackActive = true;
-    ////    }
-    ////    else if (CoalAttack.AttackCooldownActive && CanMove)
-    ////    {
-    ////        StartCoroutine(CoalAttack.AttackCooldown());
-    ////        CanMove = true;
-    ////    }
-    ////}
-
-    ////private void EarthAttackMethod()
-    ////{
-    ////    if(HornAttack.AttackCooldownActive && PerformingAttack && !AttackActive)
-    ////    {
-    ////        StartCoroutine(ObjectLifetime(EarthAttackTriger, 1.0f));
-    ////        ActivateAnimation("EarthAttack");
-    ////        Debug.Log("HAMMER DOWN MOTHER FU-");
-    ////        AttackLockoutTime = EarthAttack.LockoutTime;
-    ////        AttackActive = true;
-    ////    }
-    ////    else if (!EarthAttack.AttackCooldownActive)
-    ////    {
-
-
-    ////        StartCoroutine(EarthAttack.AttackCooldown());
-    ////        PerformingAttack = true;
-    ////    }
-    ////}
 
     public void CheckDistance()
     {
@@ -599,4 +418,190 @@ public class KaraBossAI : BossBase
 
     #endregion
 
+}
+
+
+ class KeepClasss
+{
+    //public void RunChosenAttack()
+    //{
+    //    if (ActionLockoutTime > 0 || !CanPerformAction)
+    //    {
+    //        return;
+    //    }
+    //    CanMove = false;
+    //    switch (ChosenAttack)
+    //    {
+    //        case AttackOptions.HornSwipe:
+    //            HornAttackMethod();
+    //            break;
+
+    //        case AttackOptions.CoalBarrage:
+    //            CoalAttackMethod();
+    //            break;
+
+    //        case AttackOptions.EarthShaker:
+    //            EarthAttackMethod();
+    //            Debug.Log("the sorrows");
+    //            break;
+
+    //    }
+    //    CanPerformAction = false;
+    //    //AttackChosen = false;
+
+    //    //PerformingAttack = true;
+    //}
+
+    //private IEnumerator ObjectLifetime(GameObject ActiveObject, float ActiveTime)
+    //{
+    //    yield return new WaitForSeconds(ActiveTime);
+    //    ActiveObject.SetActive(true);
+    //    yield return new WaitForSeconds(ActiveTime+2);
+    //    ActiveObject.SetActive(false);
+
+    //}
+
+    //public void ResetAttackLockout(float AttackLockoutTime)
+    //{
+    //    if (!AttackResetRefreshed)
+    //    {
+    //        return;
+    //    }
+    //    AttackWaitTime = AttackLockoutTime;
+    //}
+
+    //public void ActiveActionCooldown()
+    //{
+
+    //    if (!CanPerformAction && ActionLockoutTime > 0)
+    //    {
+    //        ActionLockoutTime -= Time.deltaTime;
+    //    }
+    //    else if (!CanPerformAction && ActionLockoutTime <= 0 )
+    //    {
+    //        ActionLockoutTime = 0;
+    //        CanPerformAction = true;
+    //        PerformingAttack = false;
+    //        AttackChosen = false;
+    //        CanMove = true;
+    //        AttackActive = false;
+    //    }
+
+    //    if (AttackWaitTime > 0)
+    //    {
+    //        AttackWaitTime -= Time.deltaTime;
+    //    }
+    //    if (AttackWaitTime <= 0 && !AttackChosen)
+    //    {
+    //        AttackWaitTime = 0;
+    //        AttackResetRefreshed = true;
+
+    //    }
+
+    //}
+
+    //private void ActivateAnimation(string AnimationName)
+    //{
+    //    KaraAnimations.SetTrigger(AnimationName);
+    //    //CanMove = false;
+    //}
+
+    //public void AttackChecker()
+    //{
+    //    if (HornAttack.AttackCooldownActive && CoalAttack.AttackCooldownActive && EarthAttack.AttackCooldownActive)
+    //    {
+    //        AllAttacksDown = true;
+    //        return;
+    //    }
+
+    //    AllAttacksDown = false;
+    //}
+    //public bool CheckAttackRange(AttackOptions CheckingAttack)
+    //{
+    //    bool InRange = false;
+    //    float AttackDistanceRef = 0.0f;
+
+    //    switch (CheckingAttack)
+    //    {
+    //        case AttackOptions.HornSwipe:
+    //            AttackDistanceRef = HornAttack.AttackDistance;
+    //            //ActionLockoutTime = HornAttack.LockoutTime;
+    //            break;
+
+    //        case AttackOptions.CoalBarrage:
+    //            AttackDistanceRef = CoalAttack.AttackDistance;
+    //            //ActionLockoutTime = CoalAttack.LockoutTime;
+    //            break;
+
+    //        case AttackOptions.EarthShaker:
+    //            AttackDistanceRef = EarthAttack.AttackDistance;
+    //            //ActionLockoutTime = EarthAttack.LockoutTime;
+    //            break;
+
+    //    }
+
+    //    InRange = (AttackDistanceRef <= PlayerDistance) ? true : false;
+    //    return InRange;
+    //}
+
+    //public void HornAttackMethod()
+    //{
+    //    if(HornAttack.AttackCooldownActive && PerformingAttack && !AttackActive)
+    //    {
+    //        StartCoroutine(ObjectLifetime(HornAttackTriger, 0.5f));
+    //        ActivateAnimation("HornAttack");
+    //        Debug.Log("Slashed Thy Horns");
+
+    //        AttackActive = true;
+    //        AttackLockoutTime = HornAttack.LockoutTime;
+    //    }
+    //    else if (!HornAttack.AttackCooldownActive)
+    //    {
+
+    //        StartCoroutine(HornAttack.AttackCooldown());
+    //        PerformingAttack = true;
+    //    }
+    ////}
+
+    ////private void CoalAttackMethod()
+    ////{
+    ////    if (!CoalAttack.AttackCooldownActive && !AttackActive)
+    ////    {
+    ////        Debug.Log("Feel the cancer rocks");
+    ////        ActivateAnimation("CoalAttack");
+
+    ////        CanMove = false;
+    ////        ChosenLocation = transform;
+
+    ////        SetDestination(PositionLock);
+    ////        StartCoroutine(CoalAttack.CoalBarrage());
+
+    ////        AttackLockoutTime = CoalAttack.LockoutTime;
+    ////        AttackActive = true;
+    ////    }
+    ////    else if (CoalAttack.AttackCooldownActive && CanMove)
+    ////    {
+    ////        StartCoroutine(CoalAttack.AttackCooldown());
+    ////        CanMove = true;
+    ////    }
+    ////}
+
+    ////private void EarthAttackMethod()
+    ////{
+    ////    if(HornAttack.AttackCooldownActive && PerformingAttack && !AttackActive)
+    ////    {
+    ////        StartCoroutine(ObjectLifetime(EarthAttackTriger, 1.0f));
+    ////        ActivateAnimation("EarthAttack");
+    ////        Debug.Log("HAMMER DOWN MOTHER FU-");
+    ////        AttackLockoutTime = EarthAttack.LockoutTime;
+    ////        AttackActive = true;
+    ////    }
+    ////    else if (!EarthAttack.AttackCooldownActive)
+    ////    {
+
+
+    ////        StartCoroutine(EarthAttack.AttackCooldown());
+    ////        PerformingAttack = true;
+    ////    }
+    ////}
 }

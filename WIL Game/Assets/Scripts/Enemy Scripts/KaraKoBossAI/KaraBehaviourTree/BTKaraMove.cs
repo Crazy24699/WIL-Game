@@ -24,6 +24,12 @@ public class BTKaraMove : BTNodeBase
             return NodeStateOptions.Running;
         }
 
+        if (KaraScript.CanMove && KaraScript.PlayerDistance > 30) 
+        {
+            KaraScript.SetDestination(KaraScript.PlayerRef.transform);
+            return NodeStateOptions.Running;
+        }
+
         //if (KaraScript.PlayerDistance <= KaraScript.StoppingDistance && KaraScript.CanMove)
         //{
         //    KaraScript.SetDestination(KaraScript.transform);
