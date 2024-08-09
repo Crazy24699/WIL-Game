@@ -23,9 +23,11 @@ public class BTNodeSequence : BTNodeBase
                 case NodeStateOptions.Running:
                     AnyNodesActive = true;
                     break;
+
                 case NodeStateOptions.Failed:
                     CurrentNodeState=NodeStateOptions.Failed;
                     break;
+
                 case NodeStateOptions.Passed:
                     break;
 
@@ -37,3 +39,8 @@ public class BTNodeSequence : BTNodeBase
     }
 
 }
+
+
+///Note, there may be a better way of running a behaviour tree. One node handling all the logic
+///while the other ones are only activated by booleans, have the sequencer return a value instead 
+///of breaking the case statement

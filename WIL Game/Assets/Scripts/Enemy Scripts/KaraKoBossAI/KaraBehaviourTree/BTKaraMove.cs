@@ -17,25 +17,32 @@ public class BTKaraMove : BTNodeBase
     public override NodeStateOptions RunLogicAndState()
     {
 
-        if (KaraScript.PlayerDistance <= KaraScript.StoppingDistance && KaraScript.CanMove)
+        if(KaraScript.CanMove && KaraScript.BeyondAllAttack || (KaraScript.AllAttacksDown))
         {
-            KaraScript.SetDestination(KaraScript.transform);
-            return NodeStateOptions.Passed;
-        }
-
-        if (KaraScript.CustomLocationChosen)
-        {
-            KaraScript.SetDestination(KaraScript.ChosenLocation);
-            return NodeStateOptions.Running;
-        }
-
-        if((KaraScript.PlayerDistance > KaraScript.StoppingDistance && KaraScript.CanMove) || KaraScript.AllAttacksDown)
-        {
-            KaraScript.CanMove = true;
             KaraScript.SetDestination(KaraScript.PlayerRef.transform);
-            Debug.Log("Set");
+            Debug.Log("Cursed with you, the things we do, when love bites");
             return NodeStateOptions.Running;
         }
+
+        //if (KaraScript.PlayerDistance <= KaraScript.StoppingDistance && KaraScript.CanMove)
+        //{
+        //    KaraScript.SetDestination(KaraScript.transform);
+        //    return NodeStateOptions.Passed;
+        //}
+
+        //if (KaraScript.CustomLocationChosen)
+        //{
+        //    KaraScript.SetDestination(KaraScript.ChosenLocation);
+        //    return NodeStateOptions.Running;
+        //}
+
+        //if((KaraScript.PlayerDistance > KaraScript.StoppingDistance && KaraScript.CanMove) || KaraScript.AllAttacksDown)
+        //{
+        //    KaraScript.CanMove = true;
+        //    KaraScript.SetDestination(KaraScript.PlayerRef.transform);
+        //    Debug.Log("Set");
+        //    return NodeStateOptions.Running;
+        //}
 
         return NodeStateOptions.Failed;
     }
