@@ -50,11 +50,6 @@ public class KaraBossAI : BossBase
     public float AttackWaitTime;
     #endregion
 
-    [Space(5)]
-    //public Transform ChosenLocation;
-    //private Transform PositionLock;
-    //public GameObject HornAttackTriger;
-    //public GameObject EarthAttackTriger;
 
     [Space(10)]
     public AttackOptions ChosenAttack;
