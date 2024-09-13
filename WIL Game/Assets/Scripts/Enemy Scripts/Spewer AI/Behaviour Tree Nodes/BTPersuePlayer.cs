@@ -18,33 +18,62 @@ public class BTPersuePlayer : BTNodeBase
     public override NodeStateOptions RunLogicAndState()
     {
 
-        if (EnemyScript.IsAttacking)
-        {
-            return NodeStateOptions.Running;
-        }
+        //if (EnemyScript.SeenPlayer && !EnemyScript.PlayerEscaped)
+        //{
+        //    EnemyScript.SetDestination(EnemyScript.PlayerTarget);
+        //    EnemyScript.HandlePlayerRange();
 
-        if (EnemyScript.SeenPlayer && !EnemyScript.PlayerEscaped)
-        {
-            EnemyScript.SetDestination(EnemyScript.PlayerTarget);
-            EnemyScript.HandlePlayerRange();
-            if(EnemyScript.CurrentPlayerDistance>EnemyScript.OutOfAttackDistance)
-            {
-                EnemyScript.CanAttackPlayer = false;
-            }
+        //    return NodeStateOptions.Passed;
+        //}
+        //else if(!EnemyScript.PlayerEscaped && !EnemyScript.SeenPlayer)
+        //{
+        //    EnemyScript.PatrolActive = true;
+        //    return NodeStateOptions.Failed;
+        //}
 
-            return NodeStateOptions.Passed;
-        }
-        else if(!EnemyScript.PlayerEscaped && !EnemyScript.SeenPlayer)
+        //if (EnemyScript.AttackPlayer && EnemyScript.SeenPlayer) 
+        //{
+        //    EnemyScript.SetDestination(EnemyScript.PlayerTarget);
+        //    return NodeStateOptions.Running;
+        //}
+
+        if (EnemyScript.PlayerEscaped || EnemyScript.PatrolActive)
         {
-            EnemyScript.PatrolActive = true;
             return NodeStateOptions.Failed;
         }
 
-        if (EnemyScript.AttackPlayer && EnemyScript.SeenPlayer) 
+        if (EnemyScript.SeenPlayer)
         {
+            //EnemyScript.NavMeshRef.isStopped = false;
+            EnemyScript.PatrolActive = false;
+
             EnemyScript.SetDestination(EnemyScript.PlayerTarget);
+            EnemyScript.HandlePlayerRange();
+            Debug.Log("the devils take ");
+
+
             return NodeStateOptions.Running;
         }
+        if(EnemyScript.OutOfAttackRange)
+        {
+            EnemyScript.CanAttackPlayer = false;
+
+            EnemyScript.SetDestination(EnemyScript.PlayerTarget);
+            EnemyScript.HandlePlayerRange();
+            Debug.Log("at midnight ");
+
+            return NodeStateOptions.Running;
+        }
+
+        if (EnemyScript.PlayerEscaped)
+        {
+            //EnemyScript.SeenPlayer = false;
+            EnemyScript.PatrolActive = true;
+
+        }
+
+        
+
         return NodeStateOptions.Failed;
     }
 

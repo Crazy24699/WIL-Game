@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -19,6 +20,9 @@ public class WorldHandler : MonoBehaviour
     void Start()
     {
         StartCoroutine(TempSetActiveEnemy());
+        Debug.Log(AllSpires.Count);
+        Debug.Log(AllSpires.ElementAt(0).Value.Count);
+
     }
 
     // Update is called once per frame
@@ -29,7 +33,7 @@ public class WorldHandler : MonoBehaviour
 
     private IEnumerator TempSetActiveEnemy()
     {
-        yield return new WaitForSeconds(3.5f);
+        yield return new WaitForSeconds(1.5f);
         Debug.Log("Rise");
         for (int i = 0; i < AllEnemies.Count; i++)
         {

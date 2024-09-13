@@ -25,7 +25,7 @@ public class BTPatrol : BTNodeBase
 
     protected EnemyBase EnemyScript;
 
-    protected Transform TargetPositon;
+    protected Transform TargetPosition;
 
     public BTPatrol(GameObject EnemyAIRef)
     {
@@ -34,26 +34,26 @@ public class BTPatrol : BTNodeBase
 
     public override NodeStateOptions RunLogicAndState()
     {
-        if (EnemyScript.IsAttacking)
-        {
-            return NodeStateOptions.Running;
-        }
+
+
+        //if (EnemyScript.IsAttacking)
+        //{
+        //    return NodeStateOptions.Failed;
+        //}
 
         if(EnemyScript.PatrolActive)
         {
+            Debug.Log("Patrol Active");
             EnemyScript.SetDestination(EnemyScript.WaypointPosition);
-            Debug.Log("Pullling me in");
-            return NodeStateOptions.Passed;
+            return NodeStateOptions.Running;
         }
 
-        if (!EnemyScript.SeenPlayer && EnemyScript.PlayerEscaped && !EnemyScript.CanAttackPlayer) 
-        {
-
-            //have this set a patrol point to a place where the player was, when the player makes a sound
-            EnemyScript.SetDestination(EnemyScript.WaypointPosition);
-            Debug.Log("Pullling me in");
-            return NodeStateOptions.Passed;
-        }
+        //if (EnemyScript.PatrolActive || EnemyScript.PlayerEscaped) 
+        //{
+        //    EnemyScript.SetDestination(EnemyScript.WaypointPosition);
+            
+        //    return NodeStateOptions.Passed;
+        //}
 
         return NodeStateOptions.Failed;
     }

@@ -1,7 +1,8 @@
 
 using System.Collections;
 using System.Collections.Generic;
-
+using System.Data.Common;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ public class EnemyBase : MonoBehaviour
     protected int MaxHealth = 2;
     [SerializeField] protected int CurrentHealth;
     protected int CurrentWayPoint = 0;
+    [SerializeField] protected int SpireAreaNumber;
     #endregion
 
     #region Floats
@@ -30,8 +32,8 @@ public class EnemyBase : MonoBehaviour
 
     [Space(8)]
     public float CurrentPlayerDistance;
-    public float OutOfFollowDistance;
-    public float OutOfAttackDistance;
+    public float MaxFollowDistance;
+    public float MaxAttackDistance;
 
     public float OutOfRangeTimer;
     public float CurrentRangeTime;
@@ -45,7 +47,7 @@ public class EnemyBase : MonoBehaviour
     [Space(5)]
     [SerializeField] public Transform WaypointPosition;
     [SerializeField] protected Transform WaypointParent;
-    [HideInInspector] public Transform PlayerTarget;
+    /*[HideInInspector]*/ public Transform PlayerTarget;
     #endregion
 
     [Header("Booleans"), Space(5)]
@@ -53,14 +55,14 @@ public class EnemyBase : MonoBehaviour
     #region Bools
     protected bool CanTakeDamage = true;
     [SerializeField] protected bool ReduceKnockbackForce = true;
-    [HideInInspector]public bool SeenPlayer = false;
+    /*[HideInInspector]*/public bool SeenPlayer = false;
     [HideInInspector] public bool PlayerEscaped = false;
+     public bool OutOfAttackRange = false; 
 
     protected bool StartupRan = false;
-    protected bool Alive = true;
+    [SerializeField]protected bool Alive = false;
     public bool PatrolActive = false;
 
-    public bool AttackPlayer;
     public bool CanAttackPlayer;
     //if the Ai is currently attacking the player, used for making sure it cant move or chain attacks
     
@@ -79,7 +81,7 @@ public class EnemyBase : MonoBehaviour
     //[HideInInspector] public AIDestinationSetter DestinationSetterScript;
     //[HideInInspector] public Seeker AISeeker;
 
-    protected NavMeshAgent NavMeshRef;
+    public NavMeshAgent NavMeshRef;
     [HideInInspector]public SpireObject SpireLoaction;
     protected WorldHandler WorldHandlerScript;
     [SerializeField] protected Slider HealthBar;
@@ -96,33 +98,51 @@ public class EnemyBase : MonoBehaviour
 
         CurrentRangeTime = OutOfRangeTimer;
 
-        CurrentHealth = MaxHealth;
+    
         Rigidbody = GetComponent<Rigidbody>();
         EnemyObjectRef = this.gameObject;
         PlayerRef = GameObject.FindGameObjectWithTag("Player");
+        PlayerTarget = PlayerRef.transform;
+
         WorldHandlerScript = FindObjectOfType<WorldHandler>();
 
-        int RandomSpire = Random.Range(1, WorldHandlerScript.AllSpires.Count);
-        List<SpireObject> SpireListChosen = WorldHandlerScript.AllSpires[RandomSpire];
-        SpireLoaction = SpireListChosen[RandomSpire];
-        WaypointParent = SpireLoaction.transform.GetComponentInParent<SpireObject>().WaypointSpot;
-        WaypointPosition = WaypointParent;
+        PopulateSpire();
 
         if (NavMeshRef == null)
         {
             NavMeshRef = GetComponent<NavMeshAgent>();
         }
         CustomStartup();
+        HealthStartup();
+
+        StartupRan = true;
+        Alive = true;
+    }
+
+    private void PopulateSpire()
+    {
+        SpireAreaNumber = 0;
+        
+        List<SpireObject> SpireListChosen = WorldHandlerScript.AllSpires.ElementAt(0).Value;
+        Debug.Log(SpireListChosen.Count);
+        SpireLoaction = SpireListChosen[Random.Range(0,SpireListChosen.Count)];
+        WaypointParent = SpireLoaction.transform.GetComponentInParent<SpireObject>().WaypointSpot;
+        WaypointPosition = WaypointParent;
+
+    }
+
+    private void HealthStartup()
+    {
+        CurrentHealth = MaxHealth;
 
         CanTakeDamage = true;
-        StartupRan = true;
+
         if (HealthBar == null)
         {
             HealthBar = transform.GetComponentInChildren<Slider>();
         }
-        
+        HealthBar.maxValue = MaxHealth;
     }
-
 
     protected virtual void CustomStartup()
     {
@@ -135,7 +155,7 @@ public class EnemyBase : MonoBehaviour
         {
             CurrentHealth -= HealthChange;
             StartCoroutine(ImmunityTimer());
-
+            Debug.Log(HealthChange+"son" + CurrentHealth);
             //Play health gained particle effect
             return CurrentHealth;
         }
@@ -153,11 +173,12 @@ public class EnemyBase : MonoBehaviour
 
     public void ApplyKnockback()
     {
-        Rigidbody.AddForce(Vector3.forward * -1 * KnockbackPower, ForceMode.Impulse);
+        Vector3 ForceDirection = (PlayerRef.transform.position - transform.position).normalized;
+        Rigidbody.AddForce(ForceDirection * -1 * KnockbackPower, ForceMode.Impulse);
         Debug.Log("Love gone wrong");
     }
 
-    public void DistableAttack()
+    public void DisableAttack()
     {
         Vector3 NewPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z) - (Vector3.forward * -2);
         transform.position = NewPosition;
@@ -198,7 +219,7 @@ public class EnemyBase : MonoBehaviour
         CurrentPlayerDistance = Vector3.Distance(this.transform.position, PlayerTarget.transform.position);
         //Draw a raycast to the player, if it hits something before the player then the enemy can not see the player
 
-        if (CurrentPlayerDistance >= OutOfFollowDistance)
+        if (CurrentPlayerDistance >= MaxFollowDistance)
         {
             CurrentRangeTime -= Time.deltaTime;
             if (CurrentRangeTime <= 0)
@@ -206,24 +227,25 @@ public class EnemyBase : MonoBehaviour
                 CurrentRangeTime = 0;
                 SeenPlayer = false;
                 PlayerEscaped = true;
+                PatrolActive = true;
+                Debug.Log("Patrol Active");
+
             }
         }
 
-        else if (CurrentPlayerDistance < OutOfFollowDistance)
+        if (PlayerEscaped && CurrentRangeTime != OutOfRangeTimer) 
         {
             CurrentRangeTime = OutOfRangeTimer;
         }
-
-        if (PlayerEscaped)
-        {
-            CurrentRangeTime = OutOfRangeTimer;
-        }
+        //Debug.Log(CurrentPlayerDistance);
+        OutOfAttackRange = CurrentPlayerDistance > MaxAttackDistance ? true : false;
     }
 
     #region Pathfinding and controlls: SetDest. OnPathComplete. UpdatePath. HandlePatrol. NewPatrolPoint. 
     public void SetDestination(Transform ObjectLocation)
     {
         NavMeshRef.SetDestination(ObjectLocation.transform.position);
+        NavMeshRef.isStopped = false;
     }
 
     public void NewPatrolPoint(SpireObject ChosenSpire)
@@ -261,15 +283,23 @@ public class EnemyBase : MonoBehaviour
 
     protected void LockForAttack()
     {
-        ViewLock = transform.rotation.eulerAngles;
-        PositionLock = transform.position;
-        IsAttacking = true;
+        //ViewLock = transform.rotation.eulerAngles;
+        NavMeshRef.isStopped = true;
+        //PositionLock = transform.position;
+        //IsAttacking = true;
     }
 
     public void EnforceLock()
     {
-        EnemyObjectRef.transform.position = PositionLock;
-        EnemyObjectRef.transform.rotation = Quaternion.Euler(ViewLock);
+        //EnemyObjectRef.transform.position = PositionLock;
+        //EnemyObjectRef.transform.rotation = Quaternion.Euler(ViewLock);
+    }
+
+    public void ChangeLockState(bool Locked)
+    {
+        NavMeshRef.isStopped = Locked;
+
+        //IsAttacking = Locked;
     }
 
     protected void Die()
@@ -279,17 +309,17 @@ public class EnemyBase : MonoBehaviour
         //After the death animation has played, the enemy will destroy itself
     }
 
-    public virtual void OnTriggerEnter(Collider Collision)
-    {
-        if (Collision.CompareTag("Player"))
-        {
-            SeenPlayer = true;
-            PlayerTarget = Collision.gameObject.transform;
-        }
+    //public virtual void OnTriggerEnter(Collider Collision)
+    //{
+    //    if (Collision.CompareTag("Player"))
+    //    {
+    //        Debug.Log("I see him");
+    //        SeenPlayer = true;
+    //        PlayerEscaped = false;
 
-
-
-    }
+    //        PlayerTarget = Collision.gameObject.transform;
+    //    }
+    //}
 
 
 }

@@ -7,7 +7,7 @@ public class ProgramManager : MonoBehaviour
 {
 
     public static ProgramManager ProgramManagerInstance;
-    public InputActionReference PlayerActionMap;
+    public bool GamePaused = false;
 
     public void Start()
     {
@@ -21,5 +21,19 @@ public class ProgramManager : MonoBehaviour
         Destroy(ProgramManagerInstance);
     }
 
+
+    private void Update()
+    {
+        switch (Time.timeScale)
+        {
+            case <= 0:
+                GamePaused = true;
+                break;
+
+            case >0:
+                GamePaused = false;
+                break;
+        }
+    }
 
 }

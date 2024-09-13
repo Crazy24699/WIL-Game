@@ -18,6 +18,8 @@ public class PlayerAttacks : MonoBehaviour
     public GameObject FreeLookCam;
     public GameObject TailSlashObject;
     public GameObject TailFirePoint;
+    [SerializeField] private GameObject ClawSlashBox;
+    [SerializeField] private GameObject BiteBox;
 
     [Space(5)]
     public Animator AttackAnimation;
@@ -35,6 +37,7 @@ public class PlayerAttacks : MonoBehaviour
     public Cinemachine.CinemachineBrain CinemachineBrainScript;
     public CameraFunctionality CamFunctionScript;
     protected PlayerInteraction PlayerInteractionScript;
+    
 
 
 
@@ -86,8 +89,11 @@ public class PlayerAttacks : MonoBehaviour
         PlayerInteractionScript = FindObjectOfType<PlayerInteraction>();
 
         SetActiveAttack(AllAttacks.SlashAttack,AttackTypes.Primary);
+        DeactivateClawAttack();
         SetActiveAttack(AllAttacks.TailWhip, AttackTypes.Secondary);
+
         SetActiveAttack(AllAttacks.BiteAttack, AttackTypes.Third);
+        DeactivateBite();
     }
 
     private void OnEnable()
@@ -151,6 +157,16 @@ public class PlayerAttacks : MonoBehaviour
             //SetActiveAttack(AllAttacks.TailWhip, AttackTypes.Primary);
         }
         IsAttacking = AttackAnimation.GetBool("IsAttacking");
+        switch (ProgramManager.ProgramManagerInstance.GamePaused)
+        {
+            case true:
+                PlayerInputRef.Disable();
+                break;
+
+            case false:
+                PlayerInputRef.Enable();
+                break;
+        }
     }
 
     private void PerformAttack(AllAttacks SetAttck)
@@ -261,6 +277,32 @@ public class PlayerAttacks : MonoBehaviour
         HandleCameraState(true);
         HandleMovementState(true);
     }
+
+    #region ClawAttack
+    public void ActivateClawAttack()
+    {
+        ClawSlashBox.SetActive(true);
+    }
+
+    public void DeactivateClawAttack()
+    {
+        ClawSlashBox.SetActive(false);
+    }
+    #endregion
+    
+    #region Bite Attack
+    public void ActivateBite()
+    {
+        BiteBox.SetActive(true);
+    }
+
+    public void DeactivateBite()
+    {
+        BiteBox.SetActive(false);
+    }
+    #endregion
+
+
 
     protected void HandleMovementState(bool LockMovement)
     {

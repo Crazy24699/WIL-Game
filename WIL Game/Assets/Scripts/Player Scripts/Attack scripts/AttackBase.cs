@@ -6,7 +6,7 @@ public class AttackBase : MonoBehaviour
 {
     [SerializeField]protected PlayerAttacks PlayerAttackRef;
     [SerializeField] protected PlayerMovement PlayerMoveScript;
-
+    public int AppliedDamage;
 
     [SerializeField] protected Collider AttackCollider;
 
@@ -26,16 +26,16 @@ public class AttackBase : MonoBehaviour
             Debug.Log("Benieth the starts");
             EnemyBase EnemyBaseScript = Collision.GetComponent<EnemyBase>();
 
-            EnemyBaseScript.HandleHealth(PlayerAttackRef.Damage);
+            EnemyBaseScript.HandleHealth(AppliedDamage);
             EnemyBaseScript.ApplyKnockback();
-            EnemyBaseScript.DistableAttack();
+            EnemyBaseScript.DisableAttack();
         }
         if (Collision.CompareTag("Boss") && PlayerAttackRef != null && this.isActiveAndEnabled)
         {
             Debug.Log(Collision.name);
             BossBase EnemyBaseScript = Collision.GetComponent<BossBase>();
 
-            EnemyBaseScript.HandleHealth(-PlayerAttackRef.Damage);
+            EnemyBaseScript.HandleHealth(-AppliedDamage);
 
         }
     }
