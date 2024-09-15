@@ -236,7 +236,7 @@ public class PlayerAttacks : MonoBehaviour
     public void SpawnTailProjectile()
     {
         GameObject SpawnedSlash = Instantiate(TailSlashObject, TailFirePoint.transform.position, transform.rotation);
-        SpawnedSlash.GetComponent<ProjectileBase>().LifeStartup(TailFirePoint.transform.forward, 200);
+        SpawnedSlash.GetComponent<ProjectileBase>().LifeStartup(TailFirePoint.transform.forward, 200*3);
     }
 
     private void BiteAttackFunction()

@@ -42,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
         PlayerInputRef.Enable();
         PlayerInputRef.BasePlayerMovement.MovementModifiers.performed += Context => Sprint(2.5f);
         PlayerInputRef.BasePlayerMovement.MovementModifiers.canceled += Context => Sprint(1f);
-
+        SpeedMultiplier = 1;
     }
 
     private void FixedUpdate()
@@ -73,14 +73,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.LeftShift))
-        //{
-        //    SpeedMultiplier = 2.5f;
-        //}
-        //if (Input.GetKeyUp(KeyCode.LeftShift))
-        //{
-        //    SpeedMultiplier = 0;
-        //}
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            SpeedMultiplier = 2.5f;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            SpeedMultiplier = 1;
+        }
         Speed = BaseMoveSpeed * SpeedMultiplier;
     }
 
