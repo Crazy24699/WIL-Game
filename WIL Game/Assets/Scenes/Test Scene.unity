@@ -2799,10 +2799,17 @@ MonoBehaviour:
   LookatPoint: {fileID: 243171378}
   MinPlayerDistance: 25
   MaxPlayerDistance: 55
+  CloseRangeTimer: 0
+  RetreatSpeed: 0
+  NewRetreatPosition: {x: 0, y: 0, z: 0}
+  OldPosition: {x: 0, y: 0, z: 0}
+  ThisPosition: {x: 0, y: 0, z: 0}
   SpawningMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  ChangePosition: 0
   ChangePoint: 0
+  Changes: 1
 --- !u!4 &1709251630
 Transform:
   m_ObjectHideFlags: 0
