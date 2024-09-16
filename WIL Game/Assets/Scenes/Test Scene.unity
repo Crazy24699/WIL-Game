@@ -609,7 +609,7 @@ Transform:
   m_GameObject: {fileID: 243171378}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 49, y: 10, z: -25}
+  m_LocalPosition: {x: 35.1, y: 4.41, z: -34}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2794,10 +2794,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GeneratorEnemy: {fileID: 1324718950}
-  PlayerTarget: {fileID: 0}
+  PlayerTarget: {fileID: 6133093832751616838}
+  LookatPoint: {fileID: 243171378}
+  MinPlayerDistance: 25
+  MaxPlayerDistance: 55
   SpawningMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  ChangePoint: 0
 --- !u!4 &1709251630
 Transform:
   m_ObjectHideFlags: 0
@@ -2807,7 +2811,7 @@ Transform:
   m_GameObject: {fileID: 1709251628}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 41, y: 12, z: -100}
+  m_LocalPosition: {x: 43.7, y: 8.28, z: -21.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

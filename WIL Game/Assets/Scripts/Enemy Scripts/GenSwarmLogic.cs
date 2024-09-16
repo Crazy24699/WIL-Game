@@ -7,18 +7,29 @@ public class GenSwarmLogic : MonoBehaviour
 {
     [SerializeField] private GameObject GeneratorEnemy;
     [SerializeField] private GameObject PlayerTarget;
+    [SerializeField] private GameObject LookatPoint;
 
-    
+
+    [SerializeField] private float MinPlayerDistance;
+    [SerializeField] private float MaxPlayerDistance;
+    private float CurrentPlayerDistance;
+    private float RandomRetreatPosition;
+
     public HashSet<Enim2PH> GeneratorSwarm = new HashSet<Enim2PH>();
     private Enim2PH CurrentSelectedDrone;
 
     private Vector3 CheckingCord;
+    Vector3 RndPoint;
 
     private int SwarmNum = 7;
     private int LocationCheckCounter;
     private int CurrentDroneIndex=0;
     
     [SerializeField] private LayerMask SpawningMask;
+
+    private bool CanAttack;
+    private bool InAttackRange;
+    public bool ChangePoint;
 
 
     private void EnemyStartup()
@@ -87,6 +98,21 @@ public class GenSwarmLogic : MonoBehaviour
 
     private void KeepDistanceRange()
     {
+        CurrentPlayerDistance = Vector3.Distance(transform.position, PlayerTarget.transform.position);
+        InAttackRange = (CurrentPlayerDistance > MinPlayerDistance && CurrentPlayerDistance < MaxPlayerDistance);
+
+        if(InAttackRange)
+        {
+            if(CurrentPlayerDistance < MinPlayerDistance)
+            {
+
+            }
+        }
+
+    }
+
+    private void Attack()
+    {
 
     }
 
@@ -97,15 +123,51 @@ public class GenSwarmLogic : MonoBehaviour
         GeneratorSwarm.ElementAt(CurrentDroneIndex).GetComponent<Enim2PH>().SwarmAttack(this.transform.gameObject, PlayerTarget);
 
         CurrentDroneIndex++;
+        StartCoroutine(AttackCooldown());
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(CheckingCord, 1.55f);
+        Vector3 DirectionPoint = (LookatPoint.transform.position - PlayerTarget.transform.position).normalized;
+        Gizmos.DrawWireSphere(PlayerTarget.transform.position, 1.55f);
+        Gizmos.color = Color.blue;
+        Vector3 Point = PlayerTarget.transform.position+DirectionPoint * MinPlayerDistance;
+
+        Gizmos.DrawSphere(Point, 2.5f);
+        Vector3 MaxPoint = PlayerTarget.transform.position+ DirectionPoint * MaxPlayerDistance;
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawSphere(MaxPoint, 2.5f);
+
+
+        if (ChangePoint)
+        {
+            RandomRetreatPosition = Random.Range(MinPlayerDistance, MaxPlayerDistance);
+            RndPoint = Random.insideUnitCircle;
+            ChangePoint = false;
+        }
+        Vector3 SpawnDirection = new Vector3(RndPoint.x, 0, RndPoint.y).normalized;
+        Vector3 SpawnPos = PlayerTarget.transform.position + SpawnDirection * RandomRetreatPosition;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(SpawnPos, 2.5f);
+
+
+    }
+
+    private IEnumerator AttackCooldown()
+    {
+        CanAttack = false;
+        yield return new WaitForSeconds(2.55f);
+        CanAttack = true;
     }
 
     private void Update()
     {
+        if(CanAttack)
+        {
+            SendNextDrone();
+        }
+
         if(Input.GetKeyDown(KeyCode.M))
         {
             EnemyStartup();
@@ -121,5 +183,7 @@ public class GenSwarmLogic : MonoBehaviour
             SendNextDrone();
         }
     }
+
+    
 
 }
