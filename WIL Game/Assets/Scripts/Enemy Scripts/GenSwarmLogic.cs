@@ -59,7 +59,7 @@ public class GenSwarmLogic : MonoBehaviour
 
     private IEnumerator SpawnSwarm()
     {
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 3; i++)
         {
             if (LocationCheckCounter >= 20)
             {
@@ -158,10 +158,10 @@ public class GenSwarmLogic : MonoBehaviour
     private void SendNextDrone()
     {
         if (CurrentDroneIndex >= GeneratorSwarm.Count) { CurrentDroneIndex = 0; }
-        Debug.Log(GeneratorSwarm.ElementAt(0));
+        Debug.Log(GeneratorSwarm.ElementAt(CurrentDroneIndex));
         GeneratorSwarm.ElementAt(CurrentDroneIndex).GetComponent<Enim2PH>().SwarmAttack(this.transform.gameObject, PlayerTarget);
 
-        //CurrentDroneIndex++;
+        CurrentDroneIndex++;
         StartCoroutine(AttackCooldown());
     }
 
