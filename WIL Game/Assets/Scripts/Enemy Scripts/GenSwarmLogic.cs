@@ -14,11 +14,12 @@ public class GenSwarmLogic : MonoBehaviour
 
     [SerializeField] private float MinPlayerDistance;
     [SerializeField] private float MaxPlayerDistance;
-    private float CurrentPlayerDistance;
+    [SerializeField]private float CurrentPlayerDistance;
     private float RandomRetreatPosition;
     [SerializeField]private float CloseRangeTimer;
     const float MaxCloseRangeTime = 1.25f;
     [SerializeField]private float RetreatSpeed;
+    
     //private float SlowMoveSpeed;
 
     public HashSet<Enim2PH> GeneratorSwarm = new HashSet<Enim2PH>();
@@ -58,7 +59,7 @@ public class GenSwarmLogic : MonoBehaviour
 
     private IEnumerator SpawnSwarm()
     {
-        for (int i = 0; i < SwarmNum; i++)
+        for (int i = 0; i < 1; i++)
         {
             if (LocationCheckCounter >= 20)
             {
@@ -73,6 +74,7 @@ public class GenSwarmLogic : MonoBehaviour
                 SpawnedDrone = Instantiate(GeneratorEnemy, PossiblePosition, Quaternion.identity);
                 SpawnedDrone.GetComponent<Enim2PH>().BaseStartup();
                 GeneratorSwarm.Add(SpawnedDrone.GetComponent<Enim2PH>());
+                SpawnedDrone.transform.parent = this.transform;
                 Debug.Log("Run");
             }
             else
@@ -120,7 +122,7 @@ public class GenSwarmLogic : MonoBehaviour
         CurrentPlayerDistance = Vector3.Distance(transform.position, PlayerTarget.transform.position);
         InAttackRange = (CurrentPlayerDistance > MinPlayerDistance && CurrentPlayerDistance < MaxPlayerDistance);
 
-        //if (!InAttackRange) { return; }
+        if (!InAttackRange) { return; }
 
 
         if (CurrentPlayerDistance < MinPlayerDistance && !ChangePosition)
@@ -156,61 +158,85 @@ public class GenSwarmLogic : MonoBehaviour
     private void SendNextDrone()
     {
         if (CurrentDroneIndex >= GeneratorSwarm.Count) { CurrentDroneIndex = 0; }
-        Debug.Log(GeneratorSwarm.ElementAt(CurrentDroneIndex));
+        Debug.Log(GeneratorSwarm.ElementAt(0));
         GeneratorSwarm.ElementAt(CurrentDroneIndex).GetComponent<Enim2PH>().SwarmAttack(this.transform.gameObject, PlayerTarget);
 
-        CurrentDroneIndex++;
+        //CurrentDroneIndex++;
         StartCoroutine(AttackCooldown());
     }
 
     private void FindRetreatPosition()
     {
         OldPosition = transform.position;
+        
+        float X_Value = RoundNumbersToDecimal(OldPosition.x);
+        float Y_Value = RoundNumbersToDecimal(OldPosition.y);
+        float Z_Value = RoundNumbersToDecimal(OldPosition.z);
+
+        OldPosition = new Vector3(X_Value, Y_Value, Z_Value);
         RandomRetreatPosition = Random.Range(MinPlayerDistance, MaxPlayerDistance);
         RndPoint = Random.insideUnitCircle;
         ChangePoint = false;
 
-        Vector3 SpawnDirection = new Vector3(RndPoint.x, 0, RndPoint.y).normalized;
-        Vector3 SpawnPos = PlayerTarget.transform.position + SpawnDirection * RandomRetreatPosition;
 
-        NewRetreatPosition = SpawnPos;
+        Vector3 RetreatDirection = new Vector3(RndPoint.x, 0, RndPoint.y).normalized;
+        NewRetreatPosition = PlayerTarget.transform.position + RetreatDirection * MaxPlayerDistance;
+
+        X_Value = RoundNumbersToDecimal(NewRetreatPosition.x);
+        Y_Value = RoundNumbersToDecimal(NewRetreatPosition.y);
+        Z_Value = RoundNumbersToDecimal(NewRetreatPosition.z);
+
+        NewRetreatPosition = new Vector3(X_Value, Y_Value, Z_Value);
+
         ChangePosition = true;
     }
 
     private void Retreat()
     {
-        //if (!ChangePosition) { return; }
-        
-        //if (transform.position == NewRetreatPosition) { ChangePosition = false; return; }
-        RetreatSpeed += 0.2f * Time.deltaTime;
+        if (!ChangePosition) { return; }
 
-        //transform.position = Vector3.Slerp(transform.position, NewRetreatPosition, RetreatSpeed);
+        if (transform.position == NewRetreatPosition) { ChangePosition = false; RetreatSpeed = 0; return; }
+        RetreatSpeed += 0.325f * Time.deltaTime;
+
+        Vector3 CurrentPosition = Vector3.Slerp(OldPosition, NewRetreatPosition, RetreatSpeed);
+
+        float X_Value = RoundNumbersToDecimal(CurrentPosition.x);
+        float Y_Value = RoundNumbersToDecimal(CurrentPosition.y);
+        float Z_Value = RoundNumbersToDecimal(CurrentPosition.z);
+
+        transform.position = new Vector3(X_Value, Y_Value, Z_Value);
+    }
+
+    private float RoundNumbersToDecimal(float BaseNum)
+    {
+        float RoundedNum = Mathf.Round(BaseNum * 100) / 100;
+        return RoundedNum;
     }
 
     private void OnDrawGizmos()
     {
-        Vector3 DirectionPoint = (LookatPoint.transform.position - PlayerTarget.transform.position).normalized;
-        Gizmos.DrawWireSphere(PlayerTarget.transform.position, 1.55f);
-        Gizmos.color = Color.blue;
-        Vector3 Point = PlayerTarget.transform.position+DirectionPoint * MinPlayerDistance;
+        //Vector3 DirectionPoint = (LookatPoint.transform.position - PlayerTarget.transform.position).normalized;
+        //Gizmos.DrawWireSphere(PlayerTarget.transform.position, 1.55f);
+        //Gizmos.color = Color.blue;
+        //Vector3 Point = PlayerTarget.transform.position+DirectionPoint * MinPlayerDistance;
 
-        Gizmos.DrawSphere(Point, 2.5f);
-        Vector3 MaxPoint = PlayerTarget.transform.position+ DirectionPoint * MaxPlayerDistance;
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawSphere(MaxPoint, 2.5f);
+        //Gizmos.DrawSphere(Point, 2.5f);
+        //Vector3 MaxPoint = PlayerTarget.transform.position+ DirectionPoint * MaxPlayerDistance;
+        //Gizmos.color = Color.cyan;
+        //Gizmos.DrawSphere(MaxPoint, 2.5f);
 
 
-        if (ChangePoint)
-        {
-            RandomRetreatPosition = Random.Range(MinPlayerDistance, MaxPlayerDistance);
-            RndPoint = Random.insideUnitCircle;
-            ChangePoint = false;
-        }
-        Vector3 SpawnDirection = new Vector3(RndPoint.x, 0, RndPoint.y).normalized;
-        Vector3 SpawnPos = PlayerTarget.transform.position + SpawnDirection * RandomRetreatPosition;
+        //if (ChangePoint)
+        //{
+        //    RandomRetreatPosition = Random.Range(MinPlayerDistance, MaxPlayerDistance);
+        //    RndPoint = Random.insideUnitCircle;
+        //    ChangePoint = false;
+        //}
+        //Vector3 SpawnDirection = new Vector3(RndPoint.x, 0, RndPoint.y).normalized;
+        //Vector3 SpawnPos = PlayerTarget.transform.position + SpawnDirection * RandomRetreatPosition;
 
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(SpawnPos, 2.5f);
+        //Gizmos.color = Color.red;
+        //Gizmos.DrawSphere(SpawnPos, 2.5f);
 
 
     }
@@ -225,18 +251,17 @@ public class GenSwarmLogic : MonoBehaviour
     private void Update()
     {
         KeepDistanceRange();
-        Retreat();
+
 
         if(CanAttack)
         {
-            SendNextDrone();
+            //SendNextDrone();
         }
 
         if(Input.GetKeyDown(KeyCode.M))
         {
-            //EnemyStartup();
             FindRetreatPosition();
-            //Retreat();
+
         }
 
         if(Input.GetKeyDown(KeyCode.J))
@@ -252,13 +277,7 @@ public class GenSwarmLogic : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //if (Changes)
-        //{
-        //    //FindRetreatPosition();
-        //    Retreat();
-        //}
-        //RetreatSpeed = 0.250f * Time.fixedDeltaTime;
-        //ThisPosition =Vector3.Lerp(ThisPosition,NewRetreatPosition,RetreatSpeed);
+        Retreat();
     }
 
 }

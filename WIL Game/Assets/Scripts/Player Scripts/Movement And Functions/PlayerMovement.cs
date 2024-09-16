@@ -54,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
         if (PlayerAnimations.GetBool("IsAttacking"))
         {
             Rigidbody.velocity = Vector3.zero;
-            Debug.Log("laced with poison");
+            //Debug.Log("laced with poison");
             return;
         }
         MovePlayer();

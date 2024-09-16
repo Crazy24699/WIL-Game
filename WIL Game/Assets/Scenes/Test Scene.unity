@@ -2310,9 +2310,17 @@ MonoBehaviour:
   NavMeshRef: {fileID: 0}
   SpireLoaction: {fileID: 0}
   HealthBar: {fileID: 0}
+  SwarmPosition: {x: 0, y: 0, z: 0}
+  OutOfRangePosition: {x: 0, y: 0, z: 0}
+  CurrentPosition: {x: 0, y: 0, z: 0}
   CenterSlerpPoint: {fileID: 0}
+  MissCount: 3
   Confused: 1
+  Attacking: 0
+  InPos: 0
   InternalCounter: 0
+  PlayerDistance: 0
+  SwarmParentDistance: 0
 --- !u!4 &1324718952
 Transform:
   m_ObjectHideFlags: 0
@@ -2354,7 +2362,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!1 &1347367057
 GameObject:
@@ -2799,6 +2807,7 @@ MonoBehaviour:
   LookatPoint: {fileID: 243171378}
   MinPlayerDistance: 25
   MaxPlayerDistance: 55
+  CurrentPlayerDistance: 0
   CloseRangeTimer: 0
   RetreatSpeed: 0
   NewRetreatPosition: {x: 0, y: 0, z: 0}
@@ -2819,7 +2828,7 @@ Transform:
   m_GameObject: {fileID: 1709251628}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 29.1, y: 6.47, z: -49.1}
+  m_LocalPosition: {x: -5.1, y: 6.47, z: -51.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
