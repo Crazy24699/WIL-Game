@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GenSwarmLogic : MonoBehaviour
@@ -14,27 +16,44 @@ public class GenSwarmLogic : MonoBehaviour
     [SerializeField] private float MaxPlayerDistance;
     private float CurrentPlayerDistance;
     private float RandomRetreatPosition;
+    [SerializeField]private float CloseRangeTimer;
+    const float MaxCloseRangeTime = 1.25f;
+    [SerializeField]private float RetreatSpeed;
+    //private float SlowMoveSpeed;
 
     public HashSet<Enim2PH> GeneratorSwarm = new HashSet<Enim2PH>();
     private Enim2PH CurrentSelectedDrone;
 
     private Vector3 CheckingCord;
     Vector3 RndPoint;
+    [SerializeField]private Vector3 NewRetreatPosition;
+    [SerializeField] private Vector3 OldPosition;
+    [SerializeField] private Vector3 ThisPosition;
 
     private int SwarmNum = 7;
     private int LocationCheckCounter;
     private int CurrentDroneIndex=0;
     
     [SerializeField] private LayerMask SpawningMask;
+    private Rigidbody RBRef;
 
     private bool CanAttack;
     private bool InAttackRange;
+    [SerializeField]private bool ChangePosition = false;
     public bool ChangePoint;
+    public bool Changes;
 
+    private void Start()
+    {
+        EnemyStartup();
+    }
 
     private void EnemyStartup()
     {
         PlayerTarget = FindObjectOfType<PlayerMovement>().gameObject;
+        RBRef = GetComponent<Rigidbody>();
+
+        CloseRangeTimer = MaxCloseRangeTime;
     }
 
     private IEnumerator SpawnSwarm()
@@ -101,16 +120,34 @@ public class GenSwarmLogic : MonoBehaviour
         CurrentPlayerDistance = Vector3.Distance(transform.position, PlayerTarget.transform.position);
         InAttackRange = (CurrentPlayerDistance > MinPlayerDistance && CurrentPlayerDistance < MaxPlayerDistance);
 
-        if(InAttackRange)
-        {
-            if(CurrentPlayerDistance < MinPlayerDistance)
-            {
+        //if (!InAttackRange) { return; }
 
+
+        if (CurrentPlayerDistance < MinPlayerDistance && !ChangePosition)
+        {
+            Vector3 PlayerDirection = (transform.position - PlayerTarget.transform.position).normalized;
+            RBRef.velocity = new Vector3(PlayerDirection.x, 0, PlayerDirection.z) * 5;
+
+            if (CloseRangeTimer > 0)
+            {
+                CloseRangeTimer -= Time.deltaTime ;
+                Debug.Log("eternal luliby");
+                if (CloseRangeTimer <= 0)
+                {
+                    Debug.Log("Heartbear");
+                    FindRetreatPosition();
+                    CloseRangeTimer = MaxCloseRangeTime;
+                }
             }
         }
-
+        else if (CurrentPlayerDistance > MinPlayerDistance)
+        {
+            RBRef.velocity = Vector3.zero;
+        }
     }
 
+
+    
     private void Attack()
     {
 
@@ -124,6 +161,30 @@ public class GenSwarmLogic : MonoBehaviour
 
         CurrentDroneIndex++;
         StartCoroutine(AttackCooldown());
+    }
+
+    private void FindRetreatPosition()
+    {
+        OldPosition = transform.position;
+        RandomRetreatPosition = Random.Range(MinPlayerDistance, MaxPlayerDistance);
+        RndPoint = Random.insideUnitCircle;
+        ChangePoint = false;
+
+        Vector3 SpawnDirection = new Vector3(RndPoint.x, 0, RndPoint.y).normalized;
+        Vector3 SpawnPos = PlayerTarget.transform.position + SpawnDirection * RandomRetreatPosition;
+
+        NewRetreatPosition = SpawnPos;
+        ChangePosition = true;
+    }
+
+    private void Retreat()
+    {
+        //if (!ChangePosition) { return; }
+        
+        //if (transform.position == NewRetreatPosition) { ChangePosition = false; return; }
+        RetreatSpeed += 0.2f * Time.deltaTime;
+
+        //transform.position = Vector3.Slerp(transform.position, NewRetreatPosition, RetreatSpeed);
     }
 
     private void OnDrawGizmos()
@@ -163,6 +224,9 @@ public class GenSwarmLogic : MonoBehaviour
 
     private void Update()
     {
+        KeepDistanceRange();
+        Retreat();
+
         if(CanAttack)
         {
             SendNextDrone();
@@ -170,7 +234,9 @@ public class GenSwarmLogic : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.M))
         {
-            EnemyStartup();
+            //EnemyStartup();
+            FindRetreatPosition();
+            //Retreat();
         }
 
         if(Input.GetKeyDown(KeyCode.J))
@@ -184,6 +250,15 @@ public class GenSwarmLogic : MonoBehaviour
         }
     }
 
-    
+    private void FixedUpdate()
+    {
+        //if (Changes)
+        //{
+        //    //FindRetreatPosition();
+        //    Retreat();
+        //}
+        //RetreatSpeed = 0.250f * Time.fixedDeltaTime;
+        //ThisPosition =Vector3.Lerp(ThisPosition,NewRetreatPosition,RetreatSpeed);
+    }
 
 }
