@@ -106,7 +106,7 @@ public class SpewerAi : EnemyBase
     public void AttackCooldown()
     {
         StartCoroutine(AttackCooldown(2.5f));
-        StartCoroutine(TempAttackCooldownLock());
+
     }
 
 

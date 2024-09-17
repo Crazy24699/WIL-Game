@@ -1,28 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 
 //Generator guy
-public class Enim2PH : EnemyBase
+public class Enim2PH : MonoBehaviour
 {
+    public Transform SwarmTransformLocation;
+    [SerializeField] private Transform CenterSlerpPoint;
+
+    private GameObject PlayerObjectRef;
+
     [SerializeField]private Vector3 SwarmPosition;
     [SerializeField] private Vector3 OutOfRangePosition;
     private Vector3 RejoinPathOffset;
     public Vector3 CurrentPosition;
 
-    [SerializeField] private Transform CenterSlerpPoint;
-
+    private Rigidbody RigidBodyRef;
     private GenSwarmLogic SwarmParent;
+
     [SerializeField]private int MissCount=3;
-    private GameObject PlayerObjectRef;
+    private int MaxHealth;
+    [SerializeField]private int CurrentHealth;
 
     [SerializeField]private bool Confused = true;
     [SerializeField] private bool Attacking = false;
-    public bool InPos;
+
     private bool GeneralStartupRan = false;
     private bool WaitTimeFinished = false;
+    private bool CanTakeDamage = true;
 
     [SerializeField]private int InternalCounter;
 
@@ -30,26 +38,27 @@ public class Enim2PH : EnemyBase
     public float SwarmParentDistance;
     private float Speed;
 
+    private Slider HealthBar;
+
     public void SwarmAttack(GameObject Parent, GameObject PlayerObject)
     {
         Attacking = true;
-
-
         if (!GeneralStartupRan)
         {
-            Rigidbody = GetComponent<Rigidbody>();
-
+            RigidBodyRef = GetComponent<Rigidbody>();
 
             SwarmParent = Parent.GetComponent<GenSwarmLogic>();
 
-
             PlayerObjectRef = PlayerObject;
             SwarmPosition = this.transform.position;
+
             SwarmPosition = SwarmPosition.RoundVector(2);
             GeneralStartupRan = true;
         }
+        transform.parent = null;
+
         transform.LookAt(PlayerObject.transform.position);
-        Rigidbody.AddForce(transform.forward * 1000);
+        RigidBodyRef.AddForce(transform.forward * 1000);
 
         WaitTimeFinished = false;
         InvokeRepeating(nameof(CheckMiss), 0.25f, 0.15f);
@@ -58,17 +67,26 @@ public class Enim2PH : EnemyBase
         Debug.Log("aaaa");
         StartCoroutine(AttackDoneWaitTime());
     }
-
-    protected override void CustomStartup()
+    
+    public void BaseStartup()
     {
-        MaxHealth = 30;
-        BaseMoveSpeed = 16;
+        CustomStartup();
+    }
 
+    protected void CustomStartup()
+    {
+        MaxHealth = 6;
+        CurrentHealth = MaxHealth;
+        //BaseMoveSpeed = 16;
+        HealthBar = transform.GetComponentInChildren<Slider>();
+
+        CanTakeDamage = true;
     }
 
     private void Start()
     {
         OutOfRangePosition = this.transform.position.RoundVector(2);
+        BaseStartup();
     }
 
     private void HandleDeath()
@@ -76,9 +94,53 @@ public class Enim2PH : EnemyBase
         SwarmParent.GeneratorSwarm.Remove(this);
     }
 
+    public void HandleHealth(int HealthChange)
+    {
+        HealthBar.value = CurrentHealth;
+        if((CurrentHealth + HealthChange) > MaxHealth)
+        {
+            return;
+        }
+        if (HealthChange < 0)
+        {
+            TakeHit();
+        }
+        CurrentHealth += HealthChange;
+
+        if (CurrentHealth <= 0)
+        {
+            Die();
+        }
+
+        HealthBar.value = CurrentHealth;
+    }
+
+    private void TakeHit()
+    {
+        if (!CanTakeDamage)
+        {
+            return;
+        }
+        StartCoroutine(TakeDamageCooldown());
+    }
+
+    private void Die()
+    {
+
+        Destroy(this.gameObject);
+    }
+
     private void OnTriggerEnter(Collider Collision)
     {
         //HandleDeath();
+    }
+
+    //maybe put this into a larger checking method for the update method. 
+    private IEnumerator TakeDamageCooldown()
+    {
+        CanTakeDamage = false;
+        yield return new WaitForSeconds(1.25f);
+        CanTakeDamage = true;
     }
 
     private void CheckMiss()
@@ -97,7 +159,7 @@ public class Enim2PH : EnemyBase
             if (MissCount > 0)
             {
                 Debug.Log("Invoke");
-                Rigidbody.velocity = Vector3.zero;
+                RigidBodyRef.velocity = Vector3.zero;
                 CancelInvoke(nameof(CheckMiss));
                 MissCount--;
                 StartCoroutine(ConfusedCooldown());
@@ -119,21 +181,49 @@ public class Enim2PH : EnemyBase
             StartCoroutine(ConfusedCooldown());
         }
 
+
+        if (!GeneralStartupRan) { return; }
+
         CurrentPosition = transform.position.RoundVector(2);
         transform.position=transform.position.RoundVector(2);
-        if (!Confused && this.transform.position.RoundVector(2) != SwarmPosition && Attacking && WaitTimeFinished && OutOfRangePosition!=Vector3.zero)
-        {
-            Speed += 0.250f * Time.deltaTime;
-            Vector3 CurrentPosition = Vector3.Slerp(OutOfRangePosition, SwarmPosition, Speed);
-            transform.position = CurrentPosition.RoundVector(2);
-        }
+        SwarmPosition = SwarmTransformLocation.position.RoundVector(2);
+
+        Retreval();
         //InPos = this.transform.position.RoundVector(2) == SwarmPosition;
-        if (!Confused && this.transform.position.RoundVector(2) == SwarmPosition && Rigidbody.velocity==Vector3.zero && Attacking && WaitTimeFinished)
+        if (!Confused && this.transform.position.RoundVector(2) == SwarmPosition && RigidBodyRef.velocity==Vector3.zero && Attacking && WaitTimeFinished)
         {
             Debug.Log("Is not true");
             Attacking = false;
             OutOfRangePosition = Vector3.zero;
         }
+    }
+
+    private void Retreval()
+    {
+        if (!Attacking)
+        {
+            return;
+        }
+
+        if (!Confused && this.transform.position.RoundVector(2) != SwarmPosition && Attacking && WaitTimeFinished && OutOfRangePosition != Vector3.zero)
+        {
+            Speed += 0.250f * Time.deltaTime;
+            Vector3 CurrentPosition = Vector3.Slerp(OutOfRangePosition, SwarmTransformLocation.position, Speed);
+            transform.position = CurrentPosition.RoundVector(2);
+        }
+
+        if (SwarmParentDistance <= 3.5f)
+        {
+            if(transform.parent==null)
+            {
+                transform.parent = SwarmParent.transform;
+            }
+
+            //Speed += 0.250f * Time.deltaTime;
+            //Vector3 CurrentPosition = Vector3.Lerp(OutOfRangePosition, SwarmPosition, Speed);
+            //transform.position = CurrentPosition.RoundVector(2);
+        }
+
     }
 
     private IEnumerator AttackDoneWaitTime()
@@ -145,7 +235,7 @@ public class Enim2PH : EnemyBase
     private IEnumerator ConfusedCooldown()
     {
         OutOfRangePosition = transform.position.RoundVector(2);
-        yield return new WaitForSeconds(1.75f);
+        yield return new WaitForSeconds(2.75f);
         Confused = false;
     }
 }

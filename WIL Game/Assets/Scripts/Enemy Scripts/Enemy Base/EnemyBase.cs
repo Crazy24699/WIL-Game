@@ -275,24 +275,12 @@ public class EnemyBase : MonoBehaviour
         CanAttackPlayer = true;
     }
 
-    public IEnumerator TempAttackCooldownLock()
-    {
-        yield return new WaitForSeconds(1f);
-        IsAttacking = false;
-    }
-
     protected void LockForAttack()
     {
         //ViewLock = transform.rotation.eulerAngles;
         NavMeshRef.isStopped = true;
         //PositionLock = transform.position;
         //IsAttacking = true;
-    }
-
-    public void EnforceLock()
-    {
-        //EnemyObjectRef.transform.position = PositionLock;
-        //EnemyObjectRef.transform.rotation = Quaternion.Euler(ViewLock);
     }
 
     public void ChangeLockState(bool Locked)
@@ -306,20 +294,7 @@ public class EnemyBase : MonoBehaviour
     {
         Alive = false;
         WorldHandlerScript.SetNextActive(this.gameObject);
-        //After the death animation has played, the enemy will destroy itself
     }
-
-    //public virtual void OnTriggerEnter(Collider Collision)
-    //{
-    //    if (Collision.CompareTag("Player"))
-    //    {
-    //        Debug.Log("I see him");
-    //        SeenPlayer = true;
-    //        PlayerEscaped = false;
-
-    //        PlayerTarget = Collision.gameObject.transform;
-    //    }
-    //}
 
 
 }

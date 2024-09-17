@@ -4,23 +4,28 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GenSwarmLogic : MonoBehaviour
 {
     [SerializeField] private GameObject GeneratorEnemy;
     [SerializeField] private GameObject PlayerTarget;
     [SerializeField] private GameObject LookatPoint;
+    [SerializeField] private List<Transform> SwarmLocations = new List<Transform>();
 
 
     [SerializeField] private float MinPlayerDistance;
     [SerializeField] private float MaxPlayerDistance;
     [SerializeField]private float CurrentPlayerDistance;
+
     private float RandomRetreatPosition;
     [SerializeField]private float CloseRangeTimer;
     const float MaxCloseRangeTime = 1.25f;
-    [SerializeField]private float RetreatSpeed;
+    private float RetreatSpeed;
+
+    private float AttackCooldownTime = 3.5f;
+    [SerializeField]private float CurrentWaitTime;
     
-    //private float SlowMoveSpeed;
 
     public HashSet<Enim2PH> GeneratorSwarm = new HashSet<Enim2PH>();
     private Enim2PH CurrentSelectedDrone;
@@ -37,12 +42,12 @@ public class GenSwarmLogic : MonoBehaviour
     
     [SerializeField] private LayerMask SpawningMask;
     private Rigidbody RBRef;
+    private NavMeshAgent NavAgentRef;
 
-    private bool CanAttack;
-    private bool InAttackRange;
+    [SerializeField] private bool CanAttack;
+    [SerializeField] private bool InAttackRange;
     [SerializeField]private bool ChangePosition = false;
-    public bool ChangePoint;
-    public bool Changes;
+    [SerializeField] private bool GeneralStartupRan = false;
 
     private void Start()
     {
@@ -55,6 +60,10 @@ public class GenSwarmLogic : MonoBehaviour
         RBRef = GetComponent<Rigidbody>();
 
         CloseRangeTimer = MaxCloseRangeTime;
+        CanAttack = true;
+        StartCoroutine(SpawnSwarm());
+
+        NavAgentRef = GetComponent<NavMeshAgent>();
     }
 
     private IEnumerator SpawnSwarm()
@@ -72,7 +81,16 @@ public class GenSwarmLogic : MonoBehaviour
             if (!Physics.CheckSphere(PossiblePosition, 1.55f, SpawningMask))
             {
                 SpawnedDrone = Instantiate(GeneratorEnemy, PossiblePosition, Quaternion.identity);
+                SpawnedDrone.gameObject.name = "Drone " + i;
+
+                SwarmLocations.Add(new GameObject().transform);
+                SwarmLocations[i].transform.position = PossiblePosition;
+                SwarmLocations[i].transform.parent = this.transform;
+                SwarmLocations[i].gameObject.name = "Swarmer Location: " + i;
+
                 SpawnedDrone.GetComponent<Enim2PH>().BaseStartup();
+                SpawnedDrone.GetComponent<Enim2PH>().SwarmTransformLocation = SwarmLocations[i];
+
                 GeneratorSwarm.Add(SpawnedDrone.GetComponent<Enim2PH>());
                 SpawnedDrone.transform.parent = this.transform;
                 Debug.Log("Run");
@@ -83,6 +101,7 @@ public class GenSwarmLogic : MonoBehaviour
             }
             LocationCheckCounter++;
         }
+        GeneralStartupRan = true;
     }
 
     //Possible Future Performance Issue 
@@ -122,6 +141,18 @@ public class GenSwarmLogic : MonoBehaviour
         CurrentPlayerDistance = Vector3.Distance(transform.position, PlayerTarget.transform.position);
         InAttackRange = (CurrentPlayerDistance > MinPlayerDistance && CurrentPlayerDistance < MaxPlayerDistance);
 
+        if (CurrentPlayerDistance > MaxPlayerDistance )
+        {
+            Debug.Log("at the alter we start to pray");
+            NavAgentRef.SetDestination(PlayerTarget.transform.position);
+            NavAgentRef.isStopped = false;
+        }
+        if (CurrentPlayerDistance < MinPlayerDistance + 15 && !NavAgentRef.isStopped)
+        {
+            Debug.Log(CurrentPlayerDistance + "Love bites" + MinPlayerDistance + 15.00);
+            NavAgentRef.isStopped = true;
+        }
+
         if (!InAttackRange) { return; }
 
 
@@ -148,10 +179,29 @@ public class GenSwarmLogic : MonoBehaviour
         }
     }
 
-
     
     private void Attack()
     {
+        if(!InAttackRange)
+        {
+            return;
+        }
+
+        if(!CanAttack)
+        {
+            CurrentWaitTime -= Time.deltaTime;
+            if(CurrentWaitTime <= 0)
+            {
+                CanAttack = true;
+            }
+        }
+
+        if (CanAttack)
+        {
+            SendNextDrone();
+            CanAttack = false;
+            CurrentWaitTime = AttackCooldownTime;
+        }
 
     }
 
@@ -162,7 +212,7 @@ public class GenSwarmLogic : MonoBehaviour
         GeneratorSwarm.ElementAt(CurrentDroneIndex).GetComponent<Enim2PH>().SwarmAttack(this.transform.gameObject, PlayerTarget);
 
         CurrentDroneIndex++;
-        StartCoroutine(AttackCooldown());
+        CanAttack = false;
     }
 
     private void FindRetreatPosition()
@@ -176,7 +226,6 @@ public class GenSwarmLogic : MonoBehaviour
         OldPosition = new Vector3(X_Value, Y_Value, Z_Value);
         RandomRetreatPosition = Random.Range(MinPlayerDistance, MaxPlayerDistance);
         RndPoint = Random.insideUnitCircle;
-        ChangePoint = false;
 
 
         Vector3 RetreatDirection = new Vector3(RndPoint.x, 0, RndPoint.y).normalized;
@@ -213,45 +262,15 @@ public class GenSwarmLogic : MonoBehaviour
         return RoundedNum;
     }
 
-    private void OnDrawGizmos()
-    {
-        //Vector3 DirectionPoint = (LookatPoint.transform.position - PlayerTarget.transform.position).normalized;
-        //Gizmos.DrawWireSphere(PlayerTarget.transform.position, 1.55f);
-        //Gizmos.color = Color.blue;
-        //Vector3 Point = PlayerTarget.transform.position+DirectionPoint * MinPlayerDistance;
-
-        //Gizmos.DrawSphere(Point, 2.5f);
-        //Vector3 MaxPoint = PlayerTarget.transform.position+ DirectionPoint * MaxPlayerDistance;
-        //Gizmos.color = Color.cyan;
-        //Gizmos.DrawSphere(MaxPoint, 2.5f);
-
-
-        //if (ChangePoint)
-        //{
-        //    RandomRetreatPosition = Random.Range(MinPlayerDistance, MaxPlayerDistance);
-        //    RndPoint = Random.insideUnitCircle;
-        //    ChangePoint = false;
-        //}
-        //Vector3 SpawnDirection = new Vector3(RndPoint.x, 0, RndPoint.y).normalized;
-        //Vector3 SpawnPos = PlayerTarget.transform.position + SpawnDirection * RandomRetreatPosition;
-
-        //Gizmos.color = Color.red;
-        //Gizmos.DrawSphere(SpawnPos, 2.5f);
-
-
-    }
-
-    private IEnumerator AttackCooldown()
-    {
-        CanAttack = false;
-        yield return new WaitForSeconds(2.55f);
-        CanAttack = true;
-    }
-
     private void Update()
     {
-        KeepDistanceRange();
+        if (!GeneralStartupRan)
+        {
+            return;
+        }
 
+        KeepDistanceRange();
+        Attack();
 
         if(CanAttack)
         {
