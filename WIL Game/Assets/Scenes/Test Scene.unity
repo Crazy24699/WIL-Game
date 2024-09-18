@@ -2383,15 +2383,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f9e913c80a19b743ab3e0360f1313a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentHealth: 0
+  BaseMoveSpeed: 0
+  PlayerTarget: {fileID: 0}
+  Alive: 0
+  NavMeshRef: {fileID: 0}
+  HealthBar: {fileID: 0}
   SwarmTransformLocation: {fileID: 0}
   CenterSlerpPoint: {fileID: 0}
   SwarmPosition: {x: 0, y: 0, z: 0}
   OutOfRangePosition: {x: 0, y: 0, z: 0}
   CurrentPosition: {x: 0, y: 0, z: 0}
   MissCount: 3
-  CurrentHealth: 0
   Confused: 1
   Attacking: 0
+  WaitTimeFinished: 0
   InternalCounter: 0
   PlayerDistance: 0
   SwarmParentDistance: 0

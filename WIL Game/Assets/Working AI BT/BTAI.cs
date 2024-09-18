@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BTAI : EnemyBase
+public class BTAI : BaseEnemy
 {
 
     public ShortAttack SAttack;

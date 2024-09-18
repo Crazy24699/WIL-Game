@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 
 //Generator guy
-public class Enim2PH : MonoBehaviour
+public class Enim2PH : BaseEnemy
 {
     public Transform SwarmTransformLocation;
     [SerializeField] private Transform CenterSlerpPoint;
@@ -22,15 +22,13 @@ public class Enim2PH : MonoBehaviour
     private GenSwarmLogic SwarmParent;
 
     [SerializeField]private int MissCount=3;
-    private int MaxHealth;
-    [SerializeField]private int CurrentHealth;
 
     [SerializeField]private bool Confused = true;
     [SerializeField] private bool Attacking = false;
 
     private bool GeneralStartupRan = false;
-    private bool WaitTimeFinished = false;
-    private bool CanTakeDamage = true;
+    [SerializeField] private bool WaitTimeFinished = false;
+
 
     [SerializeField]private int InternalCounter;
 
@@ -38,11 +36,9 @@ public class Enim2PH : MonoBehaviour
     public float SwarmParentDistance;
     private float Speed;
 
-    private Slider HealthBar;
-
     public void SwarmAttack(GameObject Parent, GameObject PlayerObject)
     {
-        Attacking = true;
+
         if (!GeneralStartupRan)
         {
             RigidBodyRef = GetComponent<Rigidbody>();
@@ -55,7 +51,10 @@ public class Enim2PH : MonoBehaviour
             SwarmPosition = SwarmPosition.RoundVector(2);
             GeneralStartupRan = true;
         }
-        transform.parent = null;
+        Attacking = true;
+        //this.transform.SetParent(null);
+        Debug.Log("Thrown " + transform.parent.name);
+        this.transform.parent = null;
 
         transform.LookAt(PlayerObject.transform.position);
         RigidBodyRef.AddForce(transform.forward * 1000);
@@ -67,18 +66,16 @@ public class Enim2PH : MonoBehaviour
         Debug.Log("aaaa");
         StartCoroutine(AttackDoneWaitTime());
     }
-    
-    public void BaseStartup()
-    {
-        CustomStartup();
-    }
+   
 
-    protected void CustomStartup()
+    protected override void CustomStartup()
     {
         MaxHealth = 6;
         CurrentHealth = MaxHealth;
         //BaseMoveSpeed = 16;
         HealthBar = transform.GetComponentInChildren<Slider>();
+
+        ImmunityTime = 0.25f;
 
         CanTakeDamage = true;
     }
@@ -94,45 +91,11 @@ public class Enim2PH : MonoBehaviour
         SwarmParent.GeneratorSwarm.Remove(this);
     }
 
-    public void HandleHealth(int HealthChange)
+
+    protected override void Death()
     {
-        HealthBar.value = CurrentHealth;
-        if((CurrentHealth + HealthChange) > MaxHealth)
-        {
-            return;
-        }
-        if (HealthChange < 0)
-        {
-            TakeHit();
-        }
-        CurrentHealth += HealthChange;
-
-        if (CurrentHealth <= 0)
-        {
-            Die();
-        }
-
-        HealthBar.value = CurrentHealth;
-    }
-
-    private void TakeHit()
-    {
-        if (!CanTakeDamage)
-        {
-            return;
-        }
-        StartCoroutine(TakeDamageCooldown());
-    }
-
-    private void Die()
-    {
-
+        //Explosion animation
         Destroy(this.gameObject);
-    }
-
-    private void OnTriggerEnter(Collider Collision)
-    {
-        //HandleDeath();
     }
 
     //maybe put this into a larger checking method for the update method. 
@@ -151,8 +114,7 @@ public class Enim2PH : MonoBehaviour
         }
 
         //Debug.Log("Hit it");
-        PlayerDistance = Vector3.Distance(transform.position, PlayerObjectRef.transform.position);
-        SwarmParentDistance = Vector3.Distance(transform.position, SwarmParent.transform.position);
+        CheckDistances();
         if (PlayerDistance >= 20.25f && SwarmParentDistance >= 40.75f) 
         {
             //Debug.Log("Bleh" + PlayerDistance + "       " + SwarmParentDistance);
@@ -174,6 +136,12 @@ public class Enim2PH : MonoBehaviour
 
     }
 
+    private void CheckDistances()
+    {
+        PlayerDistance = Vector3.Distance(transform.position, PlayerObjectRef.transform.position);
+        SwarmParentDistance = Vector3.Distance(transform.position, SwarmTransformLocation.transform.position);
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.X))
@@ -183,6 +151,11 @@ public class Enim2PH : MonoBehaviour
 
 
         if (!GeneralStartupRan) { return; }
+
+        if (Attacking)
+        {
+            //transform.parent = null;
+        }
 
         CurrentPosition = transform.position.RoundVector(2);
         transform.position=transform.position.RoundVector(2);
@@ -205,6 +178,8 @@ public class Enim2PH : MonoBehaviour
             return;
         }
 
+        CheckDistances();
+
         if (!Confused && this.transform.position.RoundVector(2) != SwarmPosition && Attacking && WaitTimeFinished && OutOfRangePosition != Vector3.zero)
         {
             Speed += 0.250f * Time.deltaTime;
@@ -212,11 +187,12 @@ public class Enim2PH : MonoBehaviour
             transform.position = CurrentPosition.RoundVector(2);
         }
 
-        if (SwarmParentDistance <= 3.5f)
+        if (SwarmParentDistance <= 3.5f && WaitTimeFinished)
         {
             if(transform.parent==null)
             {
                 transform.parent = SwarmParent.transform;
+                RigidBodyRef.velocity = Vector3.zero;
             }
 
             //Speed += 0.250f * Time.deltaTime;

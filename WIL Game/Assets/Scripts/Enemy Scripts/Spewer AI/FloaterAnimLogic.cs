@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class FloaterAnimLogic : MonoBehaviour
 {
-    private SpewerAi SpewerAIScript;
+    [SerializeField]private SpewerAi SpewerAIScript;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        //SpewerAIScript.transform.GetComponentInParent<SpewerAi>();
-
+        Debug.Log(transform.parent.name);
+        SpewerAIScript = transform.parent.transform.parent.GetComponentInChildren<SpewerAi>();
     }
 
+    [SerializeField]
+    private void SpewDrop()
+    {
+        SpewerAIScript.SpawnDropplet();
+    }
     
 
 }

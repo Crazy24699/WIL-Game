@@ -9,8 +9,9 @@ public class WorldHandler : MonoBehaviour
 
     public Dictionary<int, List<SpireObject>> AllSpires = new Dictionary<int, List<SpireObject>>();
 
-    public List<EnemyBase> AllEnemies = new List<EnemyBase>();
-    public List<EnemyBase> EnemiesAttacking = new List<EnemyBase>();
+    public List<GameObject> AllEnemies = new List<GameObject>();
+    public HashSet<GameObject> EnemiesAttacking = new HashSet<GameObject>();
+    public List<GameObject> VisableEnemies = new List<GameObject>();
 
     public GameObject Boss1;
     public GameObject FinalBoss;
@@ -19,16 +20,17 @@ public class WorldHandler : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(TempSetActiveEnemy());
+        //StartCoroutine(TempSetActiveEnemy());
         Debug.Log(AllSpires.Count);
         Debug.Log(AllSpires.ElementAt(0).Value.Count);
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         CurrentTimescale = Time.timeScale;
+        VisableEnemies=EnemiesAttacking.ToList();
     }
 
     private IEnumerator TempSetActiveEnemy()
@@ -47,7 +49,7 @@ public class WorldHandler : MonoBehaviour
 
     public void SetNextActive(GameObject RemovedEnemy)
     {
-        AllEnemies.Remove(RemovedEnemy.GetComponent<EnemyBase>());
+        AllEnemies.Remove(RemovedEnemy.GetComponent<GameObject>());
         if(AllEnemies.Count > 0)
         {
             int Rnd = Random.Range(0, AllEnemies.Count);

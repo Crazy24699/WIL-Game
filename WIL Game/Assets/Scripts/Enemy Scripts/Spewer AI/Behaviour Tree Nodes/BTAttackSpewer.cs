@@ -5,38 +5,21 @@ using UnityEngine;
 public class BTAttackSpewer : BTNodeBase
 {
 
-    private EnemyBase EnemyScript;
+    private SpewerAi EnemyScript;
     private GameObject EnemyObjectRef;
 
     public BTAttackSpewer(GameObject EnemyAIRef)
     {
-        EnemyScript = EnemyAIRef.GetComponent<EnemyBase>();
+        EnemyScript = EnemyAIRef.GetComponent<SpewerAi>();
         EnemyObjectRef = EnemyAIRef;
     }
 
     public override NodeStateOptions RunLogicAndState()
     {
-
-        //if (EnemyScript.IsAttacking)
-        //{
-        //    EnemyScript.EnforceLock();
-        //    return NodeStateOptions.Running;
-        //}
-        //if(EnemyScript.CurrentPlayerDistance <= EnemyScript.OutOfAttackDistance)
-        //{
-        //    EnemyScript.CanAttackPlayer = true;
-        //    EnemyScript.AttackPlayer = true;
-        //    Debug.Log("Bools set");
-        //}
-        //if (EnemyScript.AttackPlayer && EnemyScript.CanAttackPlayer && EnemyScript.SeenPlayer) 
-        //{
-        //    EnemyScript.Attack();
-        //    Debug.Log("Attack Triggered");
-        //    return NodeStateOptions.Running;
-        //}
-
+        
         if (!EnemyScript.OutOfAttackRange && EnemyScript.SeenPlayer)
         {
+            EnemyScript.RotateToTarget();
             //EnemyScript.NavMeshRef.isStopped = true;
             EnemyScript.Attack();
             return NodeStateOptions.Passed;

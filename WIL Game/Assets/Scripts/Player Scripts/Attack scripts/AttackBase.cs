@@ -24,11 +24,21 @@ public class AttackBase : MonoBehaviour
         if (Collision.CompareTag("Enemy") && PlayerAttackRef != null && this.isActiveAndEnabled)
         {
             Debug.Log("Benieth the starts");
-            EnemyBase EnemyBaseScript = Collision.GetComponent<EnemyBase>();
+            
+            if (Collision.GetComponent<BaseEnemy>() != null)
+            {
+                BaseEnemy EnemyBaseScript = Collision.GetComponent<BaseEnemy>();
+                EnemyBaseScript.HandleHealth(-AppliedDamage);
+                return;
+            }
+            if(Collision.GetComponent<EnemyBase>() != null)
+            {
+                EnemyBase EnemyBaseScript = Collision.GetComponent<EnemyBase>();
+                EnemyBaseScript.HandleHealth(-AppliedDamage);
+                return;
+            }
+            
 
-            EnemyBaseScript.HandleHealth(AppliedDamage);
-            EnemyBaseScript.ApplyKnockback();
-            EnemyBaseScript.DisableAttack();
         }
         if (Collision.CompareTag("Boss") && PlayerAttackRef != null && this.isActiveAndEnabled)
         {

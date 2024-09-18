@@ -12,7 +12,7 @@ public class BTNodeBase
         return CurrentNodeState;
     }
 
-    public BTNodeBase RunStartup(EnemyBase EnemyBT)
+    public BTNodeBase RunStartup(SpewerAi EnemyBT)
     {
         EnemyBT.AllNodeChoices.Add(this);
         return this;

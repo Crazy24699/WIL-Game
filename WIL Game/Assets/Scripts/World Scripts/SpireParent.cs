@@ -14,6 +14,11 @@ public class SpireParent : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        PopulateSpires();
+    }
+
+    private void PopulateSpires()
+    {
         foreach (var SpireObject in this.transform.GetComponentsInChildren<SpireObject>())
         {
             Debug.Log("run");
@@ -27,14 +32,14 @@ public class SpireParent : MonoBehaviour
         }
 
         WorldHandler WorldHandler = FindObjectOfType<WorldHandler>();
-        
+
         WorldHandler.AllSpires.Add(SpireParentLevel, SpireObjects.ToList());
-
+        Debug.Log(WorldHandler.AllSpires.Count);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void GetSpawningGroup()
     {
-        
+        EnemyParentLogic EnemyParentHandler = GetComponentInChildren<EnemyParentLogic>(true);
     }
+
 }

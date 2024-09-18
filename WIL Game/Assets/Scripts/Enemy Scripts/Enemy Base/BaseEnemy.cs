@@ -15,16 +15,20 @@ public class BaseEnemy : MonoBehaviour
     [Space(5)]
     protected float ImmunityMaxTime;
     protected float CurrentImmunTime;
+    [SerializeField] protected float KnockbackPower;
 
+    [SerializeField] protected float KnockbackTimer = 4f;
+    protected float KnockbackTime;
     //[SerializeField] protected float CurrentImmunityTime;
     [Space(3)]
     [SerializeField] protected float BaseMoveSpeed;
 
     [Space(8)]
-    protected float CurrentPlayerDistance;
+    public float CurrentPlayerDistance;
+    protected float ImmunityTime;
     protected float MaxFollowDistance;
-    protected float MaxAttackDistance;
-
+    public float MaxAttackDistance;
+    [HideInInspector]public float CurrentMoveSpeed;
     #endregion
 
     #region Gameobjects and transforms
@@ -39,8 +43,13 @@ public class BaseEnemy : MonoBehaviour
     [Header("Booleans"), Space(5)]
     #region Bools
     protected bool CanTakeDamage = true;
+    public bool SeenPlayer = false;
+    public bool PatrolActive;
+    public bool PlayerEscaped;
+    protected bool ReduceKnockbackForce;
+    public bool OnAttackingList = false;
 
-    protected bool StartupRan = false;
+    [SerializeField]protected bool StartupRan = false;
     [SerializeField] protected bool Alive = false;
 
     #endregion
@@ -50,7 +59,7 @@ public class BaseEnemy : MonoBehaviour
     protected WorldHandler WorldHandlerScript;
     [SerializeField] protected Slider HealthBar;
     protected Rigidbody RigidbodyRef;
-
+    [SerializeField] protected LayerMask PlayerLayer;
     #endregion
     
     public void BaseStartup()
@@ -67,6 +76,13 @@ public class BaseEnemy : MonoBehaviour
         {
             NavMeshRef = GetComponent<NavMeshAgent>();
         }
+
+        HealthBar = GetComponent<Slider>();
+        if(HealthBar == null)
+        {
+            HealthBar = transform.GetComponentInChildren<Slider>();
+        }
+
         CustomStartup();
         HealthStartup();
 
@@ -77,6 +93,14 @@ public class BaseEnemy : MonoBehaviour
     protected virtual void CustomStartup()
     {
 
+    }
+
+
+    public virtual void ApplyKnockback()
+    {
+        Vector3 ForceDirection = (PlayerRef.transform.position - transform.position).normalized;
+        RigidbodyRef.AddForce(ForceDirection * -1 * KnockbackPower, ForceMode.Impulse);
+        Debug.Log("Love gone wrong");
     }
 
     protected virtual void HealthStartup()
@@ -102,6 +126,7 @@ public class BaseEnemy : MonoBehaviour
         StartCoroutine(ImmunityTimer());
     }
 
+
     public virtual void HandleHealth(int ChangeValue)
     {
         HealthBar.value = CurrentHealth;
@@ -125,13 +150,62 @@ public class BaseEnemy : MonoBehaviour
     
     protected virtual void Death()
     {
+        
+    }
+
+    public void RotateToTarget()
+    {
+        Vector3 TargetDirection = PlayerRef.transform.position - this.transform.position;
+        TargetDirection.y = 0.0f;
+        Quaternion TargetRotation = Quaternion.LookRotation(TargetDirection);
+
+        this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, TargetRotation, 35f * Time.deltaTime);
+    }
+
+    protected virtual void HandleForce()
+    {
+        //Debug.Log(Rigidbody.velocity.x + " " + Mathf.Abs(Rigidbody.velocity.y) +" "+Mathf.Abs(Rigidbody.velocity.z));
+        if (Mathf.Abs(RigidbodyRef.velocity.x) <= 2 && Mathf.Abs(RigidbodyRef.velocity.y) <= 2 && Mathf.Abs(RigidbodyRef.velocity.z) <= 2)
+        {
+
+            ReduceKnockbackForce = false;
+        }
+        else if (Mathf.Abs(RigidbodyRef.velocity.x) > 2 || Mathf.Abs(RigidbodyRef.velocity.y) > 2 || Mathf.Abs(RigidbodyRef.velocity.z) > 2)
+        {
+            ReduceKnockbackForce = true;
+        }
+        if (!ReduceKnockbackForce)
+        {
+            return;
+        }
+
+        if (ReduceKnockbackForce)
+        {
+            KnockbackTime -= Time.deltaTime;
+            float CurrentXVelocity = Mathf.Lerp(RigidbodyRef.velocity.x, 0.0f, 0.005f);
+            float CurrentYVelocity = Mathf.Lerp(RigidbodyRef.velocity.y, 0.0f, KnockbackTime / KnockbackTimer);
+            float CurrentZVelocity = Mathf.Lerp(RigidbodyRef.velocity.z, 0.0f, 0.005f);
+
+            RigidbodyRef.velocity = new Vector3(CurrentXVelocity, CurrentYVelocity, CurrentZVelocity);
+        }
+    }
+
+
+    public virtual void Attack()
+    {
 
     }
+
 
     protected IEnumerator ImmunityTimer()
     {
         CanTakeDamage = false;
-        yield return new WaitForSeconds(2.55f);
+        if (ImmunityTime <= 0)
+        {
+            Debug.LogError("ImmunityTimer not set on: " + this.gameObject.name);
+            ImmunityTime = 2.55f;
+        }
+        yield return new WaitForSeconds(ImmunityTime);
         CanTakeDamage = true;
     }
 }

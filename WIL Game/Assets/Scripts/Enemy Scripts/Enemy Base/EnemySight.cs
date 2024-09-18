@@ -6,11 +6,11 @@ using UnityEngine;
 public class EnemySight : MonoBehaviour
 {
 
-    protected EnemyBase EnemyAIScript;
+    protected BTBaseEnemy EnemyAIScript;
 
     void Start()
     {
-        EnemyAIScript = transform.GetComponentInParent<EnemyBase>();
+        EnemyAIScript = transform.GetComponentInParent<BTBaseEnemy>();
     }
 
     private void OnTriggerEnter(Collider Trigger)
@@ -23,15 +23,4 @@ public class EnemySight : MonoBehaviour
             EnemyAIScript.PatrolActive = false;
         }
     }
-
-    private void OnTriggerExit(Collider Trigger)
-    {
-        if (Trigger.CompareTag("Player"))
-        {
-            //EnemyAIScript.SeenPlayer = false;
-        }
-    }
-
-
-
 }

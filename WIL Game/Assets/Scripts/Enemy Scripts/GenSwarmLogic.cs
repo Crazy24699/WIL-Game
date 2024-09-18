@@ -61,12 +61,12 @@ public class GenSwarmLogic : MonoBehaviour
 
         CloseRangeTimer = MaxCloseRangeTime;
         CanAttack = true;
-        StartCoroutine(SpawnSwarm());
-
+        //StartCoroutine();
+        SpawnSwarm();
         NavAgentRef = GetComponent<NavMeshAgent>();
     }
 
-    private IEnumerator SpawnSwarm()
+    private void SpawnSwarm()
     {
         for (int i = 0; i < 3; i++)
         {
@@ -75,7 +75,6 @@ public class GenSwarmLogic : MonoBehaviour
                 break;
             }
 
-            yield return new WaitForSeconds(0.25f);
             GameObject SpawnedDrone;
             Vector3 PossiblePosition = RandomizeSpawnPoint();
             if (!Physics.CheckSphere(PossiblePosition, 1.55f, SpawningMask))
@@ -88,11 +87,11 @@ public class GenSwarmLogic : MonoBehaviour
                 SwarmLocations[i].transform.parent = this.transform;
                 SwarmLocations[i].gameObject.name = "Swarmer Location: " + i;
 
-                SpawnedDrone.GetComponent<Enim2PH>().BaseStartup();
                 SpawnedDrone.GetComponent<Enim2PH>().SwarmTransformLocation = SwarmLocations[i];
+                SpawnedDrone.transform.parent = this.transform;
 
                 GeneratorSwarm.Add(SpawnedDrone.GetComponent<Enim2PH>());
-                SpawnedDrone.transform.parent = this.transform;
+                SpawnedDrone.GetComponent<Enim2PH>().BaseStartup();
                 Debug.Log("Run");
             }
             else
@@ -139,7 +138,7 @@ public class GenSwarmLogic : MonoBehaviour
     private void KeepDistanceRange()
     {
         CurrentPlayerDistance = Vector3.Distance(transform.position, PlayerTarget.transform.position);
-        InAttackRange = (CurrentPlayerDistance > MinPlayerDistance && CurrentPlayerDistance < MaxPlayerDistance);
+        InAttackRange = (CurrentPlayerDistance < MaxPlayerDistance);
 
         if (CurrentPlayerDistance > MaxPlayerDistance )
         {
@@ -147,13 +146,14 @@ public class GenSwarmLogic : MonoBehaviour
             NavAgentRef.SetDestination(PlayerTarget.transform.position);
             NavAgentRef.isStopped = false;
         }
-        if (CurrentPlayerDistance < MinPlayerDistance + 15 && !NavAgentRef.isStopped)
+        if (CurrentPlayerDistance < MinPlayerDistance + 15)
         {
             Debug.Log(CurrentPlayerDistance + "Love bites" + MinPlayerDistance + 15.00);
-            NavAgentRef.isStopped = true;
+            //ChangePosition = true;
+            //NavAgentRef.isStopped = true;
         }
 
-        if (!InAttackRange) { return; }
+        //if (!InAttackRange) { return; }
 
 
         if (CurrentPlayerDistance < MinPlayerDistance && !ChangePosition)
@@ -190,13 +190,13 @@ public class GenSwarmLogic : MonoBehaviour
         if(!CanAttack)
         {
             CurrentWaitTime -= Time.deltaTime;
-            if(CurrentWaitTime <= 0)
+            if (CurrentWaitTime <= 0)
             {
                 CanAttack = true;
             }
         }
 
-        if (CanAttack)
+        if (CanAttack && GeneratorSwarm.Count > 1) 
         {
             SendNextDrone();
             CanAttack = false;
@@ -209,6 +209,7 @@ public class GenSwarmLogic : MonoBehaviour
     {
         if (CurrentDroneIndex >= GeneratorSwarm.Count) { CurrentDroneIndex = 0; }
         Debug.Log(GeneratorSwarm.ElementAt(CurrentDroneIndex));
+        Debug.Log(GeneratorSwarm.ElementAt(CurrentDroneIndex).name);
         GeneratorSwarm.ElementAt(CurrentDroneIndex).GetComponent<Enim2PH>().SwarmAttack(this.transform.gameObject, PlayerTarget);
 
         CurrentDroneIndex++;
@@ -245,7 +246,7 @@ public class GenSwarmLogic : MonoBehaviour
         if (!ChangePosition) { return; }
 
         if (transform.position == NewRetreatPosition) { ChangePosition = false; RetreatSpeed = 0; return; }
-        RetreatSpeed += 0.325f * Time.deltaTime;
+        RetreatSpeed += 0.425f * Time.deltaTime;
 
         Vector3 CurrentPosition = Vector3.Slerp(OldPosition, NewRetreatPosition, RetreatSpeed);
 
@@ -254,6 +255,11 @@ public class GenSwarmLogic : MonoBehaviour
         float Z_Value = RoundNumbersToDecimal(CurrentPosition.z);
 
         transform.position = new Vector3(X_Value, Y_Value, Z_Value);
+        if (transform.position == NewRetreatPosition)
+        {
+            ChangePosition = false;
+            RetreatSpeed = 0;
+        }
     }
 
     private float RoundNumbersToDecimal(float BaseNum)
@@ -286,7 +292,7 @@ public class GenSwarmLogic : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.J))
         {
 
-            StartCoroutine(SpawnSwarm());
+            
         }
         if (Input.GetKeyDown(KeyCode.Y))
         {

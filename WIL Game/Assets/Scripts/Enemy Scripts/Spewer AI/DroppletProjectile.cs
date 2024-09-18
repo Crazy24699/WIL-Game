@@ -11,10 +11,13 @@ public class DroppletProjectile : ProjectileBase
             //Deal Damage to the thing
             if (Collision.CompareTag("Player"))
             {
-                
+
                 Collision.transform.GetComponentInParent<PlayerInteraction>().HandleHealth(-1);
             }
-
+            if (Collision.CompareTag("Ground"))
+            {
+                Destroy(this.gameObject);
+            }
             Debug.Log(Collision.name + "   Hit Object");
             Destroy(this.gameObject);
         }

@@ -14,6 +14,8 @@ public class ProjectileBase : MonoBehaviour
     protected int Damage;
     protected bool CanDestory = false;
 
+    [SerializeField]private float AdditionalForce;
+
     public void LifeStartup(Vector3 DirectionalForce, float InitalForce)
     {
         CustomBehaviour();
@@ -37,7 +39,7 @@ public class ProjectileBase : MonoBehaviour
         {
             LifeTime = 15;
         }
-        RigidBodyRef.AddForce((DirectionalForce * 5 + ForceChanges) * InitalForce);
+        RigidBodyRef.AddForce((DirectionalForce * 5 + ForceChanges) * (InitalForce + AdditionalForce));
         StartCoroutine(LifeTimer());
 
         if (!CustomLifeTimer)

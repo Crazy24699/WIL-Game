@@ -3,7 +3,15 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class SpewerAi : EnemyBase
+
+//if this is here, that means you have not taken the spewer ai off of its dev 
+//exception and needs to be. 
+using TMPro;
+using Microsoft;
+using JetBrains;
+using OpenCover;
+
+public class SpewerAi : BTBaseEnemy
 {
 
     public bool SearchSequenceActive = false;
@@ -11,28 +19,38 @@ public class SpewerAi : EnemyBase
     [SerializeField] private GameObject Dropplet;
     [SerializeField] private GameObject SpewPoint;
 
+    public float PlayerDistance;
+    public float MaxAttackDist;
+
+
+
     private Animator EnemyAnimator;
+
 
     private void Start()
     {
-        
-        //int RandomWayPoint = Random.Range(0, WorldHandlerScript.AllSpires.Count);
-        //WaypointPosition = WorldHandlerScript.AllSpires[RandomWayPoint][RandomWayPoint].ThisSpire.transform;
-        StartCoroutine(BaseStartup());
+        BaseStartup();
+    }
 
-        StartCoroutine(StartupDelay());
+    
+
+    protected override void CustomStartup()
+    {
+        MaxFollowDistance = 20.25f;
+        base.CustomStartup();
+        CreateBehaviourTree();
         EnemyAnimator = GetComponent<Animator>();
-        if(EnemyAnimator == null)
+        if (EnemyAnimator == null)
         {
             EnemyAnimator = transform.GetComponentInChildren<Animator>();
         }
         PatrolActive = true;
-        
-    }
-    protected override void CustomStartup()
-    {
-        WorldHandlerScript.AllEnemies.Add(this);
+
+
+        WorldHandlerScript.AllEnemies.Add(this.gameObject);
         MaxHealth = 10;
+        CurrentHealth = MaxHealth;
+
         
     }
 
@@ -47,30 +65,24 @@ public class SpewerAi : EnemyBase
         HealthBar.value = CurrentHealth;
         if (CurrentHealth <= 0)
         {
-            Die();
+            Death();
             Destroy(gameObject);
         }
         HandleForce();
 
         if (Input.GetKeyDown(KeyCode.J))
         {
-            IsAttacking = false;
+            //Attacking = false;
         }
 
         if (Input.GetKeyDown(KeyCode.K))
         {
-            CanAttackPlayer = true;
+            //CanAttackPlayer = true;
         }
 
 
         CurrentMoveSpeed = NavMeshRef.velocity.magnitude;
-        //Debug.Log(CurrentMoveSpeed);
         CurrentMoveSpeed = (float)System.Math.Round(CurrentMoveSpeed, 2);
-        //Debug.Log(CurrentMoveSpeed); 
-        //PlayAnimation();
-
-        //SeenPlayer = PlayerEscaped;
-        
     }
 
 
@@ -78,22 +90,29 @@ public class SpewerAi : EnemyBase
     {
         if (StartupRan && Alive)
         {
+            Debug.Log("This Is running");
             RootNode.RunLogicAndState();
             EnemyAnimator.SetFloat("CurrentSpeed", CurrentMoveSpeed);
-        }
-    }
 
-    private IEnumerator StartupDelay()
-    {
-        yield return new WaitForSeconds(0.5f);
-        CreateBehaviourTree();
+            PlayerDistance = CurrentPlayerDistance;
+            MaxAttackDist = MaxAttackDistance;
+        }
     }
 
     public override void Attack()
     {
-        Debug.Log("Wishing lust for\r\nWicked ways");
+        if (WorldHandlerScript.EnemiesAttacking.Count < 2 && !OnAttackingList)
+        {
+            WorldHandlerScript.EnemiesAttacking.Add(this.gameObject);
+            OnAttackingList = true;
+
+        }
+        if (!OnAttackingList) { return; }
+        Debug.Log("Wishing for\r\nWicked ways");
+
         LockForAttack();
         EnemyAnimator.SetTrigger("Attack");
+
     }
 
     public void SpawnDropplet()

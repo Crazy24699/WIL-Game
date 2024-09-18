@@ -4,38 +4,19 @@ using UnityEngine;
 
 public class BTPersuePlayer : BTNodeBase
 {
-    protected EnemyBase EnemyScript;
+    protected SpewerAi EnemyScript;
     protected GameObject EnemySelf;
 
 
 
     public BTPersuePlayer(GameObject EnemyAIRef)
     {
-        EnemyScript = EnemyAIRef.GetComponent<EnemyBase>();
+        EnemyScript = EnemyAIRef.GetComponent<SpewerAi>();
         EnemySelf = EnemyAIRef;
     }
 
     public override NodeStateOptions RunLogicAndState()
     {
-
-        //if (EnemyScript.SeenPlayer && !EnemyScript.PlayerEscaped)
-        //{
-        //    EnemyScript.SetDestination(EnemyScript.PlayerTarget);
-        //    EnemyScript.HandlePlayerRange();
-
-        //    return NodeStateOptions.Passed;
-        //}
-        //else if(!EnemyScript.PlayerEscaped && !EnemyScript.SeenPlayer)
-        //{
-        //    EnemyScript.PatrolActive = true;
-        //    return NodeStateOptions.Failed;
-        //}
-
-        //if (EnemyScript.AttackPlayer && EnemyScript.SeenPlayer) 
-        //{
-        //    EnemyScript.SetDestination(EnemyScript.PlayerTarget);
-        //    return NodeStateOptions.Running;
-        //}
 
         if (EnemyScript.PlayerEscaped || EnemyScript.PatrolActive)
         {
