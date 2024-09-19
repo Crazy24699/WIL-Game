@@ -102,6 +102,7 @@ public class KaraBossAI : BossBase
         AttackWaitTime = 15f;
         KaraAnimations = transform.GetComponentInChildren<Animator>();
         CreateBehaviourTree();
+        HealtbarStartup();
 
         MaxAttackDistance = CoalAttack.AttackDistance;
         StartupRan = true;
@@ -139,6 +140,17 @@ public class KaraBossAI : BossBase
             return;
         }
 
+        if (AllAttacksDown)
+        {
+            CanPerformAction = false;
+        }
+
+        if (CurrentHealth <= 0)
+        {
+            Alive = false;
+            Destroy(gameObject);
+        }
+
         CheckDistance();
         //AttackChecker();
 
@@ -173,12 +185,21 @@ public class KaraBossAI : BossBase
 
     public void FireCoal()
     {
-        if (AttackActive && CoalAttack.Performing)
-        {
-            KaraAnimations.SetTrigger("CoalAttack");
-            CoalAttack.ShotsFired++;
-            CoalAttackLogic();
-        }
+
+        CoalAttackLogic();
+        Debug.Log("fuck");
+        KaraAnimations.SetTrigger("CoalAttack");
+
+    }
+
+    public void SlashHorn()
+    {
+        KaraAnimations.SetTrigger("HornAttack");
+    }
+
+    public void ShatterGround()
+    {
+        KaraAnimations.SetTrigger("EarthAttack");
     }
 
     public void AttackPerformanceSet(bool SetPerform, AttackOptions PerformingAttack)
@@ -204,6 +225,7 @@ public class KaraBossAI : BossBase
     {
         CanAttack = false;
         yield return new WaitForSeconds(LockoutDelayTime);
+        Debug.Log("Lockout done;");
         CanAttack = true;
         AttackChosen = false;
     }
@@ -222,7 +244,7 @@ public class KaraBossAI : BossBase
                 break;
         }
         StartCoroutine(LockoutTimeLogic(LockoutTimeChosen,LockoutAttack));
-        Debug.Log("didnt see the grave");
+        //Debug.Log("didnt see the grave");
     }
 
     private IEnumerator LockoutTimeLogic(float WaitTime, bool AttackLockout)
@@ -250,52 +272,39 @@ public class KaraBossAI : BossBase
         switch (ChosenAttack)
         {
             case AttackOptions.HornSwipe:
+                AttackPerformanceSet(true, AttackOptions.HornSwipe);
                 Debug.Log("Horn");
+                ActionLockoutTime = HornAttack.LockoutTime;
+                SlashHorn();
                 break;
 
             case AttackOptions.CoalBarrage:
+                AttackPerformanceSet(true, AttackOptions.CoalBarrage);
                 Debug.Log("Coal");
+                ActionLockoutTime = CoalAttack.LockoutTime;
+                FireCoal();
                 break;
 
             case AttackOptions.EarthShaker:
+                AttackPerformanceSet(true, AttackOptions.EarthShaker);
                 Debug.Log("Earth");
+                ActionLockoutTime = EarthAttack.LockoutTime;
+                ShatterGround();
                 break;
 
         }
         ActionLockoutLogic(true);
-        StartCoroutine(AttackLockoutDelay(5));
+        StartCoroutine(AttackLockoutDelay(ActionLockoutTime));
 
         ActionLockoutLogic(false);
         CanAttack = false;
+        AttackPerformanceSet(false, ChosenAttack);
         //AttackChosen = false;
 
         //PerformingAttack = true;
     }
     #endregion
 
-
-    private void Update()
-    {
-        if (!StartupRan)
-        {
-            return;
-        }
-
-        if (AllAttacksDown)
-        {
-            CanPerformAction = false;
-        }
-
-        if (CurrentHealth <= 0)
-        {
-            Alive = false;
-            Destroy(gameObject);
-        }
-
-
-
-        //ActiveActionCooldown();
-    }
 
 
    
@@ -360,20 +369,28 @@ public class KaraBossAI : BossBase
         [SerializeField] private GameObject CoalObject;
         [SerializeField] private GameObject[] MorterPoints;
 
-        public IEnumerator CoalBarrage()
+        public void CoalBurst()
         {
-
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < MorterPoints.Length; i++)
             {
-                for (int j = 0; j < MorterPoints.Length; j++)
-                {
-                    SpawnCoal(MorterPoints[j].gameObject, j + 0 + i);
-                    yield return new WaitForSeconds(0.15f);
-                }
-                yield return new WaitForSeconds(1.25f);
+                SpawnCoal(MorterPoints[i].gameObject, i + 0 + i);
             }
-            AttackCooldownActive = true;
         }
+
+        //public IEnumerator CoalBarrage()
+        //{
+
+        //    for (int i = 0; i < 2; i++)
+        //    {
+        //        for (int j = 0; j < MorterPoints.Length; j++)
+        //        {
+        //            SpawnCoal(MorterPoints[j].gameObject, j + 0 + i);
+        //            yield return new WaitForSeconds(0.15f);
+        //        }
+        //        yield return new WaitForSeconds(1.25f);
+        //    }
+        //    AttackCooldownActive = true;
+        //}
 
         private void SpawnCoal(GameObject FirePoint, int SpawnNumer)
         {

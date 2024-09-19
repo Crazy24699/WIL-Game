@@ -1290,7 +1290,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AllEnemies: []
-  EnemiesAttacking: []
+  VisableEnemies: []
   Boss1: {fileID: 0}
   FinalBoss: {fileID: 0}
   CurrentTimescale: 0
@@ -2384,11 +2384,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CurrentHealth: 0
+  KnockbackPower: 0
+  KnockbackTimer: 4
   BaseMoveSpeed: 0
+  CurrentPlayerDistance: 0
+  MaxAttackDistance: 0
+  CurrentMoveSpeed: 0
   PlayerTarget: {fileID: 0}
+  SeenPlayer: 0
+  PatrolActive: 0
+  PlayerEscaped: 0
+  OnAttackingList: 0
+  StartupRan: 0
   Alive: 0
   NavMeshRef: {fileID: 0}
   HealthBar: {fileID: 0}
+  PlayerLayer:
+    serializedVersion: 2
+    m_Bits: 0
   SwarmTransformLocation: {fileID: 0}
   CenterSlerpPoint: {fileID: 0}
   SwarmPosition: {x: 0, y: 0, z: 0}
@@ -2997,11 +3010,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1350814672311814053, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.000000004288421
+      value: -0.000000004288421
       objectReference: {fileID: 0}
     - target: {fileID: 1350814672311814053, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -3.3639805e-10
+      value: 3.3639805e-10
       objectReference: {fileID: 0}
     - target: {fileID: 1777714556686848606, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_Name
@@ -4186,9 +4199,21 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 745666466916090104, guid: b21fde7e20c031c4e807ad0b0eeb9db6, type: 3}
-      propertyPath: PlayerRef
-      value: 
-      objectReference: {fileID: 6133093832751616838}
+      propertyPath: MaxAttackDistance
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 745666466916090104, guid: b21fde7e20c031c4e807ad0b0eeb9db6, type: 3}
+      propertyPath: CoalAttack.AttackDistance
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 745666466916090104, guid: b21fde7e20c031c4e807ad0b0eeb9db6, type: 3}
+      propertyPath: HornAttack.AttackDistance
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 745666466916090104, guid: b21fde7e20c031c4e807ad0b0eeb9db6, type: 3}
+      propertyPath: EarthAttack.AttackDistance
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 5511307945256873670, guid: b21fde7e20c031c4e807ad0b0eeb9db6, type: 3}
       propertyPath: m_LocalPosition.x
       value: -96.5
@@ -4232,10 +4257,6 @@ PrefabInstance:
     - target: {fileID: 8756959682837578916, guid: b21fde7e20c031c4e807ad0b0eeb9db6, type: 3}
       propertyPath: m_Name
       value: Kara boss
-      objectReference: {fileID: 0}
-    - target: {fileID: 8756959682837578916, guid: b21fde7e20c031c4e807ad0b0eeb9db6, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

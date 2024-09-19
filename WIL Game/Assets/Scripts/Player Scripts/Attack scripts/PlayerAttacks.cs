@@ -257,7 +257,8 @@ public class PlayerAttacks : MonoBehaviour
     {
         AttackAnimation.SetTrigger(AnimName);
 
-        StartCoroutine(AttackReset());
+        //StartCoroutine(AttackReset());
+        ResetAttack();
     }
 
     public IEnumerator AttackReset()
@@ -273,6 +274,11 @@ public class PlayerAttacks : MonoBehaviour
         }
         yield return new WaitForSeconds(1.75f);
 
+
+    }
+
+    public void ResetAttack()
+    {
         PlayerInteractionScript.CanTakeDamage = true;
         HandleCameraState(true);
         HandleMovementState(true);
@@ -306,8 +312,8 @@ public class PlayerAttacks : MonoBehaviour
 
     protected void HandleMovementState(bool LockMovement)
     {
-        //PlayerMoveScript.enabled = LockMovement;
-        //PlayerMoveScript.Rigidbody.velocity = Vector3.zero;
+        PlayerMoveScript.enabled = LockMovement;
+        PlayerMoveScript.Rigidbody.velocity = Vector3.zero;
     }
 
     protected void HandleCameraState(bool LockCamera)

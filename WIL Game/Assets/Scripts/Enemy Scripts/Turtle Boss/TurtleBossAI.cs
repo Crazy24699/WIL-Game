@@ -42,7 +42,6 @@ public class TurtleBossAI : BossBase
     #endregion
 
     [SerializeField]private Animator TurtleAnimation;
-    [SerializeField] private Slider HealthBar;
 
     public enum TurtleAttacks
     {

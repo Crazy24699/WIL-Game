@@ -6,10 +6,10 @@ using UnityEngine;
 
 //if this is here, that means you have not taken the spewer ai off of its dev 
 //exception and needs to be. 
-using TMPro;
-using Microsoft;
-using JetBrains;
-using OpenCover;
+//using TMPro;
+//using Microsoft;
+//using JetBrains;
+//using OpenCover;
 
 public class SpewerAi : BTBaseEnemy
 {
@@ -25,13 +25,6 @@ public class SpewerAi : BTBaseEnemy
 
 
     private Animator EnemyAnimator;
-
-
-    private void Start()
-    {
-        BaseStartup();
-    }
-
     
 
     protected override void CustomStartup()

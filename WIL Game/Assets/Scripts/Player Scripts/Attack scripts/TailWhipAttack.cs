@@ -49,7 +49,9 @@ public class TailWhipAttack : ProjectileBase
 
         if (Collision.CompareTag("Boss"))
         {
+            Debug.Log("aaaa");
             Collision.GetComponent<BossBase>().HandleHealth(-1);
+            Destroy(this.gameObject);
         }
         if (!ColliderExceptions.Contains(Collision.tag))
         {

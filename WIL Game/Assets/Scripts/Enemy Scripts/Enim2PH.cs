@@ -80,7 +80,7 @@ public class Enim2PH : BaseEnemy
         CanTakeDamage = true;
     }
 
-    private void Start()
+    public void HandleGeneralStartup()
     {
         OutOfRangePosition = this.transform.position.RoundVector(2);
         BaseStartup();

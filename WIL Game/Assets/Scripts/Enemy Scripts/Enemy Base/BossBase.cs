@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BossBase : MonoBehaviour
 {
@@ -14,11 +15,22 @@ public class BossBase : MonoBehaviour
     protected bool StartupRan;
 
     protected bool Alive = true;
-    
+    [SerializeField]protected Slider HealthBar;
 
     public virtual void BossStartup()
     {
 
+    }
+
+    protected void HealtbarStartup()
+    {
+        if (HealthBar == null)
+        {
+            HealthBar = transform.GetComponentInChildren<Slider>();
+            HealthBar.maxValue = MaxHealth;
+            HealthBar.minValue = 0;
+        }
+        HealthBar.value = CurrentHealth;
     }
 
     public void HandleHealth(int HealthChange)
@@ -26,7 +38,9 @@ public class BossBase : MonoBehaviour
         int ChangedHealth = (CurrentHealth + HealthChange);
         Die(ChangedHealth);
 
+
         CurrentHealth += HealthChange;
+        HealthBar.value = CurrentHealth;
     }
 
     protected void Die(int HealthCheck)

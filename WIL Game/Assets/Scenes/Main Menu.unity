@@ -269,7 +269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09945570486c2124bae4f55abc6bdbcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerActionMap: {fileID: 0}
+  GamePaused: 0
 --- !u!1 &349775368
 GameObject:
   m_ObjectHideFlags: 0

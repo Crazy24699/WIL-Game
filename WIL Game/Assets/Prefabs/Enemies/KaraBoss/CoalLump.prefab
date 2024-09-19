@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 6090004261617423477}
   - component: {fileID: 7598916758341407583}
   - component: {fileID: 2168470572342897204}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CoalLump
-  m_TagString: Untagged
+  m_TagString: DamageObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -120,6 +120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ForceChanges: {x: 0, y: 5, z: 0}
+  AdditionalForce: 0
 --- !u!54 &2168470572342897204
 Rigidbody:
   m_ObjectHideFlags: 0

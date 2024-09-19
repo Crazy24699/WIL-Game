@@ -9,12 +9,30 @@ public class KaraAnimLogic : MonoBehaviour
 
     private void Start()
     {
-        
+        KaraLogic = transform.root.GetComponent<KaraBossAI>();
     }
 
     [SerializeField] private void CoalSpurt()
     {
+        KaraLogic.CoalAttack.CoalBurst();
+    }
+
+    [SerializeField]private void StartCoalCooldown()
+    {
+        StartCoroutine(KaraLogic.CoalAttack.AttackCooldown());
+    }
+
+    [SerializeField]private void StartHornCooldown()
+    {
+        StartCoroutine(KaraLogic.HornAttack.AttackCooldown());
 
     }
+
+    [SerializeField]private void StartSlamCooldown()
+    {
+        StartCoroutine(KaraLogic.EarthAttack.AttackCooldown());
+
+    }
+
 
 }
