@@ -32699,14 +32699,14 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.3
-    functionName: ActivateClawAttack
+    functionName: SetClawState
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
-    intParameter: 0
+    intParameter: 1
     messageOptions: 0
   - time: 1.0666667
-    functionName: DeactivateClawAttack
+    functionName: SetClawState
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

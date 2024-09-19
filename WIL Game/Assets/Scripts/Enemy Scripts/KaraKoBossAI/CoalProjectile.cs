@@ -63,9 +63,11 @@ public class CoalProjectile : ProjectileBase
 
     private void OnCollisionEnter(Collision ObjectCollision)
     {
+        Debug.Log(ObjectCollision.gameObject.tag);
         if (ObjectCollision.gameObject.CompareTag("Ground"))
         {
-            Destroy(gameObject);
+            Debug.Log("Hit Ground");
+            Destroy(this.gameObject);
         }
 
         if (ObjectCollision.gameObject.CompareTag("Player"))

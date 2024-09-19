@@ -75,7 +75,7 @@ public class PlayerAttacks : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        PopulateAttacks();
+        //PopulateAttacks();
 
         NextAttack = AllAttacks.None;
         PlayerInputRef = new PlayerInput();
@@ -89,11 +89,12 @@ public class PlayerAttacks : MonoBehaviour
         PlayerInteractionScript = FindObjectOfType<PlayerInteraction>();
 
         SetActiveAttack(AllAttacks.SlashAttack,AttackTypes.Primary);
-        DeactivateClawAttack();
+        SetClawState(0);
         SetActiveAttack(AllAttacks.TailWhip, AttackTypes.Secondary);
+        SetTailAttackState(0);
 
         SetActiveAttack(AllAttacks.BiteAttack, AttackTypes.Third);
-        DeactivateBite();
+        SetBiteState(0);
     }
 
     private void OnEnable()
@@ -106,78 +107,70 @@ public class PlayerAttacks : MonoBehaviour
         PlayerInputRef.Disable();
     }
 
-    private void PopulateAttacks()
+    private void FixedUpdate()
     {
-        foreach (AllAttacks Attack in System.Enum.GetValues(typeof(AllAttacks)))
-        {
-            if (!Attack.Equals(AllAttacks.None))
-            {
-                AttacksInUse.Add(Attack, false);
-            }
-        }
+        IsAttacking = AttackAnimation.GetBool("IsAttacking");
     }
 
-    public void SetActiveAttack(AllAttacks SetAttck, AttackTypes ChosenAttack)
+    private void SetActiveAttack(AllAttacks ChosenAttack, AttackTypes AttackBind)
     {
-
-        if (AttacksInUse[SetAttck])
-        {
-            //Idicator on screen to show that the attack cant be used
-            return;
-        }
-
-        //PlayerInputRef.PlayerAttack.PrimaryAttack.RemoveAction();
-        switch (ChosenAttack)
+        switch (AttackBind)
         {
             case AttackTypes.Primary:
-                PlayerInputRef.PlayerAttack.PrimaryAttack.performed += Context => PerformAttack(SetAttck);
+                PlayerInputRef.PlayerAttack.PrimaryAttack.performed += Context => PerformAttack(ChosenAttack);
                 MainAttack = PlayerInputRef.PlayerAttack.PrimaryAttack;
                 break;
 
             case AttackTypes.Secondary:
-                PlayerInputRef.PlayerAttack.SecondaryAttack.performed += Context => PerformAttack(SetAttck);
+                PlayerInputRef.PlayerAttack.SecondaryAttack.performed += Context => PerformAttack(ChosenAttack);
                 SecondAttack = PlayerInputRef.PlayerAttack.SecondaryAttack;
                 break;
 
             case AttackTypes.Third:
-                PlayerInputRef.PlayerAttack.ThirdAttack.performed += Context => PerformAttack(SetAttck);
+                PlayerInputRef.PlayerAttack.ThirdAttack.performed += Context => PerformAttack(ChosenAttack);
                 ThirdAttack = PlayerInputRef.PlayerAttack.ThirdAttack;
                 break;
             default:
                 break;
         }
-        
     }
-
-    private void Update()
+   
+    private bool CanChain()
     {
-        if(Input.GetKeyDown(KeyCode.C))
+        if ( NextAttack == AllAttacks.None && CurrentAttack != AllAttacks.None)
         {
-            Debug.Log("Victorious");
-            //SetActiveAttack(AllAttacks.TailWhip, AttackTypes.Primary);
+            Debug.Log("Fast");
+            //NextAttack = AllAttacks.TailWhip;
+            return true;
         }
-        IsAttacking = AttackAnimation.GetBool("IsAttacking");
-        switch (ProgramManager.ProgramManagerInstance.GamePaused)
+        if ( NextAttack == AllAttacks.None && CurrentAttack == AllAttacks.None)
         {
-            case true:
-                PlayerInputRef.Disable();
-                break;
 
-            case false:
-                PlayerInputRef.Enable();
-                break;
+            return false;
         }
+        if (NextAttack != AllAttacks.None)
+        {
+            Debug.Log("Faster");
+            return false;
+        }
+        return false;
     }
 
     private void PerformAttack(AllAttacks SetAttck)
     {
-
-        if (IsAttacking && NextAttack == AllAttacks.None) 
+        if (IsAttacking)
         {
-            Debug.Log("Ocean");
-            NextAttack = SetAttck;
-            return;
+            bool CanChain = this.CanChain();
+
+            if(!CanChain)
+            {
+                Debug.Log("Can not");
+                return;
+            }
+            Debug.Log("it can");
         }
+        
+        Debug.Log("This ran;");
         PlayerInteractionScript.CanTakeDamage = false;
         switch (SetAttck)
         {
@@ -195,28 +188,28 @@ public class PlayerAttacks : MonoBehaviour
                 break;
 
         }
+
+        if (CurrentAttack == AllAttacks.None)
+        {
+            CurrentAttack = SetAttck;
+        }
+        else
+        {
+            NextAttack = SetAttck;
+        }
         
-
     }
 
-    #region PLAYER ATTACK TESTING
-    public void TailWhipAttack()
+    private void HandleAttackChaining()
     {
-        //TailWhipFunction();
+        if(NextAttack!=AllAttacks.None)
+        {
+            CurrentAttack = NextAttack;
+            PerformAttack(NextAttack);
+            NextAttack = AllAttacks.None;
+            
+        }
     }
-
-    public void SlashAttack()
-    {
-        //SlashAttackFunction();
-    }
-
-    public void BiteAttack()
-    {
-        //BiteAttackFunction();
-    }
-
-    #endregion
-
 
     private void SlashAttackFunction()
     {
@@ -233,48 +226,29 @@ public class PlayerAttacks : MonoBehaviour
         HandleCameraState(false);
     }
 
+
+
     public void SpawnTailProjectile()
     {
         GameObject SpawnedSlash = Instantiate(TailSlashObject, TailFirePoint.transform.position, transform.rotation);
-        SpawnedSlash.GetComponent<ProjectileBase>().LifeStartup(TailFirePoint.transform.forward, 200*3);
+        SpawnedSlash.GetComponent<ProjectileBase>().LifeStartup(TailFirePoint.transform.forward, 200 * 3);
     }
 
     private void BiteAttackFunction()
     {
+        IsAttacking = true;
         PlayAttackAnim("BiteAttack");
         HandleMovementState(false);
-        StartCoroutine(AttackBoxLifetime(2.5f, Attacks[0]));
-    }
-
-    private IEnumerator AttackBoxLifetime(float LifeTime, AttackBase AttackScript)
-    {
-        AttackScript.enabled = true;
-        yield return new WaitForSeconds(LifeTime);
-        AttackScript.enabled = false;
+        //StartCoroutine(AttackBoxLifetime(2.5f, Attacks[0]));
     }
 
     protected void PlayAttackAnim(string AnimName)
     {
-        AttackAnimation.SetTrigger(AnimName);
 
+        AttackAnimation.SetTrigger(AnimName);
+        AttackAnimation.SetBool(nameof(IsAttacking), true);
         //StartCoroutine(AttackReset());
         ResetAttack();
-    }
-
-    public IEnumerator AttackReset()
-    {
-        yield return new WaitForSeconds(0.2f);
-        if (NextAttack != AllAttacks.None) 
-        {
-            CurrentAttack = NextAttack;
-            NextAttack = AllAttacks.None;
-            PerformAttack(CurrentAttack);
-            Debug.Log("None");
-            yield return null;
-        }
-        yield return new WaitForSeconds(1.75f);
-
-
     }
 
     public void ResetAttack()
@@ -284,36 +258,38 @@ public class PlayerAttacks : MonoBehaviour
         HandleMovementState(true);
     }
 
-    #region ClawAttack
-    public void ActivateClawAttack()
-    {
-        ClawSlashBox.SetActive(true);
-    }
-
-    public void DeactivateClawAttack()
-    {
-        ClawSlashBox.SetActive(false);
-    }
-    #endregion
-    
-    #region Bite Attack
-    public void ActivateBite()
-    {
-        BiteBox.SetActive(true);
-    }
-
-    public void DeactivateBite()
-    {
-        BiteBox.SetActive(false);
-    }
-    #endregion
-
-
-
     protected void HandleMovementState(bool LockMovement)
     {
         PlayerMoveScript.enabled = LockMovement;
         PlayerMoveScript.Rigidbody.velocity = Vector3.zero;
+    }
+
+    public void SetClawState(int ActiveState)
+    {
+        bool Active = ActiveState == 1 ? true : false;
+        ClawSlashBox.SetActive(Active);
+        IsAttacking = Active;
+        if (!Active) { CurrentAttack = AllAttacks.None; HandleAttackChaining();}
+
+    }
+
+
+    [SerializeField]
+    private void SetBiteState(int ActiveState)
+    {
+        bool Active = ActiveState == 1 ? true : false;
+        Debug.Log(Active);
+        BiteBox.SetActive(Active);
+        IsAttacking = Active;
+        if (!Active) { CurrentAttack = AllAttacks.None; HandleAttackChaining();}
+    }
+
+    [SerializeField]
+    private void SetTailAttackState(int ActiveState)
+    {
+        bool Active = ActiveState == 1 ? true : false;
+        IsAttacking = Active;
+        if (!Active) { CurrentAttack = AllAttacks.None; HandleAttackChaining();}
     }
 
     protected void HandleCameraState(bool LockCamera)
@@ -322,5 +298,4 @@ public class PlayerAttacks : MonoBehaviour
         CamFunctionScript.enabled = LockCamera;
         FreeLookCam.SetActive(LockCamera);
     }
-
 }
