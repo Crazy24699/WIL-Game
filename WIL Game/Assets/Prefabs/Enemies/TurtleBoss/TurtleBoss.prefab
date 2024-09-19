@@ -274,7 +274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb6409afe1dbb374b9ce36677ec6acc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackDamage: 0
+  AttackDamage: -1
 --- !u!1 &1506782523556837807
 GameObject:
   m_ObjectHideFlags: 0
@@ -1217,7 +1217,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2629811448709608914
 Transform:
   m_ObjectHideFlags: 0
@@ -1275,6 +1275,7 @@ MonoBehaviour:
   RootNode:
     CurrentNodeState: 0
   AllNodeChoices: []
+  HealthBar: {fileID: 4334401436067991404}
   BubbleAttackClass:
     ShootPointRotations:
     - {x: 0, y: 0, z: 0}
@@ -1303,7 +1304,6 @@ MonoBehaviour:
   DistanceToPlayer: 0
   CurrentMagnitude: 0
   TurtleAnimation: {fileID: 0}
-  HealthBar: {fileID: 4334401436067991404}
   ChosenAttack: 0
 --- !u!54 &3159698629855900052
 Rigidbody:

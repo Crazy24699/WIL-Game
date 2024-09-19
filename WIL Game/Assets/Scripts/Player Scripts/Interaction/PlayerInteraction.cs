@@ -11,6 +11,7 @@ public class PlayerInteraction : MonoBehaviour
 
     public PlayerInput PlayerInputRef;
     protected InputAction InputRef;
+    protected PlayerAttacks PlayerAttacks;
 
     public bool MenuActive;
     public bool CanTakeDamage = true;
@@ -29,6 +30,7 @@ public class PlayerInteraction : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+
         Cursor.lockState = CursorLockMode.Locked;
         MenuActive = false ;
         PlayerInputRef = new PlayerInput();
@@ -36,6 +38,7 @@ public class PlayerInteraction : MonoBehaviour
         CurrentHealth = MaxHealth;
 
         WorldHandlerScript = FindObjectOfType<WorldHandler>();
+
     }
 
     public void OnEnable()

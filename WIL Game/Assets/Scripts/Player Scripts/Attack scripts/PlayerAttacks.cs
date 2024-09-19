@@ -89,12 +89,12 @@ public class PlayerAttacks : MonoBehaviour
         PlayerInteractionScript = FindObjectOfType<PlayerInteraction>();
 
         SetActiveAttack(AllAttacks.SlashAttack,AttackTypes.Primary);
-        SetClawState(0);
+        SetClawState(2);
         SetActiveAttack(AllAttacks.TailWhip, AttackTypes.Secondary);
-        SetTailAttackState(0);
+        SetTailAttackState(2);
 
         SetActiveAttack(AllAttacks.BiteAttack, AttackTypes.Third);
-        SetBiteState(0);
+        SetBiteState(2);
     }
 
     private void OnEnable()
@@ -188,7 +188,6 @@ public class PlayerAttacks : MonoBehaviour
                 break;
 
         }
-
         if (CurrentAttack == AllAttacks.None)
         {
             CurrentAttack = SetAttck;
@@ -269,8 +268,11 @@ public class PlayerAttacks : MonoBehaviour
         bool Active = ActiveState == 1 ? true : false;
         ClawSlashBox.SetActive(Active);
         IsAttacking = Active;
-        if (!Active) { CurrentAttack = AllAttacks.None; HandleAttackChaining();}
-
+        if (ActiveState == 2)
+        {
+            return;
+        }
+        if (!Active) { CurrentAttack = AllAttacks.None; HandleAttackChaining(); ResetAttack(); }
     }
 
 
@@ -281,15 +283,25 @@ public class PlayerAttacks : MonoBehaviour
         Debug.Log(Active);
         BiteBox.SetActive(Active);
         IsAttacking = Active;
-        if (!Active) { CurrentAttack = AllAttacks.None; HandleAttackChaining();}
+        if (ActiveState == 2)
+        {
+            return;
+        }
+        if (!Active) { CurrentAttack = AllAttacks.None; HandleAttackChaining();ResetAttack(); }
     }
+
+
 
     [SerializeField]
     private void SetTailAttackState(int ActiveState)
     {
         bool Active = ActiveState == 1 ? true : false;
         IsAttacking = Active;
-        if (!Active) { CurrentAttack = AllAttacks.None; HandleAttackChaining();}
+        if (ActiveState == 2)
+        {
+            return;
+        }
+        if (!Active) { CurrentAttack = AllAttacks.None; HandleAttackChaining(); ResetAttack(); }
     }
 
     protected void HandleCameraState(bool LockCamera)
