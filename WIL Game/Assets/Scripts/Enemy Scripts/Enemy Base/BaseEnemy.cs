@@ -122,13 +122,15 @@ public class BaseEnemy : MonoBehaviour
     {
         //Damage effect
         //Damage sound effect
-
+        if (!StartupRan) { return; }
         StartCoroutine(ImmunityTimer());
     }
 
 
     public virtual void HandleHealth(int ChangeValue)
     {
+        if (!StartupRan) { return; }
+
         HealthBar.value = CurrentHealth;
         if ((CurrentHealth + ChangeValue) > MaxHealth)
         {

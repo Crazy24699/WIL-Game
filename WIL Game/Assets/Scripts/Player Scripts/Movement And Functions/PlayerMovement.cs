@@ -52,12 +52,12 @@ public class PlayerMovement : MonoBehaviour
             Instantiate(HitParticle, transform.position, Quaternion.identity);
         }
 
-        //if (PlayerAnimations.GetBool("IsAttacking"))
-        //{
-        //    Rigidbody.velocity = Vector3.zero;
-        //    //Debug.Log("laced with poison");
-        //    return;
-        //}
+        if (PlayerAnimations.GetBool("IsAttacking"))
+        {
+            Rigidbody.velocity = Vector3.zero;
+            //Debug.Log("laced with poison");
+            return;
+        }
     }
 
     private void Update()

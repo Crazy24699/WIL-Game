@@ -36,15 +36,16 @@ public class TailWhipAttack : ProjectileBase
         {
             if (Collision.GetComponent<BaseEnemy>() != null)
             {
+                
                 Collision.GetComponent<BaseEnemy>().HandleHealth(-5);
-                return;
+                //return;
             }
             if(Collision.GetComponent<EnemyBase>() != null)
             {
-                Collision.GetComponent<EnemyBase>().HandleHealth(1);
+                Collision.GetComponent<EnemyBase>().HandleHealth(-1);
 
             }
-
+            Destroy(this.gameObject);
         }
 
         if (Collision.CompareTag("Boss"))

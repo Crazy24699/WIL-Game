@@ -28,7 +28,7 @@ public class Enim2PH : BaseEnemy
 
     private bool GeneralStartupRan = false;
     [SerializeField] private bool WaitTimeFinished = false;
-
+    [SerializeField] public bool AttatchedToParent;
 
     [SerializeField]private int InternalCounter;
 
@@ -65,12 +65,13 @@ public class Enim2PH : BaseEnemy
         Speed = 0;
         Debug.Log("aaaa");
         StartCoroutine(AttackDoneWaitTime());
+        Physics.IgnoreLayerCollision(12, 13, true);
     }
    
 
     protected override void CustomStartup()
     {
-        MaxHealth = 6;
+        MaxHealth = 4;
         CurrentHealth = MaxHealth;
         //BaseMoveSpeed = 16;
         HealthBar = transform.GetComponentInChildren<Slider>();
@@ -95,6 +96,7 @@ public class Enim2PH : BaseEnemy
     protected override void Death()
     {
         //Explosion animation
+        HandleDeath();
         Destroy(this.gameObject);
     }
 
@@ -149,6 +151,7 @@ public class Enim2PH : BaseEnemy
             StartCoroutine(ConfusedCooldown());
         }
 
+        AttatchedToParent = transform.parent != null;
 
         if (!GeneralStartupRan) { return; }
 
@@ -156,6 +159,7 @@ public class Enim2PH : BaseEnemy
         {
             //transform.parent = null;
         }
+
 
         CurrentPosition = transform.position.RoundVector(2);
         transform.position=transform.position.RoundVector(2);
@@ -189,7 +193,7 @@ public class Enim2PH : BaseEnemy
 
         if (SwarmParentDistance <= 3.5f && WaitTimeFinished)
         {
-            if(transform.parent==null)
+            if (transform.parent == null) 
             {
                 transform.parent = SwarmParent.transform;
                 RigidBodyRef.velocity = Vector3.zero;

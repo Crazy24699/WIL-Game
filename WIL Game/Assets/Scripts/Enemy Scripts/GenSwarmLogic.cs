@@ -28,6 +28,7 @@ public class GenSwarmLogic : MonoBehaviour
     
 
     public HashSet<Enim2PH> GeneratorSwarm = new HashSet<Enim2PH>();
+    public List<Enim2PH> ShownSwarm;
     private Enim2PH CurrentSelectedDrone;
 
     private Vector3 CheckingCord;
@@ -148,9 +149,9 @@ public class GenSwarmLogic : MonoBehaviour
         }
         if (CurrentPlayerDistance < MinPlayerDistance + 15)
         {
-            Debug.Log(CurrentPlayerDistance + "Love bites" + MinPlayerDistance + 15.00);
+            //Debug.Log(CurrentPlayerDistance + "Love bites" + MinPlayerDistance + 15.00);
             //ChangePosition = true;
-            //NavAgentRef.isStopped = true;
+            NavAgentRef.isStopped = true;
         }
 
         //if (!InAttackRange) { return; }
@@ -196,7 +197,7 @@ public class GenSwarmLogic : MonoBehaviour
             }
         }
 
-        if (CanAttack && GeneratorSwarm.Count > 1) 
+        if (CanAttack && GeneratorSwarm.Count > 0) 
         {
             SendNextDrone();
             CanAttack = false;
@@ -207,13 +208,19 @@ public class GenSwarmLogic : MonoBehaviour
 
     private void SendNextDrone()
     {
-        if (CurrentDroneIndex >= GeneratorSwarm.Count) { CurrentDroneIndex = 0; }
-        Debug.Log(GeneratorSwarm.ElementAt(CurrentDroneIndex));
-        Debug.Log(GeneratorSwarm.ElementAt(CurrentDroneIndex).name);
-        GeneratorSwarm.ElementAt(CurrentDroneIndex).GetComponent<Enim2PH>().SwarmAttack(this.transform.gameObject, PlayerTarget);
+        //the drone needs to do a check that it belongs to the parent before its launched, that is causing an error
 
+        if (CurrentDroneIndex >= GeneratorSwarm.Count) { CurrentDroneIndex = 0; }
+        //Debug.Log(GeneratorSwarm.ElementAt(CurrentDroneIndex));
+        //Debug.Log(GeneratorSwarm.ElementAt(CurrentDroneIndex).name);
+        if (GeneratorSwarm.ElementAt(CurrentDroneIndex).GetComponent<Enim2PH>().AttatchedToParent)
+        {
+            GeneratorSwarm.ElementAt(CurrentDroneIndex).GetComponent<Enim2PH>().SwarmAttack(this.transform.gameObject, PlayerTarget);
+            Debug.Log("Fore Drone out");
+            CurrentDroneIndex++;
+            CanAttack = false;
+        }
         CurrentDroneIndex++;
-        CanAttack = false;
     }
 
     private void FindRetreatPosition()
@@ -274,7 +281,7 @@ public class GenSwarmLogic : MonoBehaviour
         {
             return;
         }
-
+        ShownSwarm = GeneratorSwarm.ToList();
         KeepDistanceRange();
         Attack();
 
