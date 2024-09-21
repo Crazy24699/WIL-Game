@@ -51,13 +51,43 @@ public class PlayerMovement : MonoBehaviour
         {
             Instantiate(HitParticle, transform.position, Quaternion.identity);
         }
+
+        //if (PlayerAnimations.GetBool("IsAttacking"))
+        //{
+        //    Rigidbody.velocity = Vector3.zero;
+        //    //Debug.Log("laced with poison");
+        //    return;
+        //}
+    }
+
+    private void Update()
+    {
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            SpeedMultiplier = 2.5f;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            SpeedMultiplier = 1;
+        }
+        Speed = BaseMoveSpeed * SpeedMultiplier;
+        MovePlayer();
+    }
+
+    private void Sprint(float Multiplier)
+    {
+        SpeedMultiplier = Multiplier;
+    }
+
+    protected void MovePlayer()
+    {
         if (PlayerAnimations.GetBool("IsAttacking"))
         {
-            Rigidbody.velocity = Vector3.zero;
-            //Debug.Log("laced with poison");
+            Debug.Log("Its true");
+            PlayerAnimations.SetBool("Is Moving", false);
             return;
         }
-        MovePlayer();
         switch (CurrentSpeed)
         {
             case <= 0.1f:
@@ -69,28 +99,6 @@ public class PlayerMovement : MonoBehaviour
                 break;
         }
 
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            SpeedMultiplier = 2.5f;
-        }
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            SpeedMultiplier = 1;
-        }
-        Speed = BaseMoveSpeed * SpeedMultiplier;
-    }
-
-    private void Sprint(float Multiplier)
-    {
-        SpeedMultiplier = Multiplier;
-    }
-
-    protected void MovePlayer()
-    {
         PlayerVelocity = new Vector3(Rigidbody.velocity.x, Rigidbody.velocity.y, Rigidbody.velocity.z);
         MoveDirection = PlayerActionMap.action.ReadValue<Vector3>().normalized;
         CurrentSpeed = Rigidbody.velocity.magnitude;

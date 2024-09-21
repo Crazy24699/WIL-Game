@@ -82,7 +82,7 @@ public class PlayerAttacks : MonoBehaviour
 
         PlayerMoveScript = FindObjectOfType<PlayerMovement>();
 
-        CurrentAttack = AllAttacks.SlashAttack;
+        CurrentAttack = AllAttacks.None;
 
         PlayerInputRef.Enable();
 
@@ -259,7 +259,8 @@ public class PlayerAttacks : MonoBehaviour
 
     protected void HandleMovementState(bool LockMovement)
     {
-        PlayerMoveScript.enabled = LockMovement;
+        //PlayerMoveScript.enabled = LockMovement;
+        
         PlayerMoveScript.Rigidbody.velocity = Vector3.zero;
     }
 
