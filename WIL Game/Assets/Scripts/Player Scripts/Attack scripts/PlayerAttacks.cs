@@ -32,15 +32,11 @@ public class PlayerAttacks : MonoBehaviour
     protected InputAction ThirdAttack;
     [Space(5)]
 
-    public AttackBase[] Attacks;
     public PlayerMovement PlayerMoveScript;
     public Cinemachine.CinemachineBrain CinemachineBrainScript;
     public CameraFunctionality CamFunctionScript;
     protected PlayerInteraction PlayerInteractionScript;
     
-
-
-
     public enum AllAttacks
     {
         None,
@@ -48,6 +44,7 @@ public class PlayerAttacks : MonoBehaviour
         TailWhip,
         BiteAttack
     }
+
     public AllAttacks CurrentAttack;
     public AllAttacks NextAttack;
     protected Dictionary<AllAttacks, bool> AttacksInUse = new Dictionary<AllAttacks, bool>();
@@ -170,7 +167,7 @@ public class PlayerAttacks : MonoBehaviour
             Debug.Log("it can");
         }
         
-        Debug.Log("This ran;");
+        //Debug.Log("This ran;");
         PlayerInteractionScript.CanTakeDamage = false;
         switch (SetAttck)
         {
@@ -252,15 +249,22 @@ public class PlayerAttacks : MonoBehaviour
 
     public void ResetAttack()
     {
+        Debug.Log("Reseting ");
         PlayerInteractionScript.CanTakeDamage = true;
         HandleCameraState(true);
         HandleMovementState(true);
     }
 
+    [SerializeField]
+    private void BiteState(int ActiveState)
+    {
+        bool Active = ActiveState == 1 ? true : false;
+        Debug.Log(Active + "  " + ActiveState);
+    }
+
     protected void HandleMovementState(bool LockMovement)
     {
         //PlayerMoveScript.enabled = LockMovement;
-        
         PlayerMoveScript.Rigidbody.velocity = Vector3.zero;
     }
 
@@ -281,14 +285,14 @@ public class PlayerAttacks : MonoBehaviour
     private void SetBiteState(int ActiveState)
     {
         bool Active = ActiveState == 1 ? true : false;
-        Debug.Log(Active);
+        Debug.Log(Active + "  " + ActiveState+"Bite state");
         BiteBox.SetActive(Active);
         IsAttacking = Active;
         if (ActiveState == 2)
         {
             return;
         }
-        if (!Active) { CurrentAttack = AllAttacks.None; HandleAttackChaining();ResetAttack(); }
+        if (!Active) { CurrentAttack = AllAttacks.None; HandleAttackChaining(); ResetAttack(); }
     }
 
 

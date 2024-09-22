@@ -23,7 +23,7 @@ public class AttackBase : MonoBehaviour
     {
         if (Collision.CompareTag("Enemy") && PlayerAttackRef != null && this.isActiveAndEnabled)
         {
-            Debug.Log("Benieth the starts");
+            //Debug.Log("Benieth the starts");
             
             if (Collision.GetComponent<BaseEnemy>() != null)
             {

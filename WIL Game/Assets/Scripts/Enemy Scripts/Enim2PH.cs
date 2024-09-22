@@ -53,7 +53,7 @@ public class Enim2PH : BaseEnemy
         }
         Attacking = true;
         //this.transform.SetParent(null);
-        Debug.Log("Thrown " + transform.parent.name);
+        //Debug.Log("Thrown " + transform.parent.name);
         this.transform.parent = null;
 
         transform.LookAt(PlayerObject.transform.position);
@@ -63,9 +63,9 @@ public class Enim2PH : BaseEnemy
         InvokeRepeating(nameof(CheckMiss), 0.25f, 0.15f);
 
         Speed = 0;
-        Debug.Log("aaaa");
+        //Debug.Log("aaaa");
         StartCoroutine(AttackDoneWaitTime());
-        Physics.IgnoreLayerCollision(12, 13, true);
+        //Physics.IgnoreLayerCollision(12, 13, true);
     }
    
 
@@ -122,7 +122,7 @@ public class Enim2PH : BaseEnemy
             //Debug.Log("Bleh" + PlayerDistance + "       " + SwarmParentDistance);
             if (MissCount > 0)
             {
-                Debug.Log("Invoke");
+                //Debug.Log("Invoke");
                 RigidBodyRef.velocity = Vector3.zero;
                 CancelInvoke(nameof(CheckMiss));
                 MissCount--;
@@ -169,7 +169,7 @@ public class Enim2PH : BaseEnemy
         //InPos = this.transform.position.RoundVector(2) == SwarmPosition;
         if (!Confused && this.transform.position.RoundVector(2) == SwarmPosition && RigidBodyRef.velocity==Vector3.zero && Attacking && WaitTimeFinished)
         {
-            Debug.Log("Is not true");
+            //Debug.Log("Is not true");
             Attacking = false;
             OutOfRangePosition = Vector3.zero;
         }

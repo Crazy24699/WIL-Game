@@ -30,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
 
     public Transform PlayerOrientation;
     public GameObject HitParticle;
-
+    public bool AttackLocked = false;
 
     // Start is called before the first frame update
     void Start()
@@ -82,9 +82,10 @@ public class PlayerMovement : MonoBehaviour
 
     protected void MovePlayer()
     {
+        AttackLocked = PlayerAnimations.GetBool("IsAttacking");
         if (PlayerAnimations.GetBool("IsAttacking"))
         {
-            Debug.Log("Its true");
+            //Debug.Log("Its true");
             PlayerAnimations.SetBool("Is Moving", false);
             return;
         }

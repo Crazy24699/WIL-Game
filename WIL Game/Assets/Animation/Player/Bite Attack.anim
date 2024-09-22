@@ -46342,14 +46342,14 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.48333332
+  - time: 0.28333333
     functionName: SetBiteState
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 1
     messageOptions: 0
-  - time: 1.4333333
+  - time: 1.5
     functionName: SetBiteState
     data: 
     objectReferenceParameter: {fileID: 0}

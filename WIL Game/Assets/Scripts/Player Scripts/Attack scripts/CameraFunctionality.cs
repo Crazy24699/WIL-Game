@@ -18,6 +18,8 @@ public class CameraFunctionality : MonoBehaviour
     public float CurrentMoveSpeed;
     public float Incrimenter;
     public float RotationSpeed;
+    float LockoutTime;
+    float CurrentLockoutTime;
 
     public Transform PlayerOrientation;
     public Transform Player;
@@ -28,18 +30,21 @@ public class CameraFunctionality : MonoBehaviour
     public Vector3 TransformDirection;
     [SerializeField] protected Vector3 MoveDirection;
 
-    float LockoutTime;
-    float CurrentLockoutTime;
+    [SerializeField] private PlayerMovement PlayerMovementScript;    
 
     // Start is called before the first frame update
     void Start()
     {
         CurrentLockoutTime = LockoutTime;
+
+        PlayerMovementScript=transform.root.root.GetComponent<PlayerMovement>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (PlayerMovementScript.AttackLocked) { return; }
+
         RotateToView();
         if (LockView && CameraLock.Equals(false)) 
         {

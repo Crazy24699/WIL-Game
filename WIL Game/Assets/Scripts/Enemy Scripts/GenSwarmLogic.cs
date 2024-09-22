@@ -143,7 +143,7 @@ public class GenSwarmLogic : MonoBehaviour
 
         if (CurrentPlayerDistance > MaxPlayerDistance )
         {
-            Debug.Log("at the alter we start to pray");
+            //Debug.Log("at the alter we start to pray");
             NavAgentRef.SetDestination(PlayerTarget.transform.position);
             NavAgentRef.isStopped = false;
         }
@@ -183,7 +183,7 @@ public class GenSwarmLogic : MonoBehaviour
     
     private void Attack()
     {
-        if(!InAttackRange)
+        if (!InAttackRange && GeneratorSwarm.Count > 0)
         {
             return;
         }
@@ -216,7 +216,7 @@ public class GenSwarmLogic : MonoBehaviour
         if (GeneratorSwarm.ElementAt(CurrentDroneIndex).GetComponent<Enim2PH>().AttatchedToParent)
         {
             GeneratorSwarm.ElementAt(CurrentDroneIndex).GetComponent<Enim2PH>().SwarmAttack(this.transform.gameObject, PlayerTarget);
-            Debug.Log("Fore Drone out");
+            //Debug.Log("Fore Drone out");
             CurrentDroneIndex++;
             CanAttack = false;
         }
@@ -246,6 +246,15 @@ public class GenSwarmLogic : MonoBehaviour
         NewRetreatPosition = new Vector3(X_Value, Y_Value, Z_Value);
 
         ChangePosition = true;
+    }
+
+    private void CheckDeath()
+    {
+        if(GeneratorSwarm.Count == 0)
+        {
+            //play death anim
+            Destroy(this.gameObject);
+        }
     }
 
     private void Retreat()
@@ -310,6 +319,7 @@ public class GenSwarmLogic : MonoBehaviour
     private void FixedUpdate()
     {
         Retreat();
+        CheckDeath();
     }
 
 }

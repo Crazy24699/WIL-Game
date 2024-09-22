@@ -33,6 +33,11 @@ public class SpireObject : MonoBehaviour
     {
         if (TriggerObject.CompareTag("Enemy"))
         {
+            if(TriggerObject.GetComponent<BTBaseEnemy>() == null)
+            {
+                return;
+            }
+
             SpewerAi EnemyRef = TriggerObject.GetComponent<SpewerAi>();
             if (EnemyRef.SeenPlayer)
             {

@@ -32705,7 +32705,7 @@ AnimationClip:
     floatParameter: 0
     intParameter: 1
     messageOptions: 0
-  - time: 1.0666667
+  - time: 1.05
     functionName: SetClawState
     data: 
     objectReferenceParameter: {fileID: 0}
