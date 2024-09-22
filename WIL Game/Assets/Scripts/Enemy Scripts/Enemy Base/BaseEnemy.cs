@@ -48,6 +48,7 @@ public class BaseEnemy : MonoBehaviour
     public bool PlayerEscaped;
     protected bool ReduceKnockbackForce;
     public bool OnAttackingList = false;
+    protected bool CanAttack = true;
 
     [SerializeField]protected bool StartupRan = false;
     [SerializeField] protected bool Alive = false;
@@ -64,7 +65,7 @@ public class BaseEnemy : MonoBehaviour
     
     public void BaseStartup()
     {
-
+        CanAttack = true;
         RigidbodyRef = GetComponent<Rigidbody>();
         EnemyObjectRef = this.gameObject;
         PlayerRef = GameObject.FindGameObjectWithTag("Player");

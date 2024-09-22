@@ -65,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            SpeedMultiplier = 2.5f;
+            SpeedMultiplier = 1.5f;
         }
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
