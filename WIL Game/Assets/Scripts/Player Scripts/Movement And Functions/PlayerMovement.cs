@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.XR;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -37,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] protected Vector2 DashDirection;
     [SerializeField] protected Vector3 NewDashPosition;
-    [SerializeField] protected Vector2 PrevioudPosition;
+    [SerializeField] protected Vector3 PreviousPosition;
 
     public Transform PlayerOrientation;
     public GameObject HitParticle;
@@ -98,7 +95,7 @@ public class PlayerMovement : MonoBehaviour
         DashResetTimer();
         if(PlayerDashing)
         {
-
+            HandleDashing();
         }
     }
 
@@ -110,17 +107,14 @@ public class PlayerMovement : MonoBehaviour
     private void HandleDashing()
     {
         if (!PlayerDashing) { return; }
+        Vector3 CurrentPosition = transform.position.RoundVector(2);
+        if(CurrentPosition==NewDashPosition) 
+        {
+            PlayerDashing = false;
 
-        //Vector3 direction = (NewDashPosition - PrevioudPosition).normalized;
-
-        // Move the object at a constant speed towards the end position
-        //transform.position += direction * LerpSpeed * Time.deltaTime;
-
-        // If we are close enough to the target, stop lerping
-        //if (Vector3.Distance(transform.position, EndPosition) < 0.1f)
-        //{
-            
-        //}
+        }
+        CurrentPosition = Vector3.MoveTowards(CurrentPosition, NewDashPosition, 120 * Time.deltaTime);
+        transform.position = CurrentPosition;
 
     }
 
@@ -130,7 +124,14 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.Log("kickback;");
             PlayerDashing = true;
-            //NewDashPosition = (this.transform.position.RoundVector(1) + (DashDirection*Vector3.one));
+            Vector3 ForwardDirection = transform.forward;
+
+            // Normalize the DashDirection and apply it to forward direction
+            Vector3 SetDashDirection = (PlayerOrientation.forward * DashDirection.y + PlayerOrientation.right * DashDirection.x) * DashDistance;
+            SetDashDirection = SetDashDirection.RoundVector(2);
+            //Vector3 SetDashDirection = (new Vector3(DashDirection.y, 0, 0)) * DashDistance;
+
+            NewDashPosition = (this.transform.position.RoundVector(2) + (SetDashDirection));
         }
     }
 
