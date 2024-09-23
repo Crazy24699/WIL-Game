@@ -72,6 +72,24 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dash Movement"",
+                    ""type"": ""Button"",
+                    ""id"": ""bbd3d0de-5c5b-49ea-b7df-bbfbc8e0a450"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DashReading"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""385f0524-e241-4e85-9f0e-8cf41a333bdc"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -85,28 +103,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""90a0299c-9f39-40cd-a798-c9b7f4e6c0ba"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""305390f2-30de-4051-a14c-b3696456e50c"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""left"",
@@ -162,6 +158,105 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Movement Modifiers"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""69ab4c0f-3208-4372-b7fe-a3b5e420567e"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": ""MultiTap(tapTime=0.2,tapDelay=0.75,pressPoint=0.5)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""15f1cbc8-bde7-476c-8e07-0cdba461e34e"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": ""MultiTap(tapTime=0.2,tapDelay=0.75,pressPoint=0.5)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0ee8d222-44ca-4177-8a2f-7270891a515c"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": ""MultiTap(tapTime=0.2,tapDelay=0.75,pressPoint=0.5)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""11493132-d014-44da-84d5-63989674d824"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": ""MultiTap(tapTime=0.2,tapDelay=0.75,pressPoint=0.5)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Dash Vector"",
+                    ""id"": ""ba5f1d67-791a-4b4e-9a7c-209e78fa47ec"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DashReading"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""3006bf49-a64d-47bc-b718-83f6af6265cf"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DashReading"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""4197e835-45fc-45d2-a18a-124f82a3dd4d"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DashReading"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""ab7d3472-96f7-4120-85bd-225278c3d03f"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DashReading"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""082adad9-e7fa-41ec-95ca-d1c9cd3e19b2"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DashReading"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -255,6 +350,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_BasePlayerMovement = asset.FindActionMap("Base Player Movement", throwIfNotFound: true);
         m_BasePlayerMovement_Movement = m_BasePlayerMovement.FindAction("Movement", throwIfNotFound: true);
         m_BasePlayerMovement_MovementModifiers = m_BasePlayerMovement.FindAction("Movement Modifiers", throwIfNotFound: true);
+        m_BasePlayerMovement_DashMovement = m_BasePlayerMovement.FindAction("Dash Movement", throwIfNotFound: true);
+        m_BasePlayerMovement_DashReading = m_BasePlayerMovement.FindAction("DashReading", throwIfNotFound: true);
         // PlayerAttack
         m_PlayerAttack = asset.FindActionMap("PlayerAttack", throwIfNotFound: true);
         m_PlayerAttack_PrimaryAttack = m_PlayerAttack.FindAction("Primary Attack", throwIfNotFound: true);
@@ -369,12 +466,16 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private List<IBasePlayerMovementActions> m_BasePlayerMovementActionsCallbackInterfaces = new List<IBasePlayerMovementActions>();
     private readonly InputAction m_BasePlayerMovement_Movement;
     private readonly InputAction m_BasePlayerMovement_MovementModifiers;
+    private readonly InputAction m_BasePlayerMovement_DashMovement;
+    private readonly InputAction m_BasePlayerMovement_DashReading;
     public struct BasePlayerMovementActions
     {
         private @PlayerInput m_Wrapper;
         public BasePlayerMovementActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_BasePlayerMovement_Movement;
         public InputAction @MovementModifiers => m_Wrapper.m_BasePlayerMovement_MovementModifiers;
+        public InputAction @DashMovement => m_Wrapper.m_BasePlayerMovement_DashMovement;
+        public InputAction @DashReading => m_Wrapper.m_BasePlayerMovement_DashReading;
         public InputActionMap Get() { return m_Wrapper.m_BasePlayerMovement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -390,6 +491,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @MovementModifiers.started += instance.OnMovementModifiers;
             @MovementModifiers.performed += instance.OnMovementModifiers;
             @MovementModifiers.canceled += instance.OnMovementModifiers;
+            @DashMovement.started += instance.OnDashMovement;
+            @DashMovement.performed += instance.OnDashMovement;
+            @DashMovement.canceled += instance.OnDashMovement;
+            @DashReading.started += instance.OnDashReading;
+            @DashReading.performed += instance.OnDashReading;
+            @DashReading.canceled += instance.OnDashReading;
         }
 
         private void UnregisterCallbacks(IBasePlayerMovementActions instance)
@@ -400,6 +507,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @MovementModifiers.started -= instance.OnMovementModifiers;
             @MovementModifiers.performed -= instance.OnMovementModifiers;
             @MovementModifiers.canceled -= instance.OnMovementModifiers;
+            @DashMovement.started -= instance.OnDashMovement;
+            @DashMovement.performed -= instance.OnDashMovement;
+            @DashMovement.canceled -= instance.OnDashMovement;
+            @DashReading.started -= instance.OnDashReading;
+            @DashReading.performed -= instance.OnDashReading;
+            @DashReading.canceled -= instance.OnDashReading;
         }
 
         public void RemoveCallbacks(IBasePlayerMovementActions instance)
@@ -496,6 +609,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     {
         void OnMovement(InputAction.CallbackContext context);
         void OnMovementModifiers(InputAction.CallbackContext context);
+        void OnDashMovement(InputAction.CallbackContext context);
+        void OnDashReading(InputAction.CallbackContext context);
     }
     public interface IPlayerAttackActions
     {

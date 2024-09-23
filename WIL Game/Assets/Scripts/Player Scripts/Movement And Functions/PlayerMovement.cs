@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody Rigidbody;
     public InputActionReference PlayerActionMap;
     [SerializeField] private PlayerInput PlayerInputRef;
+    [SerializeField] private PlayerInput DashInput;
 
     public Transform MainCamera; 
 
@@ -21,20 +22,36 @@ public class PlayerMovement : MonoBehaviour
     protected float TurnSmoothingVel;
     public float TurnTime = 0.1f;
 
-    public float JumpHeight;
+    private float MovingDelayTimer = 0.15f;
+    [SerializeField] private float CurrentMoveDelayTime;
+
+    private float DashSetTime = 0.3f;
+    [SerializeField] private float DashDelayTimer;
+    [SerializeField] private float DashDistance=20;
 
     public Animator PlayerAnimations;
 
     public Vector3 PlayerVelocity;
     [SerializeField] protected Vector3 MoveDirection;
+    [SerializeField] protected Vector3 InputDirection;
+
+    [SerializeField] protected Vector2 DashDirection;
+    [SerializeField] protected Vector3 NewDashPosition;
+    [SerializeField] protected Vector2 PrevioudPosition;
 
     public Transform PlayerOrientation;
     public GameObject HitParticle;
+
     public bool AttackLocked = false;
+    public bool CanMove = false;
+    private bool DashSet = false;
+    private bool PlayerDashing = false;
+    private bool CanDash = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        CanMove = false;
         Rigidbody = GetComponent<Rigidbody>();
         CurrentSpeed = 0;
 
@@ -43,6 +60,11 @@ public class PlayerMovement : MonoBehaviour
         PlayerInputRef.BasePlayerMovement.MovementModifiers.performed += Context => Sprint(2.5f);
         PlayerInputRef.BasePlayerMovement.MovementModifiers.canceled += Context => Sprint(1f);
         SpeedMultiplier = 1;
+
+        PlayerInputRef.BasePlayerMovement.DashMovement.performed += Context => StartDash();
+        PlayerInputRef.BasePlayerMovement.DashReading.performed += Context => HandleDashDirection();
+
+        CurrentMoveDelayTime = MovingDelayTimer;
     }
 
     private void FixedUpdate()
@@ -63,16 +85,21 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            SpeedMultiplier = 1.5f;
-        }
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            SpeedMultiplier = 1;
-        }
+        //if (Input.GetKeyDown(KeyCode.LeftShift))
+        //{
+        //    SpeedMultiplier = 1.5f;
+        //}
+        //if (Input.GetKeyUp(KeyCode.LeftShift))
+        //{
+        //    SpeedMultiplier = 1;
+        //}
         Speed = BaseMoveSpeed * SpeedMultiplier;
         MovePlayer();
+        DashResetTimer();
+        if(PlayerDashing)
+        {
+
+        }
     }
 
     private void Sprint(float Multiplier)
@@ -80,9 +107,103 @@ public class PlayerMovement : MonoBehaviour
         SpeedMultiplier = Multiplier;
     }
 
+    private void HandleDashing()
+    {
+        if (!PlayerDashing) { return; }
+
+        //Vector3 direction = (NewDashPosition - PrevioudPosition).normalized;
+
+        // Move the object at a constant speed towards the end position
+        //transform.position += direction * LerpSpeed * Time.deltaTime;
+
+        // If we are close enough to the target, stop lerping
+        //if (Vector3.Distance(transform.position, EndPosition) < 0.1f)
+        //{
+            
+        //}
+
+    }
+
+    private void StartDash()
+    {
+        if (DashDirection != Vector2.zero && !PlayerDashing)
+        {
+            Debug.Log("kickback;");
+            PlayerDashing = true;
+            //NewDashPosition = (this.transform.position.RoundVector(1) + (DashDirection*Vector3.one));
+        }
+    }
+
+    private void DashResetTimer()
+    {
+        DashSet = DashDirection != Vector2.zero;
+
+        if (DashSet)
+        {
+            DashDelayTimer -= Time.deltaTime;
+            if (DashDelayTimer <= 0)
+            {
+                DashDirection = Vector2.zero;
+                Debug.Log("all of my dreams");
+                DashDelayTimer = DashSetTime;
+            }
+        }
+    }
+
+    private void HandleDashDirection()
+    {
+        //Debug.Log(DashingDirection);
+        Vector2 NewDashDirection = PlayerInputRef.BasePlayerMovement.DashReading.ReadValue<Vector2>().normalized;
+        if (DashDirection==Vector2.zero)
+        {
+            DashDirection = PlayerInputRef.BasePlayerMovement.DashReading.ReadValue<Vector2>().normalized;
+        }
+        if (DashDirection != Vector2.zero && NewDashDirection != DashDirection && NewDashDirection != Vector2.zero) 
+        {
+            //DashingDirection = Vector2.zero;
+            DashDirection = NewDashDirection;
+        }
+    }
+
     protected void MovePlayer()
     {
+        HandleAnimationStates();
+        InputDirection = PlayerInputRef.BasePlayerMovement.Movement.ReadValue<Vector3>().normalized;
+        InputDirection = InputDirection.RoundVector(0);
+
+        PlayerVelocity = new Vector3(Rigidbody.velocity.x, Rigidbody.velocity.y, Rigidbody.velocity.z);
+        CurrentSpeed = Rigidbody.velocity.magnitude;
+
+        MoveDelay();
+        if (InputDirection.magnitude <= 0.1f)
+        {
+            Rigidbody.velocity = Vector3.zero;
+            CanMove = false;
+            return;
+        }
+
+        if (!CanMove) { return; }
+        Debug.Log("turn to rust");
+
+
+
+        if (PlayerVelocity.magnitude > Speed) 
+        {
+            Vector3 VelocityCap = PlayerVelocity.normalized * Speed;
+            Rigidbody.velocity = new Vector3(VelocityCap.x, 0
+                , VelocityCap.z);
+        }
+
+        MoveDirection = PlayerOrientation.forward * InputDirection.z + PlayerOrientation.right * InputDirection.x;
+        //Speed = BaseMoveSpeed * SpeedMultiplier;
+        Rigidbody.AddForce(new Vector3(MoveDirection.x, MoveDirection.y, MoveDirection.z) * 10f * (Speed) , ForceMode.Force);
+
+    }
+
+    private void HandleAnimationStates()
+    {
         AttackLocked = PlayerAnimations.GetBool("IsAttacking");
+
         if (PlayerAnimations.GetBool("IsAttacking"))
         {
             //Debug.Log("Its true");
@@ -100,27 +221,24 @@ public class PlayerMovement : MonoBehaviour
                 break;
         }
 
-        PlayerVelocity = new Vector3(Rigidbody.velocity.x, Rigidbody.velocity.y, Rigidbody.velocity.z);
-        MoveDirection = PlayerActionMap.action.ReadValue<Vector3>().normalized;
-        CurrentSpeed = Rigidbody.velocity.magnitude;
+    }
 
-        if (MoveDirection.magnitude <= 0.1f)
+    private void MoveDelay()
+    {
+        if (InputDirection == Vector3.zero) { CanMove = false; CurrentMoveDelayTime = MovingDelayTimer; return; }
+        if (!CanMove)
         {
-            Rigidbody.velocity = Vector3.zero;
-            return;
+            CurrentMoveDelayTime -= Time.deltaTime;
+            if(CurrentMoveDelayTime <= 0)
+            {
+                CanMove = true;
+                CurrentMoveDelayTime = MovingDelayTimer;
+            }
         }
-        
-        if (PlayerVelocity.magnitude > Speed) 
+        if (InputDirection != Vector3.zero && CanMove)
         {
-            Vector3 VelocityCap = PlayerVelocity.normalized * Speed;
-            Rigidbody.velocity = new Vector3(VelocityCap.x, 0
-                , VelocityCap.z);
+            CurrentMoveDelayTime = MovingDelayTimer;
         }
-
-        MoveDirection = PlayerOrientation.forward * MoveDirection.z + PlayerOrientation.right * MoveDirection.x;
-        //Speed = BaseMoveSpeed * SpeedMultiplier;
-        Rigidbody.AddForce(new Vector3(MoveDirection.x, MoveDirection.y, MoveDirection.z) * 10f * (Speed) , ForceMode.Force);
-
     }
 
 }

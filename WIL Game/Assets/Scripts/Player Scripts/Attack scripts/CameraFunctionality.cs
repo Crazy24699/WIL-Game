@@ -43,7 +43,7 @@ public class CameraFunctionality : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (PlayerMovementScript.AttackLocked) { return; }
+        if (PlayerMovementScript.AttackLocked || !PlayerMovementScript.CanMove) { return; }
 
         RotateToView();
         if (LockView && CameraLock.Equals(false)) 
