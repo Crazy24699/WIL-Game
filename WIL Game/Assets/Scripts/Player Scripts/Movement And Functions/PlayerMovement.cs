@@ -37,6 +37,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] protected Vector3 PreviousPosition;
 
     public Transform PlayerOrientation;
+    public Transform BaltoOrientation;
+    public Transform BaltoRef;
     public GameObject HitParticle;
 
     public bool AttackLocked = false;
@@ -82,14 +84,6 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
 
-        //if (Input.GetKeyDown(KeyCode.LeftShift))
-        //{
-        //    SpeedMultiplier = 1.5f;
-        //}
-        //if (Input.GetKeyUp(KeyCode.LeftShift))
-        //{
-        //    SpeedMultiplier = 1;
-        //}
         Speed = BaseMoveSpeed * SpeedMultiplier;
         MovePlayer();
         DashResetTimer();
@@ -97,6 +91,12 @@ public class PlayerMovement : MonoBehaviour
         {
             HandleDashing();
         }
+        TrackBatloOrientation();
+    }
+
+    private void TrackBatloOrientation()
+    {
+        BaltoOrientation.forward = BaltoRef.forward.normalized *-1;
     }
 
     private void Sprint(float Multiplier)

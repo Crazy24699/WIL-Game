@@ -87,6 +87,7 @@ public class PlayerAttacks : MonoBehaviour
 
         SetActiveAttack(AllAttacks.SlashAttack,AttackTypes.Primary);
         SetClawState(2);
+
         SetActiveAttack(AllAttacks.TailWhip, AttackTypes.Secondary);
         SetTailAttackState(2);
 
@@ -119,7 +120,8 @@ public class PlayerAttacks : MonoBehaviour
                 break;
 
             case AttackTypes.Secondary:
-                PlayerInputRef.PlayerAttack.SecondaryAttack.performed += Context => PerformAttack(ChosenAttack);
+                PlayerInputRef.PlayerAttack.SecondaryAttack.performed += Context => AimProjectile();
+                PlayerInputRef.PlayerAttack.SecondaryAttack.canceled += Context => PerformAttack(ChosenAttack);
                 SecondAttack = PlayerInputRef.PlayerAttack.SecondaryAttack;
                 break;
 
@@ -205,6 +207,11 @@ public class PlayerAttacks : MonoBehaviour
             NextAttack = AllAttacks.None;
             
         }
+    }
+
+    private void AimProjectile()
+    {
+        Debug.Log("call our names in the vally of the saints");
     }
 
     private void SlashAttackFunction()

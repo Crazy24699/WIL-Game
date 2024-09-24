@@ -13,6 +13,7 @@ public class CameraFunctionality : MonoBehaviour
     public GameObject CameraLock;
 
     public bool LockView = false;
+    public bool CameraActive = true;
 
     public float FinalMoveSpeed;
     public float CurrentMoveSpeed;
@@ -43,7 +44,7 @@ public class CameraFunctionality : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (PlayerMovementScript.AttackLocked || !PlayerMovementScript.CanMove) { return; }
+        if (PlayerMovementScript.AttackLocked || !PlayerMovementScript.CanMove || !CameraActive) { return; }
 
         RotateToView();
         if (LockView && CameraLock.Equals(false)) 
