@@ -50,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        CanMove = false;
+        CanMove = true;
         Rigidbody = GetComponent<Rigidbody>();
         CurrentSpeed = 0;
 
@@ -87,7 +87,7 @@ public class PlayerMovement : MonoBehaviour
         Speed = BaseMoveSpeed * SpeedMultiplier;
         MovePlayer();
         DashResetTimer();
-        if(PlayerDashing)
+        if(PlayerDashing && !AttackLocked)
         {
             HandleDashing();
         }
@@ -174,6 +174,13 @@ public class PlayerMovement : MonoBehaviour
 
         PlayerVelocity = new Vector3(Rigidbody.velocity.x, Rigidbody.velocity.y, Rigidbody.velocity.z);
         CurrentSpeed = Rigidbody.velocity.magnitude;
+
+        if (AttackLocked)
+        {
+            CanMove = false;
+            Rigidbody.velocity = Vector3.zero;
+            return;
+        }
 
         MoveDelay();
         if (InputDirection.magnitude <= 0.1f)

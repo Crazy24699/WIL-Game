@@ -60,15 +60,15 @@ public class PlayerTesting : MonoBehaviour
 
         if(Input.GetMouseButtonDown(1))
         {
-            CameraFunctionalityScript.CameraActive = false;
-            HandleCameraChange(AimCamera, true);
-            HandleCameraChange(NormalCamera, false);
+            //CameraFunctionalityScript.CameraActive = false;
+            //HandleCameraChange(AimCamera, true);
+            //HandleCameraChange(NormalCamera, false);
             
         }
 
         if (AimCamera.activeSelf)
         {
-            FacingCamera.rotation = Quaternion.Euler(CameraTransform.eulerAngles.z, CameraTransform.eulerAngles.y, CameraTransform.eulerAngles.z);
+            //FacingCamera.rotation = Quaternion.Euler(CameraTransform.eulerAngles.z, CameraTransform.eulerAngles.y, CameraTransform.eulerAngles.z);
             RotateCamera();
         }
         if(!AimCamera.activeSelf)
@@ -79,10 +79,10 @@ public class PlayerTesting : MonoBehaviour
         }
         if(Input.GetMouseButtonUp(1))
         {
-            CameraFunctionalityScript.CameraActive = true;
+            //CameraFunctionalityScript.CameraActive = true;
             
-            HandleCameraChange(NormalCamera, true);
-            HandleCameraChange(AimCamera, false);
+            //HandleCameraChange(NormalCamera, true);
+            //HandleCameraChange(AimCamera, false);
             
         }
     }

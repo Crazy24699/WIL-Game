@@ -32,8 +32,9 @@ public class PlayerAttacks : MonoBehaviour
     protected InputAction ThirdAttack;
     [Space(5)]
 
-    public PlayerMovement PlayerMoveScript;
     public Cinemachine.CinemachineBrain CinemachineBrainScript;
+
+    public PlayerMovement PlayerMoveScript;
     public CameraFunctionality CamFunctionScript;
     protected PlayerInteraction PlayerInteractionScript;
     
@@ -73,17 +74,13 @@ public class PlayerAttacks : MonoBehaviour
     void Awake()
     {
         //PopulateAttacks();
-
+        PopulateScripts();
         NextAttack = AllAttacks.None;
-        PlayerInputRef = new PlayerInput();
-
-        PlayerMoveScript = FindObjectOfType<PlayerMovement>();
+        
 
         CurrentAttack = AllAttacks.None;
 
         PlayerInputRef.Enable();
-
-        PlayerInteractionScript = FindObjectOfType<PlayerInteraction>();
 
         SetActiveAttack(AllAttacks.SlashAttack,AttackTypes.Primary);
         SetClawState(2);
@@ -93,6 +90,15 @@ public class PlayerAttacks : MonoBehaviour
 
         SetActiveAttack(AllAttacks.BiteAttack, AttackTypes.Third);
         SetBiteState(2);
+    }
+
+    private void PopulateScripts()
+    {
+        PlayerInputRef = new PlayerInput();
+
+        PlayerMoveScript = FindObjectOfType<PlayerMovement>();
+        PlayerInteractionScript = FindObjectOfType<PlayerInteraction>();
+        CamFunctionScript = FindObjectOfType<CameraFunctionality>();
     }
 
     private void OnEnable()
@@ -108,6 +114,7 @@ public class PlayerAttacks : MonoBehaviour
     private void FixedUpdate()
     {
         IsAttacking = AttackAnimation.GetBool("IsAttacking");
+        PlayerMoveScript.CanMove = !IsAttacking;
     }
 
     private void SetActiveAttack(AllAttacks ChosenAttack, AttackTypes AttackBind)
@@ -212,6 +219,9 @@ public class PlayerAttacks : MonoBehaviour
     private void AimProjectile()
     {
         Debug.Log("call our names in the vally of the saints");
+        CamFunctionScript.ChangeActiveCamera(true);
+        //CamFunctionScript.AimCameraActive = true;
+
     }
 
     private void SlashAttackFunction()
@@ -227,6 +237,8 @@ public class PlayerAttacks : MonoBehaviour
 
         HandleMovementState(false);
         HandleCameraState(false);
+        CamFunctionScript.ChangeActiveCamera(false);
+        //CamFunctionScript.AimCameraActive = false;
     }
 
 
@@ -271,7 +283,7 @@ public class PlayerAttacks : MonoBehaviour
 
     protected void HandleMovementState(bool LockMovement)
     {
-        //PlayerMoveScript.enabled = LockMovement;
+        PlayerMoveScript.CanMove = LockMovement;
         PlayerMoveScript.Rigidbody.velocity = Vector3.zero;
     }
 
@@ -318,8 +330,10 @@ public class PlayerAttacks : MonoBehaviour
 
     protected void HandleCameraState(bool LockCamera)
     {
-        CinemachineBrainScript.enabled = LockCamera;
-        CamFunctionScript.enabled = LockCamera;
-        FreeLookCam.SetActive(LockCamera);
+        //CinemachineBrainScript.enabled = LockCamera;
+        //CamFunctionScript.enabled = LockCamera;
+        //PlayerMoveScript.CanMove = LockCamera;
+        //Debug.Log(LockCamera + "      " + "and burn;");
+        //FreeLookCam.SetActive(LockCamera);
     }
 }
