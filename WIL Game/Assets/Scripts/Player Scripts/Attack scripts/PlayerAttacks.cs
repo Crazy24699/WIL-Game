@@ -141,7 +141,7 @@ public class PlayerAttacks : MonoBehaviour
         }
     }
    
-    private bool CanChain()
+    private bool CheckChaining()
     {
         if ( NextAttack == AllAttacks.None && CurrentAttack != AllAttacks.None)
         {
@@ -166,7 +166,7 @@ public class PlayerAttacks : MonoBehaviour
     {
         if (IsAttacking)
         {
-            bool CanChain = this.CanChain();
+            bool CanChain = CheckChaining();
 
             if(!CanChain)
             {

@@ -72,5 +72,14 @@ public static class ExtensionClass
         return FloatOut;
     }
 
+    public static Vector3 NegativeRotation(this Vector3 Vector3Ref, GameObject ObjectTransform)
+    {
+        Vector3 UnityEditorRotation = ObjectTransform.transform.localEulerAngles;
+
+        UnityEditorRotation.x = (UnityEditorRotation.x > 180) ? UnityEditorRotation.x - 360 : UnityEditorRotation.x;
+        UnityEditorRotation.y = (UnityEditorRotation.y > 180) ? UnityEditorRotation.y - 360 : UnityEditorRotation.y;
+        UnityEditorRotation.z = (UnityEditorRotation.z > 180) ? UnityEditorRotation.z - 360 : UnityEditorRotation.z;
+        return UnityEditorRotation;
+    }
 }
 

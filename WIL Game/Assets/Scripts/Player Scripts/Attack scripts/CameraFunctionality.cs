@@ -15,18 +15,20 @@ public class CameraFunctionality : MonoBehaviour
     public bool LockView = false;
     public bool CameraActive = true;
     private bool AimCameraReady = false;
+    private bool AimInfoSet = false;
     public bool AimCameraActive = false;
 
     public float RotationSpeed;
     [SerializeField] private float MouseSensitivity = 100f;
     float LockoutTime;
     float CurrentLockoutTime;
-    private float X_Rotation;
-    private float Y_Rotation=180;
+    [SerializeField] private float X_Rotation;
+    [SerializeField] private float Y_Rotation=180;
     private float Max_X_Rotation = 30;
     private float Min_X_Rotation = -30;
     private float Max_Y_Rotation = -45+-90;
     private float Min_Y_Rotation = -135+-90;
+    [SerializeField] private AimMouse[] MouseAxisInfo;
 
     public Transform PlayerOrientation;
     public Transform Player;
@@ -34,6 +36,7 @@ public class CameraFunctionality : MonoBehaviour
     public Transform FirePoint;
     public Transform MainCamera;
     [SerializeField] private Transform AimCamera;
+    [SerializeField] private Transform AimCamRotator;
 
 
     public Vector3 ViewDirection;
@@ -89,7 +92,7 @@ public class CameraFunctionality : MonoBehaviour
             CurrentLockoutTime -= Time.deltaTime;
             if (CurrentLockoutTime <= 0)
             {
-                ChangeCamLockState(false);
+                
             }
         }
         else if (!LockView)
@@ -98,25 +101,41 @@ public class CameraFunctionality : MonoBehaviour
         }
     }
 
-    protected void ChangeCamLockState(bool LockState)
-    {
-
-    }
-
     private void HandleAimCamera()
     {
+        //HandleCameraTransformValue();
         if(!CameraActive || PlayerMovementScript.AttackLocked) { return; }
         switch (AimCameraActive)
         {
             case true:
+                AimInfoSet = false;
+                AimCamera.transform.localRotation = Quaternion.Euler(0,0,0);
                 AimCameraRotation();
+                //HandleCameraTransformValue();
                 break;
 
             case false:
-                AimCamera.rotation = Quaternion.Euler(PlayerMovementScript.BaltoOrientation.right);
+                AimCamRotator.rotation = Quaternion.LookRotation(PlayerMovementScript.BaltoOrientation.right);
+                X_Rotation = 0;
+                Y_Rotation = 0;
+                //AimCamera.localRotation = Quaternion.Euler(transform.parent.forward);
+                //X_Rotation = PlayerMovementScript.BaltoOrientation.eulerAngles.x;
+                //Y_Rotation = PlayerMovementScript.BaltoOrientation.eulerAngles.y;
+                Debug.Log("Hellish verses, at the alter we start to pray");
                 break;
 
         }
+
+    }
+
+    private void HandleCameraTransformValue()
+    {
+        
+        float X_Rotation=Mathf.Repeat(AimCamera.transform.localEulerAngles.x, 360);
+        float Y_Rotation=Mathf.Repeat(AimCamera.transform.localEulerAngles.y, 360);
+        float Z_Rotation=Mathf.Repeat(AimCamera.transform.localEulerAngles.z, 360);
+        Quaternion UpdatedTransform = Quaternion.Euler(X_Rotation, Y_Rotation, Z_Rotation);
+        AimCamera.transform.rotation = UpdatedTransform;
     }
 
     public void ChangeActiveCamera(bool AimActive)
@@ -141,20 +160,49 @@ public class CameraFunctionality : MonoBehaviour
 
     private void AimCameraRotation()
     {
+        
+
+        if (!AimInfoSet)
+        {
+            PopulateNewAimInfo();
+        }
         float MouseX = Input.GetAxis("Mouse X") * MouseSensitivity * Time.deltaTime;
         float MouseY = Input.GetAxis("Mouse Y") * MouseSensitivity * Time.deltaTime;
 
         X_Rotation -= MouseY;
         Y_Rotation += MouseX;
-        X_Rotation=Mathf.Clamp(X_Rotation, Min_X_Rotation, Max_X_Rotation);
-        Y_Rotation=Mathf.Clamp(Y_Rotation, Min_Y_Rotation, Max_Y_Rotation);
+        X_Rotation = Mathf.Clamp(X_Rotation, -30, 30);
+        Y_Rotation = Mathf.Clamp(Y_Rotation, -30, 30);
 
-        AimCamera.transform.rotation = Quaternion.Euler(X_Rotation, Y_Rotation + 90, 0);
-        FirePoint.rotation = Quaternion.Euler(X_Rotation, Y_Rotation + 90, 0);
+        AimCamera.transform.localRotation = Quaternion.Euler(X_Rotation, Y_Rotation, 0);
+        FirePoint.localRotation = Quaternion.Euler(X_Rotation, Y_Rotation-90, 0);
+    }
+
+    private void PopulateNewAimInfo()
+    {
+        MouseAxisInfo[0].BaseRotation = Mathf.Repeat(AimCamera.transform.eulerAngles.x, 360);
+        MouseAxisInfo[1].BaseRotation = Mathf.Repeat(AimCamera.transform.eulerAngles.y, 360);
+
+        AimInfoSet = true;
     }
 
     private void AimTransition()
     {
 
     }
+
+    [System.Serializable]
+    private class AimMouse
+    {
+        public float BaseRotation;
+        public float NewMinRotation;
+        public float NewMaxRotation;
+
+        public void HandleClamping()
+        {
+
+        }
+    }
 }
+
+

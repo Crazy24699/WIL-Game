@@ -16,6 +16,8 @@ public class PlayerTesting : MonoBehaviour
     public GameObject NormalCamera;
     public GameObject AimCamera;
     public GameObject Player;
+    public GameObject Reader;
+    public Vector3 RRoation;
 
     public float MouseSensitivity = 100f;
     public Transform CameraTransform;
@@ -65,7 +67,8 @@ public class PlayerTesting : MonoBehaviour
             //HandleCameraChange(NormalCamera, false);
             
         }
-
+        ReadValues();
+        return;
         if (AimCamera.activeSelf)
         {
             //FacingCamera.rotation = Quaternion.Euler(CameraTransform.eulerAngles.z, CameraTransform.eulerAngles.y, CameraTransform.eulerAngles.z);
@@ -85,6 +88,19 @@ public class PlayerTesting : MonoBehaviour
             //HandleCameraChange(AimCamera, false);
             
         }
+    }
+
+    void ReadValues()
+    {
+        Reader.transform.rotation=Quaternion.Euler(RRoation.x, RRoation.y, RRoation.z);
+        Vector3 localRotation = Reader.transform.localEulerAngles;
+
+        localRotation.x = (localRotation.x > 180) ? localRotation.x - 360 : localRotation.x;
+        localRotation.y = (localRotation.y > 180) ? localRotation.y - 360 : localRotation.y;
+        localRotation.z = (localRotation.z > 180) ? localRotation.z - 360 : localRotation.z;
+        Debug.Log(localRotation);
+        //RRoation = new Vector3(Reader.transform.localRotation.eulerAngles.x, Reader.transform.localRotation.eulerAngles.y, Reader.transform.localRotation.eulerAngles.z);
+        //RRoation = Quaternion.Euler(transform.localRotation).eulerAngles;
     }
 
     private void HandleCameraChange(GameObject ChangeCamera, bool State)
