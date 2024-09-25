@@ -114,7 +114,7 @@ public class PlayerAttacks : MonoBehaviour
     private void FixedUpdate()
     {
         IsAttacking = AttackAnimation.GetBool("IsAttacking");
-        PlayerMoveScript.CanMove = !IsAttacking;
+        //PlayerMoveScript.CanMove = !IsAttacking;
     }
 
     private void SetActiveAttack(AllAttacks ChosenAttack, AttackTypes AttackBind)
@@ -274,6 +274,7 @@ public class PlayerAttacks : MonoBehaviour
         HandleMovementState(true);
     }
 
+    //This was used for testing, remove when done
     [SerializeField]
     private void BiteState(int ActiveState)
     {

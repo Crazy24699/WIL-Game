@@ -40,11 +40,12 @@ public class PlayerMovement : MonoBehaviour
     public Transform BaltoOrientation;
     public Transform BaltoRef;
     public GameObject HitParticle;
+    public GameObject DashObject;
 
     public bool AttackLocked = false;
     public bool CanMove = false;
-    private bool DashSet = false;
-    private bool PlayerDashing = false;
+    [SerializeField]private bool DashSet = false;
+    [SerializeField]private bool PlayerDashing = false;
     private bool CanDash = false;
 
     // Start is called before the first frame update
@@ -75,7 +76,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (PlayerAnimations.GetBool("IsAttacking"))
         {
-            Rigidbody.velocity = Vector3.zero;
+            //Rigidbody.velocity = Vector3.zero;
             //Debug.Log("laced with poison");
             return;
         }
@@ -89,14 +90,14 @@ public class PlayerMovement : MonoBehaviour
         DashResetTimer();
         if(PlayerDashing && !AttackLocked)
         {
-            HandleDashing();
+            //HandleDashing();
         }
         TrackBatloOrientation();
     }
 
     private void TrackBatloOrientation()
     {
-        BaltoOrientation.forward = BaltoRef.forward.normalized *-1;
+        BaltoOrientation.forward = BaltoRef.forward.normalized * -1;
     }
 
     private void Sprint(float Multiplier)
@@ -110,11 +111,13 @@ public class PlayerMovement : MonoBehaviour
         Vector3 CurrentPosition = transform.position.RoundVector(2);
         if(CurrentPosition==NewDashPosition) 
         {
-            PlayerDashing = false;
+            //PlayerDashing = false;
 
         }
-        CurrentPosition = Vector3.MoveTowards(CurrentPosition, NewDashPosition, 120 * Time.deltaTime);
-        transform.position = CurrentPosition;
+        //CurrentPosition = Vector3.MoveTowards(CurrentPosition, NewDashPosition, 120 * Time.deltaTime);
+
+        //DashObject.GetComponent<Rigidbody>().AddForce(new Vector3(DashDirection.x,0, DashDirection.y) * 10, ForceMode.Impulse);
+        //transform.position = CurrentPosition;
 
     }
 
@@ -123,30 +126,31 @@ public class PlayerMovement : MonoBehaviour
         if (DashDirection != Vector2.zero && !PlayerDashing)
         {
             Debug.Log("kickback;");
-            PlayerDashing = true;
+            //PlayerDashing = true;
             Vector3 ForwardDirection = transform.forward;
 
             // Normalize the DashDirection and apply it to forward direction
             Vector3 SetDashDirection = (PlayerOrientation.forward * DashDirection.y + PlayerOrientation.right * DashDirection.x) * DashDistance;
-            SetDashDirection = SetDashDirection.RoundVector(2);
+            //SetDashDirection = SetDashDirection.RoundVector(2);
             //Vector3 SetDashDirection = (new Vector3(DashDirection.y, 0, 0)) * DashDistance;
 
-            NewDashPosition = (this.transform.position.RoundVector(2) + (SetDashDirection));
+            Rigidbody.AddForce(SetDashDirection * 35, ForceMode.Impulse);
+            //NewDashPosition = (this.transform.position.RoundVector(2) + (SetDashDirection));
         }
     }
 
     private void DashResetTimer()
     {
-        DashSet = DashDirection != Vector2.zero;
+        //DashSet = DashDirection != Vector2.zero;
 
         if (DashSet)
         {
-            DashDelayTimer -= Time.deltaTime;
+            //DashDelayTimer -= Time.deltaTime;
             if (DashDelayTimer <= 0)
             {
-                DashDirection = Vector2.zero;
-                Debug.Log("all of my dreams");
-                DashDelayTimer = DashSetTime;
+                //DashDirection = Vector2.zero;
+                //Debug.Log("all of my dreams");
+                //DashDelayTimer = DashSetTime;
             }
         }
     }
@@ -175,17 +179,17 @@ public class PlayerMovement : MonoBehaviour
         PlayerVelocity = new Vector3(Rigidbody.velocity.x, Rigidbody.velocity.y, Rigidbody.velocity.z);
         CurrentSpeed = Rigidbody.velocity.magnitude;
 
-        if (AttackLocked)
+        if (AttackLocked && !PlayerDashing)
         {
             CanMove = false;
-            Rigidbody.velocity = Vector3.zero;
+            //Rigidbody.velocity = Vector3.zero;
             return;
         }
 
         MoveDelay();
-        if (InputDirection.magnitude <= 0.1f)
+        if (InputDirection.magnitude <= 0.1f && !PlayerDashing)
         {
-            Rigidbody.velocity = Vector3.zero;
+            //Rigidbody.velocity = Vector3.zero;
             CanMove = false;
             return;
         }

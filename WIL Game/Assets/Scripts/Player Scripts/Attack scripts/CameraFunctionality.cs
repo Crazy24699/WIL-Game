@@ -21,8 +21,12 @@ public class CameraFunctionality : MonoBehaviour
     [SerializeField] private float MouseSensitivity = 100f;
     float LockoutTime;
     float CurrentLockoutTime;
-    [SerializeField] private float X_Rotation;
-    [SerializeField] private float Y_Rotation=180;
+    private float X_Rotation;
+    private float Y_Rotation=180;
+    private float Max_X_Rotation = 30;
+    private float Min_X_Rotation = -30;
+    private float Max_Y_Rotation = -45+-90;
+    private float Min_Y_Rotation = -135+-90;
 
     public Transform PlayerOrientation;
     public Transform Player;
@@ -142,6 +146,8 @@ public class CameraFunctionality : MonoBehaviour
 
         X_Rotation -= MouseY;
         Y_Rotation += MouseX;
+        X_Rotation=Mathf.Clamp(X_Rotation, Min_X_Rotation, Max_X_Rotation);
+        Y_Rotation=Mathf.Clamp(Y_Rotation, Min_Y_Rotation, Max_Y_Rotation);
 
         AimCamera.transform.rotation = Quaternion.Euler(X_Rotation, Y_Rotation + 90, 0);
         FirePoint.rotation = Quaternion.Euler(X_Rotation, Y_Rotation + 90, 0);
