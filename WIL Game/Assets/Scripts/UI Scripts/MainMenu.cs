@@ -9,6 +9,7 @@ public class MainMenu : MonoBehaviour
     public GameObject OptionsMenuPanel;
     public GameObject MainMenuPanel;
     public GameObject PlayOptionPanel;
+    public GameObject CreditsPanel;
 
     public GameObject PreviousPanel;
     public GameObject CurrentPanel;
@@ -53,6 +54,13 @@ public class MainMenu : MonoBehaviour
         LastPanelRef.SetActive(true);
         CurrentPanel.SetActive(false);
         CurrentPanel = LastPanelRef;
+    }
+
+    public void ShowCredits()
+    {
+        CreditsPanel.SetActive(true);
+        MainMenuPanel.SetActive(false);
+        CurrentPanel = CreditsPanel;
     }
 
 }
