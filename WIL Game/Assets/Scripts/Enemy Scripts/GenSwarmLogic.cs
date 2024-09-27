@@ -9,8 +9,7 @@ using UnityEngine.AI;
 public class GenSwarmLogic : MonoBehaviour
 {
     [SerializeField] private GameObject GeneratorEnemy;
-    [SerializeField] private GameObject PlayerTarget;
-    [SerializeField] private GameObject LookatPoint;
+    private GameObject PlayerTarget;
     [SerializeField] private List<Transform> SwarmLocations = new List<Transform>();
 
 
@@ -18,7 +17,7 @@ public class GenSwarmLogic : MonoBehaviour
     [SerializeField] private float MaxPlayerDistance;
     [SerializeField]private float CurrentPlayerDistance;
 
-    private float RandomRetreatPosition;
+
     [SerializeField]private float CloseRangeTimer;
     const float MaxCloseRangeTime = 1.25f;
     private float RetreatSpeed;
@@ -69,7 +68,7 @@ public class GenSwarmLogic : MonoBehaviour
 
     private void SpawnSwarm()
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < SwarmNum; i++)
         {
             if (LocationCheckCounter >= 20)
             {
@@ -232,7 +231,7 @@ public class GenSwarmLogic : MonoBehaviour
         float Z_Value = RoundNumbersToDecimal(OldPosition.z);
 
         OldPosition = new Vector3(X_Value, Y_Value, Z_Value);
-        RandomRetreatPosition = Random.Range(MinPlayerDistance, MaxPlayerDistance);
+        //RandomRetreatPosition = Random.Range(MinPlayerDistance, MaxPlayerDistance);
         RndPoint = Random.insideUnitCircle;
 
 

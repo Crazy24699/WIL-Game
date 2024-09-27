@@ -41,7 +41,6 @@ public class PlayerMovement : MonoBehaviour
     public Transform BaltoOrientation;
     public Transform BaltoRef;
     public GameObject HitParticle;
-    public GameObject DashObject;
 
     public bool AttackLocked = false;
     public bool CanMove = false;
@@ -101,6 +100,7 @@ public class PlayerMovement : MonoBehaviour
             //HandleDashing();
         }
         TrackBatloOrientation();
+        ReduceDashVelocity();
     }
 
     private void TrackBatloOrientation()
@@ -119,9 +119,17 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.Log("kickback;");
             Vector3 SetDashDirection = (PlayerOrientation.forward * DashDirection.y + PlayerOrientation.right * DashDirection.x) * DashDistance;
-            Rigidbody.AddForce(SetDashDirection * 15, ForceMode.Impulse);
+            Rigidbody.AddForce(SetDashDirection * 25, ForceMode.Impulse);
             PlayerDashing = true;
             StartCoroutine(DashTime());
+        }
+    }
+
+    private void ReduceDashVelocity()
+    {
+        if(PlayerDashing)
+        {
+            Rigidbody.velocity *= 0.975f;
         }
     }
 
@@ -246,7 +254,7 @@ public class PlayerMovement : MonoBehaviour
 
     private IEnumerator DashTime()
     {
-        yield return new WaitForSeconds(0.35f);
+        yield return new WaitForSeconds(0.45f);
         PlayerDashing = false;
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,8 +34,9 @@ public class Enim2PH : BaseEnemy
     [SerializeField]private int InternalCounter;
 
     public float PlayerDistance;
-    public float SwarmParentDistance;
+    private float SwarmParentDistance;
     private float Speed;
+    private float MaxTravelDistance = 50;
 
     public void SwarmAttack(GameObject Parent, GameObject PlayerObject)
     {
@@ -57,7 +59,7 @@ public class Enim2PH : BaseEnemy
         this.transform.parent = null;
 
         transform.LookAt(PlayerObject.transform.position);
-        RigidBodyRef.AddForce(transform.forward * 1000);
+        RigidBodyRef.AddForce(transform.forward * 1250);
 
         WaitTimeFinished = false;
         InvokeRepeating(nameof(CheckMiss), 0.25f, 0.15f);
@@ -117,7 +119,7 @@ public class Enim2PH : BaseEnemy
 
         //Debug.Log("Hit it");
         CheckDistances();
-        if (PlayerDistance >= 20.25f && SwarmParentDistance >= 40.75f) 
+        if (PlayerDistance >= 20.25f && SwarmParentDistance >= 40.75f || SwarmParentDistance >= MaxTravelDistance) 
         {
             //Debug.Log("Bleh" + PlayerDistance + "       " + SwarmParentDistance);
             if (MissCount > 0)
@@ -198,7 +200,6 @@ public class Enim2PH : BaseEnemy
                 transform.parent = SwarmParent.transform;
                 RigidBodyRef.velocity = Vector3.zero;
             }
-
             //Speed += 0.250f * Time.deltaTime;
             //Vector3 CurrentPosition = Vector3.Lerp(OutOfRangePosition, SwarmPosition, Speed);
             //transform.position = CurrentPosition.RoundVector(2);
@@ -217,5 +218,21 @@ public class Enim2PH : BaseEnemy
         OutOfRangePosition = transform.position.RoundVector(2);
         yield return new WaitForSeconds(2.75f);
         Confused = false;
+    }
+
+    private void OnTriggerEnter(Collider Collision)
+    {
+        if (Collision.CompareTag("Player"))
+        {
+            FindObjectOfType<PlayerInteraction>().HandleHealth(-10);
+            //Play explosion animation
+            //Play explosion sound
+            Destroy(this.gameObject);
+        }
+        if (Collision.CompareTag("Ground"))
+        {
+            MissCount--;
+            RigidbodyRef.velocity = Vector3.zero;
+        }
     }
 }

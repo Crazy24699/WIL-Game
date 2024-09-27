@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,27 +25,28 @@ public class CameraFunctionality : MonoBehaviour
     float CurrentLockoutTime;
     [SerializeField] private float X_Rotation;
     [SerializeField] private float Y_Rotation=180;
-    private float Max_X_Rotation = 30;
-    private float Min_X_Rotation = -30;
-    private float Max_Y_Rotation = -45+-90;
-    private float Min_Y_Rotation = -135+-90;
     [SerializeField] private AimMouse[] MouseAxisInfo;
 
     public Transform PlayerOrientation;
     public Transform Player;
     public Transform PlayerObject;
+
     public Transform FirePoint;
     public Transform MainCamera;
+    public Transform FreeLookCamera;
+
     [SerializeField] private Transform AimCamera;
     [SerializeField] private Transform AimCamRotator;
 
 
     public Vector3 ViewDirection;
+    public Vector3 CameraView;
     public Vector3 PlayerVelocity;
     public Vector3 TransformDirection;
     [SerializeField] protected Vector3 MoveDirection;
 
-    [SerializeField] private PlayerMovement PlayerMovementScript;    
+    [SerializeField] private PlayerMovement PlayerMovementScript;
+    public Cinemachine.CinemachineBrain Brain;
 
     // Start is called before the first frame update
     void Start()
@@ -59,13 +61,40 @@ public class CameraFunctionality : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         HandleAimCamera();
+
+        LockCamera();
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            switch (LockView)
+            {
+                case false:
+                    CameraView = MainCamera.transform.position;
+                    LockView = true;
+                    break;
+
+                case true:
+                    LockView = false;
+                    break;
+            }
+        }
+
 
         if (PlayerMovementScript.AttackLocked || !PlayerMovementScript.CanMove || !CameraActive) { return; }
 
         RotateToView();
         HandleLockout();
 
+    }
+
+    private void LockCamera()
+    {
+        Brain.enabled = !LockView;
+        if (LockView)
+        {
+            Brain.gameObject.transform.position = Vector3.one;
+        }
     }
 
     public void RotateToView()
