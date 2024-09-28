@@ -137,7 +137,7 @@ public class PlayerInteraction : MonoBehaviour
         Debug.Log("Damaghe");
         CurrentHealth += HealthChange;
         DeathCheck();
-        HandleHeartChanges();
+        //HandleHeartChanges();
     }
 
     private void HandleHeartChanges()

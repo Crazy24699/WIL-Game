@@ -29,6 +29,7 @@ public class GenSwarmLogic : MonoBehaviour
     public HashSet<Enim2PH> GeneratorSwarm = new HashSet<Enim2PH>();
     public List<Enim2PH> ShownSwarm;
     private Enim2PH CurrentSelectedDrone;
+    private WorldHandler WorldHandlerScript;
 
     private Vector3 CheckingCord;
     Vector3 RndPoint;
@@ -48,6 +49,7 @@ public class GenSwarmLogic : MonoBehaviour
     [SerializeField] private bool InAttackRange;
     [SerializeField]private bool ChangePosition = false;
     [SerializeField] private bool GeneralStartupRan = false;
+    [SerializeField] private bool OnAttackList = false;
 
     private void Start()
     {
@@ -64,6 +66,7 @@ public class GenSwarmLogic : MonoBehaviour
         //StartCoroutine();
         SpawnSwarm();
         NavAgentRef = GetComponent<NavMeshAgent>();
+        WorldHandlerScript = FindObjectOfType<WorldHandler>();
     }
 
     private void SpawnSwarm()
@@ -74,7 +77,7 @@ public class GenSwarmLogic : MonoBehaviour
             {
                 break;
             }
-
+            
             GameObject SpawnedDrone;
             Vector3 PossiblePosition = RandomizeSpawnPoint();
             if (!Physics.CheckSphere(PossiblePosition, 1.55f, SpawningMask))
@@ -182,12 +185,18 @@ public class GenSwarmLogic : MonoBehaviour
     
     private void Attack()
     {
-        if (!InAttackRange && GeneratorSwarm.Count > 0)
+        
+        if (!OnAttackList && WorldHandlerScript.EnemiesAttacking.Count < 2)
+        {
+            WorldHandlerScript.EnemiesAttacking.Add(this.gameObject);
+            OnAttackList = true;
+        }
+
+        if ((!InAttackRange && GeneratorSwarm.Count > 0) || OnAttackList )
         {
             return;
         }
-
-        if(!CanAttack)
+        if (!CanAttack)
         {
             CurrentWaitTime -= Time.deltaTime;
             if (CurrentWaitTime <= 0)

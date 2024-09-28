@@ -157,9 +157,9 @@ public class Enim2PH : BaseEnemy
 
         if (!GeneralStartupRan) { return; }
 
-        if (Attacking)
+        if (Attacking && !AttatchedToParent)
         {
-            //transform.parent = null;
+            
         }
 
 
@@ -224,7 +224,11 @@ public class Enim2PH : BaseEnemy
     {
         if (Collision.CompareTag("Player"))
         {
-            FindObjectOfType<PlayerInteraction>().HandleHealth(-10);
+            if (!Attacking)
+            {
+                return;
+            }
+            FindObjectOfType<PlayerInteraction>().HandleHealth(-3);
             //Play explosion animation
             //Play explosion sound
             Destroy(this.gameObject);
