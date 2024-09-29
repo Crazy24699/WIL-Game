@@ -218,7 +218,7 @@ public class PlayerAttacks : MonoBehaviour
 
     private void AimProjectile()
     {
-        Debug.Log("call our names in the vally of the saints");
+        //Debug.Log("call our names in the vally of the saints");
         CamFunctionScript.ChangeActiveCamera(true);
         //CamFunctionScript.AimCameraActive = true;
 
@@ -268,7 +268,7 @@ public class PlayerAttacks : MonoBehaviour
 
     public void ResetAttack()
     {
-        Debug.Log("Reseting ");
+        //Debug.Log("Reseting ");
         PlayerInteractionScript.CanTakeDamage = true;
         HandleCameraState(true);
         HandleMovementState(true);
@@ -305,7 +305,7 @@ public class PlayerAttacks : MonoBehaviour
     private void SetBiteState(int ActiveState)
     {
         bool Active = ActiveState == 1 ? true : false;
-        Debug.Log(Active + "  " + ActiveState+"Bite state");
+        //Debug.Log(Active + "  " + ActiveState+"Bite state");
         BiteBox.SetActive(Active);
         IsAttacking = Active;
         if (ActiveState == 2)

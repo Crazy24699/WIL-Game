@@ -151,7 +151,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleDashDirection()
     {
-        Debug.Log("Reading Dash ");
+        //Debug.Log("Reading Dash ");
         Vector2 NewDashDirection = PlayerInputRef.BasePlayerMovement.DashReading.ReadValue<Vector2>().normalized;
         if (DashDirection==Vector2.zero)
         {
@@ -194,7 +194,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (!CanMove) { return; }
-        Debug.Log("turn to rust");
+        //Debug.Log("turn to rust");
 
 
 

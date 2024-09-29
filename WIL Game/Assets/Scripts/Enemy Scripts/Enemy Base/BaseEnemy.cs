@@ -26,9 +26,15 @@ public class BaseEnemy : MonoBehaviour
     [Space(8)]
     public float CurrentPlayerDistance;
     protected float ImmunityTime;
-    protected float MaxFollowDistance;
+
+    [SerializeField]protected float MaxFollowDistance;
     public float MaxAttackDistance;
     [HideInInspector]public float CurrentMoveSpeed;
+
+    public float CloseRangeSpeedMulti;
+    public float PathfindAwayDistance;
+
+    public float OrbitingDistance;
     #endregion
 
     #region Gameobjects and transforms
@@ -40,15 +46,25 @@ public class BaseEnemy : MonoBehaviour
     public Transform PlayerTarget;
     #endregion
 
+    protected Vector3 PlayerDirection;
+    protected Vector3 RetreatPosition;
+    protected Vector3 CurrentPosition;
+
     [Header("Booleans"), Space(5)]
     #region Bools
     protected bool CanTakeDamage = true;
     public bool SeenPlayer = false;
     public bool PatrolActive;
     public bool PlayerEscaped;
+
     protected bool ReduceKnockbackForce;
     public bool OnAttackingList = false;
+
     protected bool CanAttack = true;
+    public bool Orbiting;
+
+    public bool UpdateRetretPosition;
+    [SerializeField] protected bool AdvancedRetreat = false;
 
     [SerializeField]protected bool StartupRan = false;
     [SerializeField] protected bool Alive = false;
@@ -199,6 +215,78 @@ public class BaseEnemy : MonoBehaviour
 
     }
 
+    protected void KeepOrbitDistance()
+    {
+        CurrentPlayerDistance = Vector3.Distance(this.transform.position, PlayerTarget.transform.position);
+        PlayerDirection = (this.transform.position - PlayerTarget.transform.position).normalized;
+        //PlayerDirection = PlayerDirection.RoundVector(0);
+
+        if (CurrentPlayerDistance <= PathfindAwayDistance && UpdateRetretPosition)
+        {
+            PathfindingRetreat();
+            StartCoroutine(RetreatCooldown());
+
+            return;
+        }
+        if (AdvancedRetreat)
+        {
+            if (CurrentPosition == RetreatPosition)
+            {
+                if (RigidbodyRef.velocity != Vector3.zero)
+                {
+                    RigidbodyRef.velocity = Vector3.zero;
+                }
+
+                AdvancedRetreat = false;
+            }
+            return;
+        }
+
+        if (CurrentPlayerDistance < OrbitingDistance)
+        {
+            Debug.Log(":the whispers");
+            NavMeshRef.isStopped = false;
+            RigidbodyRef.velocity = new Vector3(PlayerDirection.x, 0, PlayerDirection.z) * 20;
+            if (CurrentPlayerDistance < MaxFollowDistance - 10)
+            {
+                UpdateRetretPosition = true;
+                CloseRangeSpeedMulti = 2.5f;
+                NavMeshRef.speed = BaseMoveSpeed * CloseRangeSpeedMulti;
+                return;
+            }
+
+            CloseRangeSpeedMulti = 1f;
+            UpdateRetretPosition = false;
+            NavMeshRef.speed = BaseMoveSpeed * CloseRangeSpeedMulti;
+        }
+        else
+        {
+            Debug.Log("thriller");
+            NavMeshRef.isStopped = true;
+            if (RigidbodyRef.velocity != Vector3.zero)
+            {
+
+                RigidbodyRef.velocity = Vector3.zero;
+            }
+        }
+    }
+
+    private void PathfindingRetreat()
+    {
+        CurrentPosition = transform.position.RoundVector(2);
+        RetreatPosition = (PlayerDirection * 20) + CurrentPosition;
+        RetreatPosition = RetreatPosition.RoundVector(2);
+
+        NavMeshRef.SetDestination(RetreatPosition);
+        AdvancedRetreat = true;
+    }
+
+    private IEnumerator RetreatCooldown()
+    {
+        UpdateRetretPosition = false;
+        yield return new WaitForSeconds(1.75f);
+        UpdateRetretPosition = true;
+    }
 
     protected IEnumerator ImmunityTimer()
     {
