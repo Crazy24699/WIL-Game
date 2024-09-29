@@ -2202,7 +2202,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &457824687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2595,7 +2595,7 @@ RectTransform:
   m_Father: {fileID: 1919049350}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2762,7 +2762,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8192
   TargetedPosition: {x: 0, y: 0, z: 0}
-  CurrentPosition: {x: 0, y: 0, z: 0}
   HasTargetPosition: 0
   TravelDistance: 10
   CurrentDistance: 0
@@ -5069,11 +5068,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 958757144226772664, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.00000002827196
+      value: 0.000000062290844
       objectReference: {fileID: 0}
     - target: {fileID: 958757144226772664, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000004314657
+      value: 0.000000009506366
       objectReference: {fileID: 0}
     - target: {fileID: 1062518012877003342, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5129,19 +5128,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3560059566175486749, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.000000036599584
+      value: 0.000000053527113
       objectReference: {fileID: 0}
     - target: {fileID: 3560059566175486749, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.0000000066705796
+      value: 0.000000009755762
       objectReference: {fileID: 0}
     - target: {fileID: 3903236220028915141, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.00000003659958
+      value: 0.000000053527106
       objectReference: {fileID: 0}
     - target: {fileID: 3903236220028915141, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.0000000066705788
+      value: 0.0000000097557615
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7108,21 +7107,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Swarm Parent
       objectReference: {fileID: 0}
-    - target: {fileID: 2080626467293257028, guid: e1a3788007c864443a515218731fb043, type: 3}
-      propertyPath: m_IsActive
-      value: 1
+    - target: {fileID: 3465066959424565041, guid: e1a3788007c864443a515218731fb043, type: 3}
+      propertyPath: MaxFollowDistance
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 3465066959424565041, guid: e1a3788007c864443a515218731fb043, type: 3}
-      propertyPath: SeenPlayer
-      value: 1
+      propertyPath: MaxPlayerDistance
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 3465066959424565041, guid: e1a3788007c864443a515218731fb043, type: 3}
-      propertyPath: DevAttackOverride
-      value: 1
+      propertyPath: MinPlayerDistance
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8470166410979336904, guid: e1a3788007c864443a515218731fb043, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.47369862
+      value: -20.13
       objectReference: {fileID: 0}
     - target: {fileID: 8470166410979336904, guid: e1a3788007c864443a515218731fb043, type: 3}
       propertyPath: m_LocalPosition.y
@@ -7130,7 +7129,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8470166410979336904, guid: e1a3788007c864443a515218731fb043, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -33.00101
+      value: -52.62
       objectReference: {fileID: 0}
     - target: {fileID: 8470166410979336904, guid: e1a3788007c864443a515218731fb043, type: 3}
       propertyPath: m_LocalRotation.w
@@ -7158,10 +7157,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8470166410979336904, guid: e1a3788007c864443a515218731fb043, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8633011154656294399, guid: e1a3788007c864443a515218731fb043, type: 3}
-      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

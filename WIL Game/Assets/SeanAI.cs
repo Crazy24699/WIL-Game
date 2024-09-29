@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SeanAI : BaseEnemy
 {
-
+    private bool Attacking;
 
     private void Start()
     {
@@ -33,8 +33,11 @@ public class SeanAI : BaseEnemy
     {
         if(!CanAttack || !OnAttackingList) { return; }
 
-
-        
+        if (Attacking)
+        {
+            return;
+        }
+        NavMeshRef.SetDestination(PlayerTarget.transform.position);
     }
 
     private void Update()
@@ -49,5 +52,4 @@ public class SeanAI : BaseEnemy
         }
     }
 
-    
 }

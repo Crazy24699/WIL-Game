@@ -6,7 +6,6 @@ public class TrashBag : BaseEnemy
 {
 
     [SerializeField] private Vector3 TargetedPosition;
-    [SerializeField] private Vector3 CurrentPosition;
 
     [SerializeField] private bool HasTargetPosition = false;
     

@@ -17,9 +17,7 @@ public class Enim2PH : BaseEnemy
     [SerializeField]private Vector3 SwarmPosition;
     [SerializeField] private Vector3 OutOfRangePosition;
     private Vector3 RejoinPathOffset;
-    public Vector3 CurrentPosition;
 
-    private Rigidbody RigidBodyRef;
     private GenSwarmLogic SwarmParent;
 
     [SerializeField]private int MissCount=3;
@@ -40,10 +38,10 @@ public class Enim2PH : BaseEnemy
 
     public void SwarmAttack(GameObject Parent, GameObject PlayerObject)
     {
-
+        RigidbodyRef.isKinematic = false;
         if (!GeneralStartupRan)
         {
-            RigidBodyRef = GetComponent<Rigidbody>();
+            RigidbodyRef = GetComponent<Rigidbody>();
 
             SwarmParent = Parent.GetComponent<GenSwarmLogic>();
 
@@ -59,7 +57,7 @@ public class Enim2PH : BaseEnemy
         this.transform.parent = null;
 
         transform.LookAt(PlayerObject.transform.position);
-        RigidBodyRef.AddForce(transform.forward * 1250);
+        RigidbodyRef.AddForce(transform.forward * 1250);
 
         WaitTimeFinished = false;
         InvokeRepeating(nameof(CheckMiss), 0.25f, 0.15f);
@@ -69,10 +67,11 @@ public class Enim2PH : BaseEnemy
         StartCoroutine(AttackDoneWaitTime());
         //Physics.IgnoreLayerCollision(12, 13, true);
     }
-   
+    
 
     protected override void CustomStartup()
     {
+        RigidbodyRef.isKinematic = true;
         MaxHealth = 4;
         CurrentHealth = MaxHealth;
         //BaseMoveSpeed = 16;
@@ -125,7 +124,7 @@ public class Enim2PH : BaseEnemy
             if (MissCount > 0)
             {
                 //Debug.Log("Invoke");
-                RigidBodyRef.velocity = Vector3.zero;
+                RigidbodyRef.velocity = Vector3.zero;
                 CancelInvoke(nameof(CheckMiss));
                 MissCount--;
                 StartCoroutine(ConfusedCooldown());
@@ -157,9 +156,9 @@ public class Enim2PH : BaseEnemy
 
         if (!GeneralStartupRan) { return; }
 
-        if (Attacking && !AttatchedToParent)
+        if (AttatchedToParent)
         {
-            
+            RigidbodyRef.isKinematic = true;
         }
 
 
@@ -169,7 +168,7 @@ public class Enim2PH : BaseEnemy
 
         Retreval();
         //InPos = this.transform.position.RoundVector(2) == SwarmPosition;
-        if (!Confused && this.transform.position.RoundVector(2) == SwarmPosition && RigidBodyRef.velocity==Vector3.zero && Attacking && WaitTimeFinished)
+        if (!Confused && this.transform.position.RoundVector(2) == SwarmPosition && RigidbodyRef.velocity==Vector3.zero && Attacking && WaitTimeFinished)
         {
             //Debug.Log("Is not true");
             Attacking = false;
@@ -198,7 +197,7 @@ public class Enim2PH : BaseEnemy
             if (transform.parent == null) 
             {
                 transform.parent = SwarmParent.transform;
-                RigidBodyRef.velocity = Vector3.zero;
+                RigidbodyRef.velocity = Vector3.zero;
             }
             //Speed += 0.250f * Time.deltaTime;
             //Vector3 CurrentPosition = Vector3.Lerp(OutOfRangePosition, SwarmPosition, Speed);
@@ -232,6 +231,7 @@ public class Enim2PH : BaseEnemy
             //Play explosion animation
             //Play explosion sound
             Destroy(this.gameObject);
+            SwarmParent.GeneratorSwarm.Remove(this);
         }
         if (Collision.CompareTag("Ground"))
         {

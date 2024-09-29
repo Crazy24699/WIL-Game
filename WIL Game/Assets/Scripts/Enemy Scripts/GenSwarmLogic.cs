@@ -76,7 +76,7 @@ public class GenSwarmLogic : MonoBehaviour
     public bool DevAttackOverride = false;
     public bool AdvancedRetreat;
     public bool UpdateRetretPosition;
-
+    public bool Orbiting = false;
 
 
     private void Start()
@@ -259,10 +259,11 @@ public class GenSwarmLogic : MonoBehaviour
             OnAttackList = true;
         }
 
-        if ((!InAttackRange && GeneratorSwarm.Count > 0) || OnAttackList )
+        if ((!InAttackRange || GeneratorSwarm.Count <= 0) || !OnAttackList )
         {
             return;
         }
+
         if (!CanAttack)
         {
             CurrentWaitTime -= Time.deltaTime;
@@ -359,12 +360,32 @@ public class GenSwarmLogic : MonoBehaviour
         return RoundedNum;
     }
 
+    public void RotateToTarget()
+    {
+        Vector3 TargetDirection = PlayerTarget.transform.position - this.transform.position;
+        TargetDirection.y = 0.0f;
+        Quaternion TargetRotation = Quaternion.LookRotation(TargetDirection);
+
+        this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, TargetRotation, 35f * Time.deltaTime);
+    }
+
     private void Update()
     {
         if (!GeneralStartupRan)
         {
             return;
         }
+
+        //if (!StartupRan) { return; }
+
+        
+        if (Orbiting)
+        {
+            RotateToTarget();
+            KeepOrbitDistance();
+            return;
+        }
+
         ShownSwarm = GeneratorSwarm.ToList();
         KeepDistanceRange();
         Attack();
@@ -397,10 +418,6 @@ public class GenSwarmLogic : MonoBehaviour
         CheckDeath();
     }
 
-    private void OutOfRangeTimer()
-    {
-
-    }
 
     private void OnTriggerEnter(Collider Collision)
     {
