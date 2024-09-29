@@ -2223,6 +2223,8 @@ MonoBehaviour:
   MaxFollowDistance: 45
   MaxAttackDistance: 0
   CurrentMoveSpeed: 0
+  CloseRangeSpeedMulti: 0
+  PathfindAwayDistance: 0
   OrbitingDistance: 60
   PlayerTarget: {fileID: 0}
   SeenPlayer: 1
@@ -2230,6 +2232,8 @@ MonoBehaviour:
   PlayerEscaped: 0
   OnAttackingList: 0
   Orbiting: 1
+  UpdateRetretPosition: 0
+  AdvancedRetreat: 0
   StartupRan: 0
   Alive: 0
   NavMeshRef: {fileID: 0}
@@ -2237,13 +2241,6 @@ MonoBehaviour:
   PlayerLayer:
     serializedVersion: 2
     m_Bits: 8192
-  PlayerDirection: {x: 0, y: 0, z: 0}
-  RetreatPosition: {x: 0, y: 0, z: 0}
-  CurrentPosition: {x: 0, y: 0, z: 0}
-  CloseRangeSpeedMulti: 0
-  PathfindAwayDistance: 0
-  UpdateRetretPosition: 0
-  AdvancedRetreat: 0
 --- !u!4 &457824688
 Transform:
   m_ObjectHideFlags: 0
@@ -2746,6 +2743,8 @@ MonoBehaviour:
   MaxFollowDistance: 0
   MaxAttackDistance: 0
   CurrentMoveSpeed: 0
+  CloseRangeSpeedMulti: 0
+  PathfindAwayDistance: 0
   OrbitingDistance: 0
   PlayerTarget: {fileID: 0}
   SeenPlayer: 0
@@ -2753,6 +2752,8 @@ MonoBehaviour:
   PlayerEscaped: 0
   OnAttackingList: 0
   Orbiting: 0
+  UpdateRetretPosition: 0
+  AdvancedRetreat: 0
   StartupRan: 0
   Alive: 0
   NavMeshRef: {fileID: 0}
@@ -5068,11 +5069,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 958757144226772664, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.000000062290844
+      value: 0.00000002827196
       objectReference: {fileID: 0}
     - target: {fileID: 958757144226772664, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000009506366
+      value: 0.000000004314657
       objectReference: {fileID: 0}
     - target: {fileID: 1062518012877003342, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5128,19 +5129,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3560059566175486749, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.000000053527113
+      value: 0.000000036599584
       objectReference: {fileID: 0}
     - target: {fileID: 3560059566175486749, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000009755762
+      value: 0.0000000066705796
       objectReference: {fileID: 0}
     - target: {fileID: 3903236220028915141, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.000000053527106
+      value: 0.00000003659958
       objectReference: {fileID: 0}
     - target: {fileID: 3903236220028915141, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.0000000097557615
+      value: 0.0000000066705788
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5257,6 +5258,8 @@ MonoBehaviour:
   MaxFollowDistance: 0
   MaxAttackDistance: 0
   CurrentMoveSpeed: 0
+  CloseRangeSpeedMulti: 0
+  PathfindAwayDistance: 0
   OrbitingDistance: 0
   PlayerTarget: {fileID: 0}
   SeenPlayer: 0
@@ -5264,6 +5267,8 @@ MonoBehaviour:
   PlayerEscaped: 0
   OnAttackingList: 0
   Orbiting: 0
+  UpdateRetretPosition: 0
+  AdvancedRetreat: 0
   StartupRan: 0
   Alive: 0
   NavMeshRef: {fileID: 0}
@@ -7105,7 +7110,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2080626467293257028, guid: e1a3788007c864443a515218731fb043, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3465066959424565041, guid: e1a3788007c864443a515218731fb043, type: 3}
       propertyPath: SeenPlayer

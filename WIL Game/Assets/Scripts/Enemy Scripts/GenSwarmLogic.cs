@@ -20,6 +20,9 @@ public class GenSwarmLogic : MonoBehaviour
     //this is used when the swarm can not attack and needs to keep distance
     [SerializeField] private float ExtraOrbitDistance;
     [SerializeField]private float CurrentPlayerDistance;
+
+    public Vector3 PlayerDirection;
+
     [SerializeField]private float OrbitingMoveMultiplier;
 
     [SerializeField]private float Radius;
@@ -31,6 +34,11 @@ public class GenSwarmLogic : MonoBehaviour
 
     private float AttackCooldownTime = 3.5f;
     [SerializeField]private float CurrentWaitTime; 
+    public float CloseRangeSpeedMulti;
+
+    public float PathfindAwayDistance;
+    public float OrbitingDistance;
+    public float BaseMoveSpeed;
     
 
     public HashSet<Enim2PH> GeneratorSwarm = new HashSet<Enim2PH>();
@@ -43,17 +51,20 @@ public class GenSwarmLogic : MonoBehaviour
     [SerializeField]private Vector3 NewRetreatPosition;
     [SerializeField] private Vector3 OldPosition;
     [SerializeField] private Vector3 ThisPosition;
+    public Vector3 CurrentPosition;
+    public Vector3 RetreatPosition;
 
     private int SwarmNum = 7;
     private int LocationCheckCounter;
     private int CurrentDroneIndex=0;
-    
+    public int MaxFollowDistance;
+
     [SerializeField] private LayerMask SpawningMask;
     [SerializeField] private LayerMask TargetMask;
     [SerializeField] private LayerMask ObstacleMask;
 
-    private Rigidbody RBRef;
-    private NavMeshAgent NavAgentRef;
+    private Rigidbody RigidbodyRef;
+    private NavMeshAgent NavMeshRef;
 
     [SerializeField] private bool CanAttack;
     [SerializeField] private bool InAttackRange;
@@ -63,22 +74,26 @@ public class GenSwarmLogic : MonoBehaviour
     [SerializeField] private bool OnAttackList = false;
     [SerializeField] private bool SeenPlayer = false;
     public bool DevAttackOverride = false;
+    public bool AdvancedRetreat;
+    public bool UpdateRetretPosition;
+
+
 
     private void Start()
     {
         EnemyStartup();
-    }
+    }   
 
     private void EnemyStartup()
     {
         PlayerTarget = FindObjectOfType<PlayerMovement>().gameObject;
-        RBRef = GetComponent<Rigidbody>();
+        RigidbodyRef = GetComponent<Rigidbody>();
 
         CloseRangeTimer = MaxCloseRangeTime;
         CanAttack = true;
         //StartCoroutine();
         SpawnSwarm();
-        NavAgentRef = GetComponent<NavMeshAgent>();
+        NavMeshRef = GetComponent<NavMeshAgent>();
         WorldHandlerScript = FindObjectOfType<WorldHandler>();
     }
 
@@ -158,7 +173,7 @@ public class GenSwarmLogic : MonoBehaviour
 
         if (!OnAttackList && SeenPlayer)
         {
-            NavAgentRef.speed = 3.5f * OrbitingMoveMultiplier;
+            NavMeshRef.speed = 3.5f * OrbitingMoveMultiplier;
             OrbitPlayer();
             return;
         }
@@ -166,14 +181,14 @@ public class GenSwarmLogic : MonoBehaviour
         if (CurrentPlayerDistance > MaxPlayerDistance )
         {
             //Debug.Log("at the alter we start to pray");
-            NavAgentRef.SetDestination(PlayerTarget.transform.position);
-            NavAgentRef.isStopped = false;
+            NavMeshRef.SetDestination(PlayerTarget.transform.position);
+            NavMeshRef.isStopped = false;
         }
         if (CurrentPlayerDistance < MinPlayerDistance + 15)
         {
             //Debug.Log(CurrentPlayerDistance + "Love bites" + MinPlayerDistance + 15.00);
             //ChangePosition = true;
-            NavAgentRef.isStopped = true;
+            NavMeshRef.isStopped = true;
         }
 
         //if (!InAttackRange) { return; }
@@ -182,7 +197,7 @@ public class GenSwarmLogic : MonoBehaviour
         if (CurrentPlayerDistance < MinPlayerDistance && !ChangePosition)
         {
             Vector3 PlayerDirection = (transform.position - PlayerTarget.transform.position).normalized;
-            RBRef.velocity = new Vector3(PlayerDirection.x, 0, PlayerDirection.z) * 5;
+            RigidbodyRef.velocity = new Vector3(PlayerDirection.x, 0, PlayerDirection.z) * 5;
 
             if (CloseRangeTimer > 0)
             {
@@ -198,7 +213,7 @@ public class GenSwarmLogic : MonoBehaviour
         }
         else if (CurrentPlayerDistance > MinPlayerDistance)
         {
-            RBRef.velocity = Vector3.zero;
+            RigidbodyRef.velocity = Vector3.zero;
         }
     }
 
@@ -209,19 +224,19 @@ public class GenSwarmLogic : MonoBehaviour
 
         if (CurrentPlayerDistance < NewFollowDistance)
         {
-            if(NavAgentRef.isStopped) { NavAgentRef.isStopped = false; }
+            if(NavMeshRef.isStopped) { NavMeshRef.isStopped = false; }
 
-            NavAgentRef.SetDestination(PlayerTarget.transform.position);
+            NavMeshRef.SetDestination(PlayerTarget.transform.position);
         }
         else if (CurrentPlayerDistance < NewFollowDistance - 5) 
         {
-            NavAgentRef.isStopped = true;
+            NavMeshRef.isStopped = true;
         }
         //this moves the swarm out of range of the player faster
         if (CurrentPlayerDistance < MaxPlayerDistance && !ChangePosition)
         {
             Vector3 PlayerDirection = (transform.position - PlayerTarget.transform.position).normalized;
-            RBRef.velocity = new Vector3(PlayerDirection.x, 0, PlayerDirection.z) * 15;
+            RigidbodyRef.velocity = new Vector3(PlayerDirection.x, 0, PlayerDirection.z) * 15;
         }
 
         //if the player somehow manages to corner the swarm
@@ -407,5 +422,78 @@ public class GenSwarmLogic : MonoBehaviour
                 SeenPlayer = false;
             }
         }
+    }
+
+    protected void KeepOrbitDistance()
+    {
+        CurrentPlayerDistance = Vector3.Distance(this.transform.position, PlayerTarget.transform.position);
+        PlayerDirection = (this.transform.position - PlayerTarget.transform.position).normalized;
+        //PlayerDirection = PlayerDirection.RoundVector(0);
+
+        if (CurrentPlayerDistance <= PathfindAwayDistance && UpdateRetretPosition)
+        {
+            PathfindingRetreat();
+            StartCoroutine(RetreatCooldown());
+
+            return;
+        }
+        if (AdvancedRetreat)
+        {
+            if (CurrentPosition == RetreatPosition)
+            {
+                if (RigidbodyRef.velocity != Vector3.zero)
+                {
+                    RigidbodyRef.velocity = Vector3.zero;
+                }
+
+                AdvancedRetreat = false;
+            }
+            return;
+        }
+
+        if (CurrentPlayerDistance < OrbitingDistance)
+        {
+            Debug.Log(":the whispers");
+            NavMeshRef.isStopped = false;
+            RigidbodyRef.velocity = new Vector3(PlayerDirection.x, 0, PlayerDirection.z) * 20;
+            if (CurrentPlayerDistance < MaxFollowDistance - 10)
+            {
+                UpdateRetretPosition = true;
+                CloseRangeSpeedMulti = 2.5f;
+                NavMeshRef.speed = BaseMoveSpeed * CloseRangeSpeedMulti;
+                return;
+            }
+
+            CloseRangeSpeedMulti = 1f;
+            UpdateRetretPosition = false;
+            NavMeshRef.speed = BaseMoveSpeed * CloseRangeSpeedMulti;
+        }
+        else
+        {
+            Debug.Log("thriller");
+            NavMeshRef.isStopped = true;
+            if (RigidbodyRef.velocity != Vector3.zero)
+            {
+
+                RigidbodyRef.velocity = Vector3.zero;
+            }
+        }
+    }
+
+    private void PathfindingRetreat()
+    {
+        CurrentPosition = transform.position.RoundVector(2);
+        RetreatPosition = (PlayerDirection * 20) + CurrentPosition;
+        RetreatPosition = RetreatPosition.RoundVector(2);
+
+        NavMeshRef.SetDestination(RetreatPosition);
+        AdvancedRetreat = true;
+    }
+
+    private IEnumerator RetreatCooldown()
+    {
+        UpdateRetretPosition = false;
+        yield return new WaitForSeconds(1.75f);
+        UpdateRetretPosition = true;
     }
 }
