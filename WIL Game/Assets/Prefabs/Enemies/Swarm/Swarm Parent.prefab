@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3465066959424565041}
   - component: {fileID: 7130163019830172617}
   - component: {fileID: 4661104138600167047}
+  - component: {fileID: 8633011154656294399}
   m_Layer: 0
   m_Name: Swarm Parent
   m_TagString: Untagged
@@ -48,11 +49,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GeneratorEnemy: {fileID: 2610401700660308599, guid: a731357dcff0295469a8203a0cad0868, type: 3}
-  PlayerTarget: {fileID: 0}
   SwarmLocations: []
   MinPlayerDistance: 25
   MaxPlayerDistance: 65
+  ExtraOrbitDistance: 0
   CurrentPlayerDistance: 0
+  OrbitingMoveMultiplier: 0
+  Radius: 0
+  Angle: 0
   CloseRangeTimer: 0
   CurrentWaitTime: 0
   ShownSwarm: []
@@ -62,10 +66,19 @@ MonoBehaviour:
   SpawningMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  TargetMask:
+    serializedVersion: 2
+    m_Bits: 0
+  ObstacleMask:
+    serializedVersion: 2
+    m_Bits: 0
   CanAttack: 0
   InAttackRange: 0
   ChangePosition: 0
   GeneralStartupRan: 0
+  OnAttackList: 0
+  SeenPlayer: 0
+  DevAttackOverride: 0
 --- !u!54 &7130163019830172617
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -115,6 +128,27 @@ NavMeshAgent:
   m_BaseOffset: 4.32
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!65 &8633011154656294399
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2080626467293257028}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 8192
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 50, y: 4, z: 50}
+  m_Center: {x: 0, y: -3, z: 0}
 --- !u!1 &4880983029103670105
 GameObject:
   m_ObjectHideFlags: 0

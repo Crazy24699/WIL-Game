@@ -11,6 +11,7 @@ public class EnemySight : MonoBehaviour
     void Start()
     {
         EnemyAIScript = transform.GetComponentInParent<BTBaseEnemy>();
+
     }
 
     private void OnTriggerEnter(Collider Trigger)
@@ -18,6 +19,7 @@ public class EnemySight : MonoBehaviour
         Debug.Log(Trigger.name+"        "+Trigger.tag);
         if (Trigger.CompareTag("Player"))
         {
+
             EnemyAIScript.SeenPlayer = true;
             EnemyAIScript.PlayerEscaped = false;
             EnemyAIScript.PatrolActive = false;

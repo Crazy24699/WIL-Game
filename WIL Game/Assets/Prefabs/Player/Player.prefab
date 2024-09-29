@@ -100,13 +100,16 @@ MonoBehaviour:
   PlayerObject: {fileID: 3540955281142370588}
   FirePoint: {fileID: 4244928746411730047}
   MainCamera: {fileID: 3560059566175486749}
+  FreeLookCamera: {fileID: 0}
   AimCamera: {fileID: 8011278577453095645}
   AimCamRotator: {fileID: 5701009480670178258}
   ViewDirection: {x: 0, y: 0, z: 0}
+  CameraView: {x: 0, y: 0, z: 0}
   PlayerVelocity: {x: 0, y: 0, z: 0}
   TransformDirection: {x: 0, y: 0, z: 0}
   MoveDirection: {x: 0, y: 0, z: 0}
   PlayerMovementScript: {fileID: 1242344083140566919}
+  Brain: {fileID: 8487017906920466996}
 --- !u!1 &443349271743385038
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,7 +663,7 @@ MonoBehaviour:
   HitParticle: {fileID: 9049368545106134100, guid: 1c7b93a4dc4d0d842acb62a5f9cbae16, type: 3}
   AttackLocked: 0
   CanMove: 0
-  DashSet: 1
+  DashSet: 0
   PlayerDashing: 0
 --- !u!114 &8949839218342407227
 MonoBehaviour:
@@ -734,7 +737,7 @@ MonoBehaviour:
   ActionInput: {fileID: 8308658063465391865, guid: 0cb833d8b6cd3384cbf8e4c382a539af, type: 3}
   MenuActive: 0
   CanTakeDamage: 1
-  MaxHealth: 6
+  MaxHealth: 422
   CurrentHealth: 0
   HeartImages:
   - {fileID: 7209066564683194866}
@@ -2004,7 +2007,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4490988748872957721}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.000000007783258, y: 0.99246967, z: -0.12249071, w: 0.000000063063126}
+  m_LocalRotation: {x: 0.000000003438284, y: 0.99246967, z: -0.122490704, w: 0.000000027858373}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3070,7 +3073,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8664163676790721914}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0000000069105117, y: 0.9885543, z: -0.1508658, w: 0.00000004528141}
+  m_LocalRotation: {x: 0.000000004314657, y: 0.98855424, z: -0.15086582, w: 0.00000002827196}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

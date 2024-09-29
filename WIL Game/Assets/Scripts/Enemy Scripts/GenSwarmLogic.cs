@@ -15,15 +15,22 @@ public class GenSwarmLogic : MonoBehaviour
 
     [SerializeField] private float MinPlayerDistance;
     [SerializeField] private float MaxPlayerDistance;
-    [SerializeField]private float CurrentPlayerDistance;
 
+    //What amount of added distance the swarm needs when orbiting the player
+    //this is used when the swarm can not attack and needs to keep distance
+    [SerializeField] private float ExtraOrbitDistance;
+    [SerializeField]private float CurrentPlayerDistance;
+    [SerializeField]private float OrbitingMoveMultiplier;
+
+    [SerializeField]private float Radius;
+    [SerializeField] private float Angle;
 
     [SerializeField]private float CloseRangeTimer;
     const float MaxCloseRangeTime = 1.25f;
     private float RetreatSpeed;
 
     private float AttackCooldownTime = 3.5f;
-    [SerializeField]private float CurrentWaitTime;
+    [SerializeField]private float CurrentWaitTime; 
     
 
     public HashSet<Enim2PH> GeneratorSwarm = new HashSet<Enim2PH>();
@@ -42,6 +49,9 @@ public class GenSwarmLogic : MonoBehaviour
     private int CurrentDroneIndex=0;
     
     [SerializeField] private LayerMask SpawningMask;
+    [SerializeField] private LayerMask TargetMask;
+    [SerializeField] private LayerMask ObstacleMask;
+
     private Rigidbody RBRef;
     private NavMeshAgent NavAgentRef;
 
@@ -49,7 +59,10 @@ public class GenSwarmLogic : MonoBehaviour
     [SerializeField] private bool InAttackRange;
     [SerializeField]private bool ChangePosition = false;
     [SerializeField] private bool GeneralStartupRan = false;
+
     [SerializeField] private bool OnAttackList = false;
+    [SerializeField] private bool SeenPlayer = false;
+    public bool DevAttackOverride = false;
 
     private void Start()
     {
@@ -143,6 +156,13 @@ public class GenSwarmLogic : MonoBehaviour
         CurrentPlayerDistance = Vector3.Distance(transform.position, PlayerTarget.transform.position);
         InAttackRange = (CurrentPlayerDistance < MaxPlayerDistance);
 
+        if (!OnAttackList && SeenPlayer)
+        {
+            NavAgentRef.speed = 3.5f * OrbitingMoveMultiplier;
+            OrbitPlayer();
+            return;
+        }
+
         if (CurrentPlayerDistance > MaxPlayerDistance )
         {
             //Debug.Log("at the alter we start to pray");
@@ -182,10 +202,42 @@ public class GenSwarmLogic : MonoBehaviour
         }
     }
 
+    private void OrbitPlayer()
+    {
+        Debug.Log("Orbiting");
+        float NewFollowDistance = MaxPlayerDistance + ExtraOrbitDistance;
+
+        if (CurrentPlayerDistance < NewFollowDistance)
+        {
+            if(NavAgentRef.isStopped) { NavAgentRef.isStopped = false; }
+
+            NavAgentRef.SetDestination(PlayerTarget.transform.position);
+        }
+        else if (CurrentPlayerDistance < NewFollowDistance - 5) 
+        {
+            NavAgentRef.isStopped = true;
+        }
+        //this moves the swarm out of range of the player faster
+        if (CurrentPlayerDistance < MaxPlayerDistance && !ChangePosition)
+        {
+            Vector3 PlayerDirection = (transform.position - PlayerTarget.transform.position).normalized;
+            RBRef.velocity = new Vector3(PlayerDirection.x, 0, PlayerDirection.z) * 15;
+        }
+
+        //if the player somehow manages to corner the swarm
+        if (CurrentPlayerDistance < MaxPlayerDistance - 10)
+        {
+            Debug.Log("Heartbear");
+            FindRetreatPosition();
+            CloseRangeTimer = MaxCloseRangeTime;
+        }
+
+    }
+
     
     private void Attack()
     {
-        
+        if (DevAttackOverride) { return; }
         if (!OnAttackList && WorldHandlerScript.EnemiesAttacking.Count < 2)
         {
             WorldHandlerScript.EnemiesAttacking.Add(this.gameObject);
@@ -304,7 +356,7 @@ public class GenSwarmLogic : MonoBehaviour
 
         if(CanAttack)
         {
-            //SendNextDrone();
+            SendNextDrone();
         }
 
         if(Input.GetKeyDown(KeyCode.M))
@@ -313,9 +365,9 @@ public class GenSwarmLogic : MonoBehaviour
 
         }
 
-        if(Input.GetKeyDown(KeyCode.J))
+        if(Input.GetKeyDown(KeyCode.O))
         {
-
+            DevAttackOverride = !DevAttackOverride;
             
         }
         if (Input.GetKeyDown(KeyCode.Y))
@@ -330,4 +382,30 @@ public class GenSwarmLogic : MonoBehaviour
         CheckDeath();
     }
 
+    private void OutOfRangeTimer()
+    {
+
+    }
+
+    private void OnTriggerEnter(Collider Collision)
+    {
+        if (Collision.CompareTag("Player"))
+        {
+            if (Collision.transform.root.root.GetComponent<PlayerInteraction>())
+            {
+                SeenPlayer = true;
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider Collision)
+    {
+        if (Collision.CompareTag("Player"))
+        {
+            if (Collision.transform.root.root.GetComponent<PlayerInteraction>())
+            {
+                SeenPlayer = false;
+            }
+        }
+    }
 }

@@ -120,9 +120,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ForceChanges: {x: 0, y: 0, z: 0}
+  AdditionalForce: 0
   ColliderExceptions:
-  - Player
-  - AttackCollider
+  - Enemy
+  - Boss
 --- !u!54 &8522724400245077478
 Rigidbody:
   m_ObjectHideFlags: 0
