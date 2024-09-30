@@ -150,7 +150,7 @@ public class CameraFunctionality : MonoBehaviour
                 //AimCamera.localRotation = Quaternion.Euler(transform.parent.forward);
                 //X_Rotation = PlayerMovementScript.BaltoOrientation.eulerAngles.x;
                 //Y_Rotation = PlayerMovementScript.BaltoOrientation.eulerAngles.y;
-                Debug.Log("Hellish verses, at the alter we start to pray");
+                //Debug.Log("Hellish verses, at the alter we start to pray");
                 break;
 
         }

@@ -128,14 +128,24 @@ MonoBehaviour:
   KnockbackPower: 0
   KnockbackTimer: 4
   BaseMoveSpeed: 0
+  ExtraRotSpeed: 0
   CurrentPlayerDistance: 0
+  MaxFollowDistance: 0
   MaxAttackDistance: 0
   CurrentMoveSpeed: 0
+  CloseRangeSpeedMulti: 0
+  PathfindAwayDistance: 0
+  OrbitingDistance: 0
   PlayerTarget: {fileID: 0}
+  RetreatPosition: {x: 0, y: 0, z: 0}
   SeenPlayer: 0
   PatrolActive: 0
   PlayerEscaped: 0
   OnAttackingList: 0
+  CanAttack: 1
+  Orbiting: 0
+  UpdateRetretPosition: 0
+  AdvancedRetreat: 0
   StartupRan: 0
   Alive: 0
   NavMeshRef: {fileID: 0}
@@ -147,7 +157,6 @@ MonoBehaviour:
   CenterSlerpPoint: {fileID: 0}
   SwarmPosition: {x: 0, y: 0, z: 0}
   OutOfRangePosition: {x: 0, y: 0, z: 0}
-  CurrentPosition: {x: 0, y: 0, z: 0}
   MissCount: 3
   Confused: 1
   Attacking: 0

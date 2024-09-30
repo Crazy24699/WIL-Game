@@ -34,7 +34,7 @@ public class SpireParent : MonoBehaviour
         WorldHandler WorldHandler = FindObjectOfType<WorldHandler>();
 
         WorldHandler.AllSpires.Add(SpireParentLevel, SpireObjects.ToList());
-        Debug.Log(WorldHandler.AllSpires.Count);
+        //Debug.Log(WorldHandler.AllSpires.Count);
     }
 
     private void GetSpawningGroup()

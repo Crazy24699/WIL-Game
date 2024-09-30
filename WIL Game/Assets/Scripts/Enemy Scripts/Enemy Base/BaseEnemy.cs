@@ -22,6 +22,8 @@ public class BaseEnemy : MonoBehaviour
     //[SerializeField] protected float CurrentImmunityTime;
     [Space(3)]
     [SerializeField] protected float BaseMoveSpeed;
+    [SerializeField] protected float ExtraRotSpeed;
+
 
     [Space(8)]
     public float CurrentPlayerDistance;
@@ -178,7 +180,7 @@ public class BaseEnemy : MonoBehaviour
         TargetDirection.y = 0.0f;
         Quaternion TargetRotation = Quaternion.LookRotation(TargetDirection);
 
-        this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, TargetRotation, 35f * Time.deltaTime);
+        this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, TargetRotation, (35f + ExtraRotSpeed) * Time.deltaTime);
     }
 
     protected virtual void HandleForce()

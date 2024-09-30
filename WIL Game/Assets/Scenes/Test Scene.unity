@@ -2197,6 +2197,7 @@ GameObject:
   - component: {fileID: 457824689}
   - component: {fileID: 457824690}
   - component: {fileID: 457824691}
+  - component: {fileID: 457824692}
   m_Layer: 12
   m_Name: 'Sean '
   m_TagString: Enemy
@@ -2220,9 +2221,10 @@ MonoBehaviour:
   KnockbackPower: 0
   KnockbackTimer: 4
   BaseMoveSpeed: 10
+  ExtraRotSpeed: 0
   CurrentPlayerDistance: 0
   MaxFollowDistance: 45
-  MaxAttackDistance: 0
+  MaxAttackDistance: 18
   CurrentMoveSpeed: 0
   CloseRangeSpeedMulti: 0
   PathfindAwayDistance: 0
@@ -2247,9 +2249,10 @@ MonoBehaviour:
   Attacking: 0
   Retreat: 0
   Stalking: 0
-  MinAttackDistance: 6.5
-  MinStalkDistance: 20
   MaxStalkDistance: 40
+  StalkingRadius: 20
+  StalkingSpeed: 0.75
+  MinAttackDistance: 6.5
 --- !u!4 &457824688
 Transform:
   m_ObjectHideFlags: 0
@@ -2306,7 +2309,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 25
-  m_Acceleration: 50
+  m_Acceleration: 150
   avoidancePriority: 20
   m_AngularSpeed: 120
   m_StoppingDistance: 0
@@ -2331,6 +2334,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SeanScriptLink: {fileID: 0}
   CollisionBox: {fileID: 0}
+--- !u!114 &457824692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 457824686}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bfee456ccbcade488aaf600e20553f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 1062518012369824675}
+  Agent: {fileID: 457824690}
+  CircleRadius: 20
+  RotationSpeed: 0.75
 --- !u!1 &635451966
 GameObject:
   m_ObjectHideFlags: 0
@@ -2763,6 +2782,7 @@ MonoBehaviour:
   KnockbackPower: 0
   KnockbackTimer: 4
   BaseMoveSpeed: 0
+  ExtraRotSpeed: 0
   CurrentPlayerDistance: 0
   MaxFollowDistance: 0
   MaxAttackDistance: 0
@@ -5161,15 +5181,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 958757144226772664, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.000000062290844
+      value: 0.00000002827196
       objectReference: {fileID: 0}
     - target: {fileID: 958757144226772664, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000009506366
+      value: 0.000000004314657
       objectReference: {fileID: 0}
     - target: {fileID: 1062518012877003342, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 47.3
+      value: 48.23
       objectReference: {fileID: 0}
     - target: {fileID: 1062518012877003342, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5177,7 +5197,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1062518012877003342, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -49.9
+      value: -62.92
       objectReference: {fileID: 0}
     - target: {fileID: 1062518012877003342, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5209,31 +5229,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1350814672311814053, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.00000006306312
+      value: 0.000000027858373
       objectReference: {fileID: 0}
     - target: {fileID: 1350814672311814053, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000007783258
+      value: 0.000000003438284
       objectReference: {fileID: 0}
     - target: {fileID: 1777714556686848606, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 3560059566175486749, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 3560059566175486749, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.000000053527113
+      value: 0.000000036599584
       objectReference: {fileID: 0}
     - target: {fileID: 3560059566175486749, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000009755762
+      value: 0.0000000066705796
       objectReference: {fileID: 0}
     - target: {fileID: 3903236220028915141, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.000000053527106
+      value: 0.00000003659958
       objectReference: {fileID: 0}
     - target: {fileID: 3903236220028915141, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.0000000097557615
+      value: 0.0000000066705788
+      objectReference: {fileID: 0}
+    - target: {fileID: 4048365417468829315, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.0000038146973
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5346,6 +5374,7 @@ MonoBehaviour:
   KnockbackPower: 0
   KnockbackTimer: 4
   BaseMoveSpeed: 0
+  ExtraRotSpeed: 0
   CurrentPlayerDistance: 0
   MaxFollowDistance: 0
   MaxAttackDistance: 0
