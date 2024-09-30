@@ -47,7 +47,7 @@ public class BaseEnemy : MonoBehaviour
     #endregion
 
     protected Vector3 PlayerDirection;
-    protected Vector3 RetreatPosition;
+    [SerializeField]protected Vector3 RetreatPosition;
     protected Vector3 CurrentPosition;
 
     [Header("Booleans"), Space(5)]
@@ -60,7 +60,7 @@ public class BaseEnemy : MonoBehaviour
     protected bool ReduceKnockbackForce;
     public bool OnAttackingList = false;
 
-    protected bool CanAttack = true;
+    [SerializeField]protected bool CanAttack = true;
     public bool Orbiting;
 
     public bool UpdateRetretPosition;
@@ -215,6 +215,8 @@ public class BaseEnemy : MonoBehaviour
 
     }
 
+
+
     protected void KeepOrbitDistance()
     {
         CurrentPlayerDistance = Vector3.Distance(this.transform.position, PlayerTarget.transform.position);
@@ -299,4 +301,7 @@ public class BaseEnemy : MonoBehaviour
         yield return new WaitForSeconds(ImmunityTime);
         CanTakeDamage = true;
     }
+
+
+
 }

@@ -2196,13 +2196,14 @@ GameObject:
   - component: {fileID: 457824687}
   - component: {fileID: 457824689}
   - component: {fileID: 457824690}
+  - component: {fileID: 457824691}
   m_Layer: 12
   m_Name: 'Sean '
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &457824687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2227,11 +2228,13 @@ MonoBehaviour:
   PathfindAwayDistance: 0
   OrbitingDistance: 60
   PlayerTarget: {fileID: 0}
+  RetreatPosition: {x: 0, y: 0, z: 0}
   SeenPlayer: 1
   PatrolActive: 0
   PlayerEscaped: 0
-  OnAttackingList: 0
-  Orbiting: 1
+  OnAttackingList: 1
+  CanAttack: 1
+  Orbiting: 0
   UpdateRetretPosition: 0
   AdvancedRetreat: 0
   StartupRan: 0
@@ -2241,6 +2244,12 @@ MonoBehaviour:
   PlayerLayer:
     serializedVersion: 2
     m_Bits: 8192
+  Attacking: 0
+  Retreat: 0
+  Stalking: 0
+  MinAttackDistance: 6.5
+  MinStalkDistance: 20
+  MaxStalkDistance: 40
 --- !u!4 &457824688
 Transform:
   m_ObjectHideFlags: 0
@@ -2256,6 +2265,7 @@ Transform:
   m_Children:
   - {fileID: 200705838}
   - {fileID: 1579868613}
+  - {fileID: 1290164465}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &457824689
@@ -2295,8 +2305,8 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 10
+  m_Speed: 25
+  m_Acceleration: 50
   avoidancePriority: 20
   m_AngularSpeed: 120
   m_StoppingDistance: 0
@@ -2307,6 +2317,20 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &457824691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 457824686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 226087c178f111842b049d94fb5e9be5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SeanScriptLink: {fileID: 0}
+  CollisionBox: {fileID: 0}
 --- !u!1 &635451966
 GameObject:
   m_ObjectHideFlags: 0
@@ -2595,7 +2619,7 @@ RectTransform:
   m_Father: {fileID: 1919049350}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2747,10 +2771,12 @@ MonoBehaviour:
   PathfindAwayDistance: 0
   OrbitingDistance: 0
   PlayerTarget: {fileID: 0}
+  RetreatPosition: {x: 0, y: 0, z: 0}
   SeenPlayer: 0
   PatrolActive: 0
   PlayerEscaped: 0
   OnAttackingList: 0
+  CanAttack: 1
   Orbiting: 0
   UpdateRetretPosition: 0
   AdvancedRetreat: 0
@@ -4249,6 +4275,73 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1290164464
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1290164465}
+  - component: {fileID: 1290164466}
+  - component: {fileID: 1290164467}
+  m_Layer: 12
+  m_Name: Cube
+  m_TagString: AttackCollider
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1290164465
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1290164464}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 457824688}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1290164466
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1290164464}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.5, y: 1.5386617, z: 2.627336}
+  m_Center: {x: -3.7855105e-15, y: -0.1106267, z: 0.5636677}
+--- !u!114 &1290164467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1290164464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb6409afe1dbb374b9ce36677ec6acc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AttackDamage: 0
 --- !u!1001 &1320516195
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5116,11 +5209,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1350814672311814053, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.000000027858373
+      value: 0.00000006306312
       objectReference: {fileID: 0}
     - target: {fileID: 1350814672311814053, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000003438284
+      value: 0.000000007783258
       objectReference: {fileID: 0}
     - target: {fileID: 1777714556686848606, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_Name
@@ -5261,10 +5354,12 @@ MonoBehaviour:
   PathfindAwayDistance: 0
   OrbitingDistance: 0
   PlayerTarget: {fileID: 0}
+  RetreatPosition: {x: 0, y: 0, z: 0}
   SeenPlayer: 0
   PatrolActive: 0
   PlayerEscaped: 0
   OnAttackingList: 0
+  CanAttack: 1
   Orbiting: 0
   UpdateRetretPosition: 0
   AdvancedRetreat: 0
@@ -7106,6 +7201,10 @@ PrefabInstance:
     - target: {fileID: 2080626467293257028, guid: e1a3788007c864443a515218731fb043, type: 3}
       propertyPath: m_Name
       value: Swarm Parent
+      objectReference: {fileID: 0}
+    - target: {fileID: 2080626467293257028, guid: e1a3788007c864443a515218731fb043, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3465066959424565041, guid: e1a3788007c864443a515218731fb043, type: 3}
       propertyPath: MaxFollowDistance
