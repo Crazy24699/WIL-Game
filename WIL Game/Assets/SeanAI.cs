@@ -72,6 +72,7 @@ public class SeanAI : BaseEnemy
 
         }
 
+
         CurrentPlayerDistance = Vector3.Distance(this.transform.position, PlayerTarget.transform.position);
 
         RotateToTarget();
@@ -143,18 +144,23 @@ public class SeanAI : BaseEnemy
 
         if(RetreatPosition==Vector3.zero)
         {
-            RandomRetreatPosition = Random.insideUnitCircle;
-            RetreatPosition = RandomRetreatPosition * 20 + transform.position;
-            RetreatPosition = new Vector3(RetreatPosition.x, transform.position.y, RetreatPosition.z);
-            RetreatPosition = RetreatPosition.RoundVector(2);
+            Vector3 RandomPoint = Random.insideUnitCircle;
+            Vector3 RetreatDirection = new Vector3(RandomPoint.x, 0, RandomPoint.y).normalized;
+
+            RandomRetreatPosition = PlayerTarget.transform.position + RetreatDirection * 20;
+            RetreatPosition = RandomRetreatPosition.RoundVector(2);
+
         }
 
+        RetreatPosition.y = transform.position.RoundVector(2).y;
         NavMeshRef.isStopped = false;
         NavMeshRef.SetDestination(RetreatPosition);
-
-        if(CurrentPosition==RetreatPosition)
+        CurrentPosition = transform.position.RoundVector(2);
+        if (CurrentPosition==RetreatPosition)
         {
             RetreatPosition = Vector3.zero;
+            Retreat = false;
+            Stalking = true;
             StartCoroutine(AttackCooldown());
         }
     }
@@ -164,7 +170,8 @@ public class SeanAI : BaseEnemy
         CanAttack = false;
         Attacking = false;
 
-        yield return new WaitForSeconds(2.25f);
+        yield return new WaitForSeconds(12.25f);
+        Debug.Log("CooldownRan");
         CanAttack = true;
     }
 
