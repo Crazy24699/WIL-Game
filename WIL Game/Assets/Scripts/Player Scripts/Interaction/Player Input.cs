@@ -160,50 +160,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""69ab4c0f-3208-4372-b7fe-a3b5e420567e"",
-                    ""path"": ""<Keyboard>/w"",
-                    ""interactions"": ""MultiTap(tapTime=0.2,tapDelay=0.75,pressPoint=0.5)"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Dash Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""15f1cbc8-bde7-476c-8e07-0cdba461e34e"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": ""MultiTap(tapTime=0.2,tapDelay=0.75,pressPoint=0.5)"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Dash Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""0ee8d222-44ca-4177-8a2f-7270891a515c"",
-                    ""path"": ""<Keyboard>/s"",
-                    ""interactions"": ""MultiTap(tapTime=0.2,tapDelay=0.75,pressPoint=0.5)"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Dash Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""11493132-d014-44da-84d5-63989674d824"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": ""MultiTap(tapTime=0.2,tapDelay=0.75,pressPoint=0.5)"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Dash Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
                     ""name"": ""Dash Vector"",
                     ""id"": ""ba5f1d67-791a-4b4e-9a7c-209e78fa47ec"",
                     ""path"": ""2DVector"",
@@ -257,6 +213,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""DashReading"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""12f3e2cc-9506-4f19-b016-3c843e898311"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },

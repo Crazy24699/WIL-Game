@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
     private float MovingDelayTimer = 0.15f;
     [SerializeField] private float CurrentMoveDelayTime;
 
-    private float DashSetTime = 0.3f;
+    private float DashSetTime = 0.93f;
     [SerializeField] private float DashDelayTimer;
     [SerializeField] private float DashDistance=20;
 
@@ -94,7 +94,7 @@ public class PlayerMovement : MonoBehaviour
     {
         TrackPlayerMovement();
 
-        DashResetTimer();
+        //DashResetTimer();
         if (PlayerDashing && !AttackLocked)
         {
             //HandleDashing();
@@ -151,18 +151,35 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleDashDirection()
     {
-        //Debug.Log("Reading Dash ");
         Vector2 NewDashDirection = PlayerInputRef.BasePlayerMovement.DashReading.ReadValue<Vector2>().normalized;
-        if (DashDirection==Vector2.zero)
+
+        if (DashDirection == Vector2.zero && NewDashDirection != Vector2.zero)
         {
-            DashDirection = PlayerInputRef.BasePlayerMovement.DashReading.ReadValue<Vector2>().normalized;
+            DashDirection = NormalizeDashDirection(NewDashDirection);
         }
-        if (DashDirection != Vector2.zero && NewDashDirection != DashDirection && NewDashDirection != Vector2.zero) 
+
+        if (NewDashDirection != Vector2.zero && NewDashDirection != DashDirection)
         {
-            //DashingDirection = Vector2.zero;
-            DashDirection = NewDashDirection;
+            DashDirection = NormalizeDashDirection(NewDashDirection);
         }
     }
+
+    private Vector2 NormalizeDashDirection(Vector2 inputDirection)
+    {
+        if (Mathf.Abs(inputDirection.x) > Mathf.Abs(inputDirection.y))
+        {
+            return new Vector2(Mathf.Sign(inputDirection.x), 0); // Prioritize horizontal
+        }
+        else if (Mathf.Abs(inputDirection.x) < Mathf.Abs(inputDirection.y))
+        {
+            return new Vector2(0, Mathf.Sign(inputDirection.y)); // Prioritize vertical
+        }
+        else // If both are equal in magnitude
+        {
+            return new Vector2(Mathf.Sign(inputDirection.x), 0); // Default to horizontal
+        }
+    }
+
 
     private void TrackPlayerMovement()
     {
