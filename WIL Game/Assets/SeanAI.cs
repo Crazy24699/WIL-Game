@@ -137,7 +137,7 @@ public class SeanAI : BaseEnemy
 
         if (OnAttackingList)
         {
-            if (CurrentPlayerDistance > MaxAttackDistance) 
+            if (CurrentPlayerDistance > MaxAttackDistance && !Stalking) 
             {
                 NavMeshRef.isStopped = false;
                 Debug.Log("SetDestination");
@@ -268,6 +268,8 @@ public class SeanAI : BaseEnemy
         if (!Retreat || Stalking) { return; }
         Debug.Log("huint uyou down");
         Vector3 RandomRetreatPosition = Vector3.zero;
+
+        RetreatPosition=RetreatPosition.RoundVector(2);
 
         NavMeshRef.isStopped = false;
         NavMeshRef.SetDestination(RetreatPosition);
