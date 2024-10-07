@@ -12,6 +12,7 @@ TagManager:
   - Ground
   - Boss
   - NextArea
+  - LevelSwitch
   layers:
   - Default
   - TransparentFX

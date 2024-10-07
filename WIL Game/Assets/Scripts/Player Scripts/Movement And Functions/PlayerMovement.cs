@@ -42,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
     public Transform BaltoRef;
     public GameObject HitParticle;
 
+    public bool Attacking = false;
     public bool AttackLocked = false;
     public bool CanMove = false;
     [SerializeField]private bool DashSet = false;
@@ -95,7 +96,7 @@ public class PlayerMovement : MonoBehaviour
         TrackPlayerMovement();
 
         //DashResetTimer();
-        if (PlayerDashing && !AttackLocked)
+        if (PlayerDashing && !Attacking)
         {
             //HandleDashing();
         }
@@ -195,7 +196,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if(PlayerDashing) { return; }
 
-        if (AttackLocked )
+        if (Attacking || AttackLocked)
         {
             CanMove = false;
             Rigidbody.velocity = Vector3.zero;
@@ -230,7 +231,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleAnimationStates()
     {
-        AttackLocked = PlayerAnimations.GetBool("IsAttacking");
+        Attacking = PlayerAnimations.GetBool("IsAttacking");
 
         if (PlayerAnimations.GetBool("IsAttacking"))
         {

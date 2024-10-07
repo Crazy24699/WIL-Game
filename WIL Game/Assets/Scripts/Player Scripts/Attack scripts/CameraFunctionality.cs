@@ -81,7 +81,7 @@ public class CameraFunctionality : MonoBehaviour
         }
 
 
-        if (PlayerMovementScript.AttackLocked || !PlayerMovementScript.CanMove || !CameraActive) { return; }
+        if (PlayerMovementScript.Attacking || !PlayerMovementScript.CanMove || !CameraActive) { return; }
 
         RotateToView();
         HandleLockout();
@@ -133,7 +133,7 @@ public class CameraFunctionality : MonoBehaviour
     private void HandleAimCamera()
     {
         //HandleCameraTransformValue();
-        if(!CameraActive || PlayerMovementScript.AttackLocked) { return; }
+        if(!CameraActive || PlayerMovementScript.Attacking) { return; }
         switch (AimCameraActive)
         {
             case true:

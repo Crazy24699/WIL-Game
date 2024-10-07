@@ -2709,11 +2709,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf85d841f824b2949a11783f4d622094, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RunLoadingScreen:
+    m_PersistentCalls:
+      m_Calls: []
+  LoadingScreenPanel: {fileID: 0}
+  PlayerStartPosition: {fileID: 0}
   AllEnemies: []
   VisableEnemies: []
   Boss1: {fileID: 0}
   FinalBoss: {fileID: 0}
+  PlayerObject: {fileID: 0}
   CurrentTimescale: 0
+  Entities: []
 --- !u!4 &796181148
 Transform:
   m_ObjectHideFlags: 0
@@ -5181,11 +5188,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 958757144226772664, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.000000062290844
+      value: 0.000000053786128
       objectReference: {fileID: 0}
     - target: {fileID: 958757144226772664, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000009506366
+      value: 0.000000008208439
       objectReference: {fileID: 0}
     - target: {fileID: 1062518012877003342, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5229,11 +5236,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1350814672311814053, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.00000006306312
+      value: 0.000000027858373
       objectReference: {fileID: 0}
     - target: {fileID: 1350814672311814053, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000007783258
+      value: 0.0000000034382839
       objectReference: {fileID: 0}
     - target: {fileID: 1777714556686848606, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_Name

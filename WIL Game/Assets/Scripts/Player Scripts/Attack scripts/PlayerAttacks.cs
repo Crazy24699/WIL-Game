@@ -220,6 +220,8 @@ public class PlayerAttacks : MonoBehaviour
     {
         //Debug.Log("call our names in the vally of the saints");
         CamFunctionScript.ChangeActiveCamera(true);
+        PlayerMoveScript.CanMove = false;
+        PlayerMoveScript.AttackLocked = true;
         //CamFunctionScript.AimCameraActive = true;
 
     }
@@ -331,10 +333,26 @@ public class PlayerAttacks : MonoBehaviour
 
     protected void HandleCameraState(bool LockCamera)
     {
-        //CinemachineBrainScript.enabled = LockCamera;
-        //CamFunctionScript.enabled = LockCamera;
-        //PlayerMoveScript.CanMove = LockCamera;
-        //Debug.Log(LockCamera + "      " + "and burn;");
-        //FreeLookCam.SetActive(LockCamera);
+        CinemachineBrainScript.enabled = LockCamera;
+        CamFunctionScript.enabled = LockCamera;
+        PlayerMoveScript.CanMove = LockCamera;
+        Debug.Log(LockCamera + "      " + "and burn;");
+        FreeLookCam.SetActive(LockCamera);
     }
+
+    [SerializeField]
+    private void LockMovement()
+    {
+        PlayerMoveScript.CanMove = false;
+    }
+
+    [SerializeField]
+    private void UnlockMovement()
+    {
+        PlayerMoveScript.CanMove = true;
+        PlayerMoveScript.Attacking = false;
+        PlayerMoveScript.AttackLocked = false;
+
+    }
+
 }

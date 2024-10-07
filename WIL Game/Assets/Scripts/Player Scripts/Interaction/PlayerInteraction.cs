@@ -160,6 +160,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnTriggerEnter(Collider Collision)
     {
+
         if (Collision.CompareTag("NextArea"))
         {
             if (Collision.name.Equals("Boss 1 Area"))

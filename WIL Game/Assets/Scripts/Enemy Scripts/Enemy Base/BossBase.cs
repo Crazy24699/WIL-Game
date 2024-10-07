@@ -9,13 +9,16 @@ public class BossBase : MonoBehaviour
     [SerializeField]protected int CurrentHealth;
 
     [HideInInspector]public GameObject PlayerRef;
+    [SerializeField] private GameObject EndZoneArea;
+
 
     [HideInInspector] public BTNodeBase RootNode;
     [HideInInspector] public List<BTNodeBase> AllNodeChoices;
     protected bool StartupRan;
 
-    protected bool Alive = true;
     [SerializeField]protected Slider HealthBar;
+    protected bool Alive = true;
+    //[HideInInspector] public bool BossBeaten = false;
 
     public virtual void BossStartup()
     {
@@ -48,6 +51,12 @@ public class BossBase : MonoBehaviour
         if (HealthCheck <= 0)
         {
             CurrentHealth = 0;
+            if (EndZoneArea)
+            {
+                Debug.LogError("Endzone not set");
+                return;
+            }
+            EndZoneArea.SetActive(true);
             //Play Death animation
             return;
         }

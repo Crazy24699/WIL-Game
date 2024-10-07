@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class WorldHandler : MonoBehaviour
 {
+
+    public UnityEvent RunLoadingScreen;
+    [SerializeField] private GameObject LoadingScreenPanel;
+    [Space(1.2f), Header(" ")]
+    [SerializeField] private GameObject PlayerStartPosition;
 
     public Dictionary<int, List<SpireObject>> AllSpires = new Dictionary<int, List<SpireObject>>();
 
@@ -15,15 +21,39 @@ public class WorldHandler : MonoBehaviour
 
     public GameObject Boss1;
     public GameObject FinalBoss;
+
+    [Space(2)]
+    public GameObject PlayerObject;
+
     public float CurrentTimescale;
 
+    [SerializeField] private List<GameObject> Entities = new List<GameObject>();
+
+    private bool RunLoadscreen = false;
 
     void Start()
     {
+        if (RunLoadscreen)
+        {
+            RunLoadingScreen.AddListener(() => StartCoroutine(HandleLoadingScreen()));
+
+            RunLoadingScreen.Invoke();
+        }
+
+        //HandleLoadValues();
+        
+        //Move all spires into a different script
         //StartCoroutine(TempSetActiveEnemy());
         Debug.Log(AllSpires.Count);
         Debug.Log(AllSpires.ElementAt(0).Value.Count);
         
+
+
+    }
+
+    private void HandleLoadValues()
+    {
+        PlayerObject.transform.position = PlayerStartPosition.transform.position;
     }
 
     // Update is called once per frame
@@ -79,6 +109,13 @@ public class WorldHandler : MonoBehaviour
     public async Task PathGridReloadTimer ()
     {
         await Task.Delay(100);
+    }
+
+    private IEnumerator HandleLoadingScreen()
+    {
+        
+        yield return new WaitForSeconds(5.75f);
+        LoadingScreenPanel.SetActive(false);
     }
 
 }
