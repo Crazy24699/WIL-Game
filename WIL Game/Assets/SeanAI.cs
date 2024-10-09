@@ -42,6 +42,7 @@ public class SeanAI : BaseEnemy
 
         WorldHandlerScript = FindObjectOfType<WorldHandler>();
 
+        ImmunityTime = 0.57f;
 
         StartupRan = true;
         Alive = true;
