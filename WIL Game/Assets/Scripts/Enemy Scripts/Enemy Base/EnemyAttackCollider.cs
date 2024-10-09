@@ -21,7 +21,7 @@ public class EnemyAttackCollider : MonoBehaviour
             {
                 PlayerHealth=Collision.transform.GetComponentInParent<PlayerInteraction>();
             }
-            PlayerHealth.HandleHealth(AttackDamage);
+            PlayerHealth.HandleHealth(-AttackDamage);
         Debug.Log("Takes Damage");
 
         }

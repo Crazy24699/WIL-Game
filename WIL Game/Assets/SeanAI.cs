@@ -11,6 +11,7 @@ public class SeanAI : BaseEnemy
     [SerializeField]private bool Retreat = false;
     private bool KeepAttackDistance = false;
     [SerializeField]private bool Stalking = false;
+    private bool RetreatDelayActive = false;
 
     //Stalking Floats
     [SerializeField] private float MaxStalkDistance;
@@ -19,6 +20,7 @@ public class SeanAI : BaseEnemy
     private float CurrentStalkAngle;
     private float StalkTime=2.75f;
     private float StalkingTimer;
+    [SerializeField] private float WaitTime;
 
     [SerializeField] private float MinAttackDistance;
 
@@ -93,6 +95,7 @@ public class SeanAI : BaseEnemy
 
         RotateToTarget();
         HandleBehaviour();
+        
         //if (KeepAttackDistance)
         //{
             
@@ -268,8 +271,9 @@ public class SeanAI : BaseEnemy
         if (!Retreat || Stalking) { return; }
         Debug.Log("huint uyou down");
         Vector3 RandomRetreatPosition = Vector3.zero;
-
         RetreatPosition=RetreatPosition.RoundVector(2);
+
+        HandleRetreatLocation();
 
         NavMeshRef.isStopped = false;
         NavMeshRef.SetDestination(RetreatPosition);
@@ -293,12 +297,32 @@ public class SeanAI : BaseEnemy
         //
         if (CurrentPosition == RetreatPosition)
         {
-            Debug.Log("Cunt nugget");
+            Debug.Log("Cunt nugget"+CurrentPosition+"       "+RetreatPosition);
             //RetreatPosition = Vector3.zero;
             Retreat = false;
             Stalking = true;
             StartCoroutine(AttackCooldown());
         }
+    }
+
+    //Checks if the current retreat location is too far away from the player
+    //if it is then the program will change the retreat position to be within
+    //range of the player
+
+    private void HandleRetreatLocation()
+    {
+        Vector2 PlayerPositionVect2 = PlayerTarget.transform.position;
+        Vector2 RetreatPositionVect2 = RetreatPosition;
+
+        float RetreatPositionDistance = Vector2.Distance(PlayerPositionVect2, RetreatPositionVect2);
+        if (RetreatPositionDistance > MaxFollowDistance) 
+        {
+            UpdateRetretPosition = true;
+            PathfindingRetreat();
+            Debug.Log("The fuckening");
+        }
+
+
     }
 
     private IEnumerator AttackCooldown()
@@ -312,11 +336,19 @@ public class SeanAI : BaseEnemy
         CanAttack = true;
     }
 
+    private void HandleRetreatAndStalkingSwitch()
+    {
+        if (!RetreatDelayActive) { return; }
+
+        //Timer logic goes here
+
+    }
+    
     public IEnumerator RetreatDelay()
     {
         IntialStalkingPosition = transform.position.RoundVector(2);
         Debug.Log("retreat");
-        yield return new WaitForSeconds(1.25f);
+        yield return new WaitForSeconds(WaitTime);
         Retreat = true;
         Stalking = false;
     }

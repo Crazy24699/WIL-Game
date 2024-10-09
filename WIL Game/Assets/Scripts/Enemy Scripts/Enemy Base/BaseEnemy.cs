@@ -227,6 +227,7 @@ public class BaseEnemy : MonoBehaviour
 
         if (CurrentPlayerDistance <= PathfindAwayDistance && UpdateRetretPosition)
         {
+            Debug.Log("Fuc Dunce");
             PathfindingRetreat();
             StartCoroutine(RetreatCooldown());
 
@@ -275,7 +276,7 @@ public class BaseEnemy : MonoBehaviour
         }
     }
 
-    private void PathfindingRetreat()
+    protected void PathfindingRetreat()
     {
         CurrentPosition = transform.position.RoundVector(2);
         RetreatPosition = (PlayerDirection * 20) + CurrentPosition;
