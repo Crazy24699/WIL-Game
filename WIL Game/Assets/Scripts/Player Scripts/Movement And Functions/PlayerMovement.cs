@@ -91,7 +91,6 @@ public class PlayerMovement : MonoBehaviour
         if (PlayerAnimations.GetBool("IsAttacking"))
         {
             Rigidbody.velocity = Vector3.zero;
-            //Debug.Log("laced with poison");
             return;
         }
 
@@ -107,17 +106,18 @@ public class PlayerMovement : MonoBehaviour
     {
         TrackPlayerMovement();
         Gravity = Physics.gravity;
-        //DashResetTimer();
+        DashResetTimer();
         if (PlayerDashing && !Attacking)
         {
-            //HandleDashing();
+            ////HandleDashing();
         }
         TrackBatloOrientation();
         ReduceDashVelocity();
+
         if (PlayerVelocity.magnitude > Speed)
         {
             Vector3 VelocityCap = PlayerVelocity.normalized * Speed;
-            Rigidbody.velocity = new Vector3(VelocityCap.x, VelocityCap.y
+            Rigidbody.velocity = new Vector3(VelocityCap.x, Rigidbody.velocity.y
                 , VelocityCap.z);
         }
 
@@ -197,7 +197,7 @@ public class PlayerMovement : MonoBehaviour
         {
             return new Vector2(0, Mathf.Sign(inputDirection.y)); // Prioritize vertical
         }
-        else // If both are equal in magnitude
+        else 
         {
             return new Vector2(Mathf.Sign(inputDirection.x), 0); // Default to horizontal
         }
@@ -249,7 +249,8 @@ public class PlayerMovement : MonoBehaviour
 
         MoveDirection = PlayerOrientation.forward * InputDirection.z + PlayerOrientation.right * InputDirection.x;
         //Speed = BaseMoveSpeed * SpeedMultiplier;
-        Rigidbody.AddForce(new Vector3(MoveDirection.x, MoveDirection.y, MoveDirection.z) * 10f * (Speed) , ForceMode.Force);
+        Rigidbody.AddForce(MoveDirection * 10f * (Speed), ForceMode.Force);
+        //Rigidbody.AddForce(new Vector3(MoveDirection.x, 0, MoveDirection.z) * 10f * (Speed), ForceMode.Force);
 
     }
 
