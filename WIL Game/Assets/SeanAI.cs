@@ -202,6 +202,7 @@ public class SeanAI : BaseEnemy
             Vector3 StalkingPosition = HandleCirlcing();
             Debug.Log("193");
             NavMeshRef.SetDestination(StalkingPosition);
+            RigidbodyRef.velocity = Vector3.zero;
             Debug.Log("Huh 19");
 
             CurrentStalkAngle += StalkingSpeed * Time.deltaTime;
@@ -244,6 +245,10 @@ public class SeanAI : BaseEnemy
             PlayerDirection = this.transform.position - PlayerTarget.transform.position;
             Vector3 NewPosition = (PlayerDirection * 5) + transform.position;
             NavMeshRef.SetDestination(NewPosition);
+            if(RigidbodyRef.velocity.magnitude > 0)
+            {
+            }
+                RigidbodyRef.velocity = Vector3.zero;
             Debug.Log("231");
         }
         else if(CurrentPlayerDistance > MaxStalkDistance - 10)
