@@ -95,13 +95,23 @@ public class PlayerMovement : MonoBehaviour
     {
         TrackPlayerMovement();
 
-        //DashResetTimer();
+        TrackPlayerMovement();
+        //Gravity = Physics.gravity;
+        DashResetTimer();
         if (PlayerDashing && !Attacking)
         {
-            //HandleDashing();
+            ////HandleDashing();
         }
         TrackBatloOrientation();
         ReduceDashVelocity();
+
+        if (PlayerVelocity.magnitude > Speed && !PlayerDashing)
+        {
+            Vector3 VelocityCap = PlayerVelocity.normalized * Speed;
+            Rigidbody.velocity = new Vector3(VelocityCap.x, Rigidbody.velocity.y
+                , VelocityCap.z);
+        }
+
     }
 
     private void TrackBatloOrientation()
@@ -113,6 +123,8 @@ public class PlayerMovement : MonoBehaviour
     {
         SpeedMultiplier = Multiplier;
     }
+
+
 
     private void StartDash()
     {
