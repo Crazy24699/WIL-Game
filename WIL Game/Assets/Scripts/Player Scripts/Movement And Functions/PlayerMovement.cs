@@ -36,11 +36,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] protected Vector2 DashDirection;
     [SerializeField] protected Vector3 NewDashPosition;
     [SerializeField] protected Vector3 PreviousPosition;
+    public Vector3 Gravity;
+    [SerializeField] protected Vector3 GroundCheckPosition;
 
     public Transform PlayerOrientation;
     public Transform BaltoOrientation;
     public Transform BaltoRef;
     public GameObject HitParticle;
+    public LayerMask GroundLayers;
 
     public bool Attacking = false;
     public bool AttackLocked = false;
@@ -48,6 +51,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]private bool DashSet = false;
     [SerializeField]private bool PlayerDashing = false;
     private bool CanDash = false;
+    [SerializeField]private bool Grounded;
 
     // Start is called before the first frame update
     void Start()
@@ -96,16 +100,14 @@ public class PlayerMovement : MonoBehaviour
         TrackPlayerMovement();
 
         TrackPlayerMovement();
-        //Gravity = Physics.gravity;
         DashResetTimer();
-        if (PlayerDashing && !Attacking)
-        {
-            ////HandleDashing();
-        }
+
         TrackBatloOrientation();
         ReduceDashVelocity();
 
-        if (PlayerVelocity.magnitude > Speed && !PlayerDashing)
+
+        Vector3 MessuredVelocity = new Vector3(PlayerVelocity.x, 0, PlayerVelocity.z);
+        if (MessuredVelocity.magnitude > Speed && !PlayerDashing)
         {
             Vector3 VelocityCap = PlayerVelocity.normalized * Speed;
             Rigidbody.velocity = new Vector3(VelocityCap.x, Rigidbody.velocity.y
@@ -196,6 +198,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void TrackPlayerMovement()
     {
+
+        GroundCheckPosition = new Vector3(transform.position.x, transform.position.y - 1.25f, transform.position.z);
+        Grounded = Physics.CheckSphere(GroundCheckPosition, 0.35f, GroundLayers);
+        float VerticalGravity = Grounded ? 0.75f : -9.81f;
+        Rigidbody.AddForce(new Vector3(0, VerticalGravity, 0), ForceMode.Acceleration);
+
         HandleAnimationStates();
         InputDirection = PlayerInputRef.BasePlayerMovement.Movement.ReadValue<Vector3>().normalized;
         InputDirection = InputDirection.RoundVector(0);
