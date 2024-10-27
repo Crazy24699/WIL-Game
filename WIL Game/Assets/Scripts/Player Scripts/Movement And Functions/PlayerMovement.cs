@@ -109,12 +109,12 @@ public class PlayerMovement : MonoBehaviour
         DashResetTimer();
         if (PlayerDashing && !Attacking)
         {
-            ////HandleDashing();
+            //HandleDashing();
         }
         TrackBatloOrientation();
         ReduceDashVelocity();
 
-        if (PlayerVelocity.magnitude > Speed)
+        if (PlayerVelocity.magnitude > Speed && !PlayerDashing)
         {
             Vector3 VelocityCap = PlayerVelocity.normalized * Speed;
             Rigidbody.velocity = new Vector3(VelocityCap.x, Rigidbody.velocity.y
@@ -141,7 +141,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.Log("kickback;");
             Vector3 SetDashDirection = (PlayerOrientation.forward * DashDirection.y + PlayerOrientation.right * DashDirection.x) * DashDistance;
-            //Rigidbody.AddForce(SetDashDirection * 25, ForceMode.Impulse);
+            Rigidbody.AddForce(SetDashDirection * 35, ForceMode.Impulse);
             PlayerDashing = true;
             StartCoroutine(DashTime());
         }
