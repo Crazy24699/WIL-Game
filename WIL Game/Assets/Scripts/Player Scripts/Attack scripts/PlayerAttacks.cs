@@ -164,6 +164,11 @@ public class PlayerAttacks : MonoBehaviour
 
     private void PerformAttack(AllAttacks SetAttck)
     {
+        if (!PlayerMoveScript.Grounded)
+        {
+            return;
+        }
+
         if (IsAttacking)
         {
             bool CanChain = CheckChaining();

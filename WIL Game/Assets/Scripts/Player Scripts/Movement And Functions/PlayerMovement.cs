@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public float SpeedMultiplier;
     public float CurrentSpeed;
     public float Speed;
+    public Vector3 Gravity;
 
     protected float TurnSmoothingVel;
     public float TurnTime = 0.1f;
@@ -28,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float DashDistance=20;
 
     public Animator PlayerAnimations;
+    public LayerMask GroundLayers;
 
     public Vector3 PlayerVelocity;
     [SerializeField] protected Vector3 MoveDirection;
@@ -36,6 +38,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] protected Vector2 DashDirection;
     [SerializeField] protected Vector3 NewDashPosition;
     [SerializeField] protected Vector3 PreviousPosition;
+
+
+    [SerializeField] protected Vector3 GroundCheckPosition;
 
     public Transform PlayerOrientation;
     public Transform BaltoOrientation;
@@ -48,10 +53,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]private bool DashSet = false;
     [SerializeField]private bool PlayerDashing = false;
     private bool CanDash = false;
+    [SerializeField]public bool Grounded = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        
         CanMove = true;
         Rigidbody = GetComponent<Rigidbody>();
         CurrentSpeed = 0;
@@ -68,6 +75,11 @@ public class PlayerMovement : MonoBehaviour
         CurrentMoveDelayTime = MovingDelayTimer;
     }
 
+    private void CyoteeTime()
+    {
+
+    }
+
     private void FixedUpdate()
     {
         if(Input.GetKey(KeyCode.L))
@@ -79,7 +91,6 @@ public class PlayerMovement : MonoBehaviour
         if (PlayerAnimations.GetBool("IsAttacking"))
         {
             Rigidbody.velocity = Vector3.zero;
-            //Debug.Log("laced with poison");
             return;
         }
 
@@ -94,14 +105,22 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         TrackPlayerMovement();
-
-        //DashResetTimer();
+        Gravity = Physics.gravity;
+        DashResetTimer();
         if (PlayerDashing && !Attacking)
         {
             //HandleDashing();
         }
         TrackBatloOrientation();
         ReduceDashVelocity();
+
+        if (PlayerVelocity.magnitude > Speed && !PlayerDashing)
+        {
+            Vector3 VelocityCap = PlayerVelocity.normalized * Speed;
+            Rigidbody.velocity = new Vector3(VelocityCap.x, Rigidbody.velocity.y
+                , VelocityCap.z);
+        }
+
     }
 
     private void TrackBatloOrientation()
@@ -114,13 +133,15 @@ public class PlayerMovement : MonoBehaviour
         SpeedMultiplier = Multiplier;
     }
 
+
+
     private void StartDash()
     {
         if (DashDirection != Vector2.zero && !PlayerDashing)
         {
             Debug.Log("kickback;");
             Vector3 SetDashDirection = (PlayerOrientation.forward * DashDirection.y + PlayerOrientation.right * DashDirection.x) * DashDistance;
-            Rigidbody.AddForce(SetDashDirection * 25, ForceMode.Impulse);
+            Rigidbody.AddForce(SetDashDirection * 35, ForceMode.Impulse);
             PlayerDashing = true;
             StartCoroutine(DashTime());
         }
@@ -132,6 +153,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Rigidbody.velocity *= 0.975f;
         }
+
     }
 
     private void DashResetTimer()
@@ -175,7 +197,7 @@ public class PlayerMovement : MonoBehaviour
         {
             return new Vector2(0, Mathf.Sign(inputDirection.y)); // Prioritize vertical
         }
-        else // If both are equal in magnitude
+        else 
         {
             return new Vector2(Mathf.Sign(inputDirection.x), 0); // Default to horizontal
         }
@@ -184,6 +206,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void TrackPlayerMovement()
     {
+
+        GroundCheckPosition = new Vector3(transform.position.x, transform.position.y - 1.25f, transform.position.z);
+        Grounded = Physics.CheckSphere(GroundCheckPosition, 0.35f, GroundLayers);
+        float VerticalGravity = Grounded ? -9.81f : -9.81f*2.5f;
+        Physics.gravity = new Vector3(1, VerticalGravity, 1);
+
         HandleAnimationStates();
         InputDirection = PlayerInputRef.BasePlayerMovement.Movement.ReadValue<Vector3>().normalized;
         InputDirection = InputDirection.RoundVector(0);
@@ -194,19 +222,21 @@ public class PlayerMovement : MonoBehaviour
 
     protected void MovePlayer()
     {
+
+
         if(PlayerDashing) { return; }
 
         if (Attacking || AttackLocked)
         {
             CanMove = false;
-            Rigidbody.velocity = Vector3.zero;
+            //Rigidbody.velocity = Vector3.zero;
             return;
         }
 
         MoveDelay();
         if (InputDirection.magnitude <= 0.1f )
         {
-            Rigidbody.velocity = Vector3.zero;
+            //Rigidbody.velocity = new Vector3(0, Rigidbody.velocity.y, 0);
             CanMove = false;
             return;
         }
@@ -216,21 +246,23 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-        if (PlayerVelocity.magnitude > Speed) 
-        {
-            Vector3 VelocityCap = PlayerVelocity.normalized * Speed;
-            Rigidbody.velocity = new Vector3(VelocityCap.x, 0
-                , VelocityCap.z);
-        }
 
         MoveDirection = PlayerOrientation.forward * InputDirection.z + PlayerOrientation.right * InputDirection.x;
         //Speed = BaseMoveSpeed * SpeedMultiplier;
-        Rigidbody.AddForce(new Vector3(MoveDirection.x, MoveDirection.y, MoveDirection.z) * 10f * (Speed) , ForceMode.Force);
+        Rigidbody.AddForce(MoveDirection * 10f * (Speed), ForceMode.Force);
+        //Rigidbody.AddForce(new Vector3(MoveDirection.x, 0, MoveDirection.z) * 10f * (Speed), ForceMode.Force);
 
     }
 
+    
+
     private void HandleAnimationStates()
     {
+        if (!Grounded)
+        {
+            return;
+        }
+
         Attacking = PlayerAnimations.GetBool("IsAttacking");
 
         if (PlayerAnimations.GetBool("IsAttacking"))
@@ -275,4 +307,10 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(0.45f);
         PlayerDashing = false;
     }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(GroundCheckPosition, 0.35f);
+    }
+
 }
