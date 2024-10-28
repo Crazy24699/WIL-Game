@@ -51,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]private bool DashSet = false;
     [SerializeField]private bool PlayerDashing = false;
     private bool CanDash = false;
-    [SerializeField]private bool Grounded;
+    [SerializeField]public bool Grounded;
 
     // Start is called before the first frame update
     void Start()
@@ -99,7 +99,6 @@ public class PlayerMovement : MonoBehaviour
     {
         TrackPlayerMovement();
 
-        TrackPlayerMovement();
         DashResetTimer();
 
         TrackBatloOrientation();
@@ -201,7 +200,8 @@ public class PlayerMovement : MonoBehaviour
 
         GroundCheckPosition = new Vector3(transform.position.x, transform.position.y - 1.25f, transform.position.z);
         Grounded = Physics.CheckSphere(GroundCheckPosition, 0.35f, GroundLayers);
-        float VerticalGravity = Grounded ? 0.75f : -9.81f;
+
+        float VerticalGravity = Grounded ? -0.81f : -9.81f*2;
         Rigidbody.AddForce(new Vector3(0, VerticalGravity, 0), ForceMode.Acceleration);
 
         HandleAnimationStates();
@@ -214,6 +214,7 @@ public class PlayerMovement : MonoBehaviour
 
     protected void MovePlayer()
     {
+        //if (!Grounded) { return; }
         if(PlayerDashing) { return; }
 
         if (Attacking || AttackLocked)
@@ -226,7 +227,7 @@ public class PlayerMovement : MonoBehaviour
         MoveDelay();
         if (InputDirection.magnitude <= 0.1f )
         {
-            Rigidbody.velocity = Vector3.zero;
+            Rigidbody.velocity = new Vector3(0,Rigidbody.velocity.y,0);
             CanMove = false;
             return;
         }
@@ -245,7 +246,7 @@ public class PlayerMovement : MonoBehaviour
 
         MoveDirection = PlayerOrientation.forward * InputDirection.z + PlayerOrientation.right * InputDirection.x;
         //Speed = BaseMoveSpeed * SpeedMultiplier;
-        Rigidbody.AddForce(new Vector3(MoveDirection.x, MoveDirection.y, MoveDirection.z) * 10f * (Speed) , ForceMode.Force);
+        Rigidbody.AddForce(new Vector3(MoveDirection.x, 0, MoveDirection.z) * 10f * (Speed) , ForceMode.Force);
 
     }
 
