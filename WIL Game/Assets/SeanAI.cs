@@ -303,7 +303,6 @@ public class SeanAI : BaseEnemy
         //
         if (CurrentPosition == RetreatPosition)
         {
-            Debug.Log("Cunt nugget"+CurrentPosition+"       "+RetreatPosition);
             //RetreatPosition = Vector3.zero;
             Retreat = false;
             Stalking = true;

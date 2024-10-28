@@ -9,8 +9,9 @@ public class PlayerMovement : MonoBehaviour
     public InputActionReference PlayerActionMap;
     [SerializeField] private PlayerInput PlayerInputRef;
     [SerializeField] private PlayerInput DashInput;
+    public LayerMask GroundLayers;
+    private RaycastHit SlopeHit;
 
-    public Transform MainCamera; 
 
     public float BaseMoveSpeed;
     public float SpeedMultiplier;
@@ -26,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
     private float DashSetTime = 0.93f;
     [SerializeField] private float DashDelayTimer;
     [SerializeField] private float DashDistance=20;
+    private float MaxSlopeAngle = 35f;
 
     public Animator PlayerAnimations;
 
@@ -42,8 +44,9 @@ public class PlayerMovement : MonoBehaviour
     public Transform PlayerOrientation;
     public Transform BaltoOrientation;
     public Transform BaltoRef;
+    public Transform MainCamera; 
     public GameObject HitParticle;
-    public LayerMask GroundLayers;
+    
 
     public bool Attacking = false;
     public bool AttackLocked = false;
@@ -296,4 +299,20 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(0.45f);
         PlayerDashing = false;
     }
+
+    private bool OnSlope()
+    {
+        if(Physics.Raycast(transform.position,Vector3.down,out SlopeHit, transform.lossyScale.y + 1.25f))
+        {
+            float Angle = Vector3.Angle(Vector3.up, SlopeHit.normal);
+            return Angle < MaxSlopeAngle && Angle != 0;
+        }
+        return false;
+    }
+
+    private Vector3 GetMoveDirecOnSlope()
+    {
+        return Vector3.ProjectOnPlane(MoveDirection,SlopeHit.normal).normalized;
+    }
+
 }
