@@ -70,6 +70,7 @@ public class BaseEnemy : MonoBehaviour
 
     [SerializeField]protected bool StartupRan = false;
     [SerializeField] protected bool Alive = false;
+    public bool Override = false;
 
     #endregion
 
@@ -114,6 +115,13 @@ public class BaseEnemy : MonoBehaviour
 
     }
 
+    private void LateUpdate()
+    {
+        if(Override && !StartupRan)
+        {
+            BaseStartup();
+        }
+    }
 
     public virtual void ApplyKnockback()
     {
