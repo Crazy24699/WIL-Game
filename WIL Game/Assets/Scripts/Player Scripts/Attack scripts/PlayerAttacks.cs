@@ -68,6 +68,7 @@ public class PlayerAttacks : MonoBehaviour
     private void UnlockAttack()
     {
         AttackAnimation.SetBool("IsAttacking", false);
+        Debug.Log("from above ");
     }
 
     // Start is called before the first frame update
@@ -357,6 +358,18 @@ public class PlayerAttacks : MonoBehaviour
         PlayerMoveScript.CanMove = true;
         PlayerMoveScript.Attacking = false;
         PlayerMoveScript.AttackLocked = false;
+
+    }
+
+    public void SetDodgeInfo(Vector2 Direction)
+    {
+        AttackAnimation.SetFloat("XInput", Direction.y);
+        AttackAnimation.SetFloat("YInput", Direction.x);
+        AttackAnimation.SetTrigger("DodgeInput");
+    }
+
+    public void HandleDodging()
+    {
 
     }
 

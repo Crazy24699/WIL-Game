@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
 
     public Rigidbody Rigidbody;
     public InputActionReference PlayerActionMap;
+    private PlayerAttacks PlayerAttackScript;
     [SerializeField] private PlayerInput PlayerInputRef;
     [SerializeField] private PlayerInput DashInput;
     public LayerMask GroundLayers;
@@ -60,6 +61,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]private bool PlayerDashing = false;
     private bool CanDash = false;
     [SerializeField]public bool Grounded;
+    [SerializeField] private bool IsMoving;
 
     // Start is called before the first frame update
     void Start()
@@ -76,6 +78,9 @@ public class PlayerMovement : MonoBehaviour
 
         PlayerInputRef.BasePlayerMovement.DashReading.performed += Context => HandleDashDirection();
         PlayerInputRef.BasePlayerMovement.DashMovement.performed += Context => StartDash();
+
+        PlayerAttackScript = GetComponentInChildren<PlayerAttacks>();
+
 
         CurrentMoveDelayTime = MovingDelayTimer;
     }
@@ -141,8 +146,11 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.Log("kickback;");
             Vector3 SetDashDirection = (PlayerOrientation.forward * DashDirection.y + PlayerOrientation.right * DashDirection.x) * DashDistance;
+            PlayerAttackScript.SetDodgeInfo((PlayerOrientation.forward * DashDirection.y + PlayerOrientation.right * DashDirection.x).normalized);
+            
             Rigidbody.AddForce(SetDashDirection * 25, ForceMode.Impulse);
             PlayerDashing = true;
+
             StartCoroutine(DashTime());
         }
     }
@@ -251,6 +259,12 @@ public class PlayerMovement : MonoBehaviour
             Vector3 VelocityCap = PlayerVelocity.normalized * Speed;
             Rigidbody.velocity = new Vector3(VelocityCap.x, 0
                 , VelocityCap.z);
+        }
+
+
+        if (CanMove)
+        {
+
         }
 
         MoveDirection = PlayerOrientation.forward * InputDirection.z + PlayerOrientation.right * InputDirection.x;

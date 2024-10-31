@@ -41656,21 +41656,14 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0
-    functionName: LockAttack
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0
     functionName: SetTailAttackState
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 1
     messageOptions: 0
-  - time: 0.05
-    functionName: LockMovement
+  - time: 0.033333335
+    functionName: LockAttack
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -41682,6 +41675,13 @@ AnimationClip:
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 1
+    messageOptions: 0
+  - time: 0.2
+    functionName: LockMovement
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
     messageOptions: 0
   - time: 0.75
     functionName: SpawnTailProjectile
@@ -41705,7 +41705,7 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 1.55
-    functionName: UnlockAttack
+    functionName: 
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

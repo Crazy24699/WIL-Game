@@ -284,23 +284,7 @@ public class SeanAI : BaseEnemy
         NavMeshRef.isStopped = false;
         NavMeshRef.SetDestination(RetreatPosition);
 
-        /*
-        if (RetreatPosition==Vector3.zero)
-        {
-            Vector3 RandomPoint = Random.insideUnitCircle;
-            Vector3 RetreatDirection = new Vector3(RandomPoint.x, 0, RandomPoint.y).normalized;
 
-            RandomRetreatPosition = PlayerTarget.transform.position + RetreatDirection * 20;
-            RetreatPosition = RandomRetreatPosition.RoundVector(2);
-
-        }
-
-        RetreatPosition.y = transform.position.RoundVector(2).y;
-        */
-
-        //NavMeshRef.isStopped = false;
-        //NavMeshRef.SetDestination(RetreatPosition);
-        //
         if (CurrentPosition == RetreatPosition)
         {
             //RetreatPosition = Vector3.zero;
