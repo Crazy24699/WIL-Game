@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     public float SpeedMultiplier;
     public float CurrentSpeed;
     public float Speed;
+    public float DetectionRadius=0.35f;
 
     protected float TurnSmoothingVel;
     public float TurnTime = 0.1f;
@@ -34,17 +35,21 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 PlayerVelocity;
     [SerializeField] protected Vector3 MoveDirection;
     [SerializeField] protected Vector3 InputDirection;
-
+    [Space(2)]
     [SerializeField] protected Vector2 DashDirection;
     [SerializeField] protected Vector3 NewDashPosition;
     [SerializeField] protected Vector3 PreviousPosition;
     public Vector3 Gravity;
-    [SerializeField] protected Vector3 GroundCheckPosition;
+    [Space(2)]
+
 
     public Transform PlayerOrientation;
     public Transform BaltoOrientation;
     public Transform BaltoRef;
-    public Transform MainCamera; 
+    public Transform MainCamera;
+    [SerializeField] protected Transform Front_GroundCheckTransform;
+    [SerializeField] protected Transform Back_GroundCheckTransform;
+
     public GameObject HitParticle;
     
 
@@ -200,9 +205,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void TrackPlayerMovement()
     {
-
-        GroundCheckPosition = new Vector3(transform.position.x, transform.position.y - 1.25f, transform.position.z);
-        Grounded = Physics.CheckSphere(GroundCheckPosition, 0.35f, GroundLayers);
+        
+        bool FrontGrounded = Physics.CheckSphere(Front_GroundCheckTransform.position, DetectionRadius, GroundLayers);
+        bool BackGrounded = Physics.CheckSphere(Back_GroundCheckTransform.position, DetectionRadius, GroundLayers);
+        Grounded = FrontGrounded || BackGrounded;
 
         float VerticalGravity = Grounded ? -0.81f : -9.81f*2;
         Rigidbody.AddForce(new Vector3(0, VerticalGravity, 0), ForceMode.Acceleration);
@@ -313,6 +319,13 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 GetMoveDirecOnSlope()
     {
         return Vector3.ProjectOnPlane(MoveDirection,SlopeHit.normal).normalized;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(Front_GroundCheckTransform.position, DetectionRadius);
+        Gizmos.DrawWireSphere(Back_GroundCheckTransform.position, DetectionRadius);
     }
 
 }
