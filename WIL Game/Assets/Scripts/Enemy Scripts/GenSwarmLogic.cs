@@ -41,9 +41,9 @@ public class GenSwarmLogic : MonoBehaviour
     public float BaseMoveSpeed;
     
 
-    public HashSet<Enim2PH> GeneratorSwarm = new HashSet<Enim2PH>();
-    public List<Enim2PH> ShownSwarm;
-    private Enim2PH CurrentSelectedDrone;
+    public HashSet<Gen_Drone> GeneratorSwarm = new HashSet<Gen_Drone>();
+    public List<Gen_Drone> ShownSwarm;
+    private Gen_Drone CurrentSelectedDrone;
     private WorldHandler WorldHandlerScript;
 
     private Vector3 CheckingCord;
@@ -118,11 +118,11 @@ public class GenSwarmLogic : MonoBehaviour
                 SwarmLocations[i].transform.parent = this.transform;
                 SwarmLocations[i].gameObject.name = "Swarmer Location: " + i;
 
-                SpawnedDrone.GetComponent<Enim2PH>().SwarmTransformLocation = SwarmLocations[i];
+                SpawnedDrone.GetComponent<Gen_Drone>().SwarmTransformLocation = SwarmLocations[i];
                 SpawnedDrone.transform.parent = this.transform;
 
-                GeneratorSwarm.Add(SpawnedDrone.GetComponent<Enim2PH>());
-                SpawnedDrone.GetComponent<Enim2PH>().BaseStartup();
+                GeneratorSwarm.Add(SpawnedDrone.GetComponent<Gen_Drone>());
+                SpawnedDrone.GetComponent<Gen_Drone>().BaseStartup();
                 Debug.Log("Run");
             }
             else
@@ -289,9 +289,9 @@ public class GenSwarmLogic : MonoBehaviour
         if (CurrentDroneIndex >= GeneratorSwarm.Count) { CurrentDroneIndex = 0; }
         //Debug.Log(GeneratorSwarm.ElementAt(CurrentDroneIndex));
         //Debug.Log(GeneratorSwarm.ElementAt(CurrentDroneIndex).name);
-        if (GeneratorSwarm.ElementAt(CurrentDroneIndex).GetComponent<Enim2PH>().AttatchedToParent)
+        if (GeneratorSwarm.ElementAt(CurrentDroneIndex).GetComponent<Gen_Drone>().AttatchedToParent)
         {
-            GeneratorSwarm.ElementAt(CurrentDroneIndex).GetComponent<Enim2PH>().SwarmAttack(this.transform.gameObject, PlayerTarget);
+            GeneratorSwarm.ElementAt(CurrentDroneIndex).GetComponent<Gen_Drone>().SwarmAttack(this.transform.gameObject, PlayerTarget);
             //Debug.Log("Fore Drone out");
             CurrentDroneIndex++;
             CanAttack = false;

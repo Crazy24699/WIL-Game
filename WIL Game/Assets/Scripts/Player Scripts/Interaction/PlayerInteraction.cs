@@ -12,6 +12,7 @@ public class PlayerInteraction : MonoBehaviour
     public PlayerInput PlayerInputRef;
     protected InputAction InputRef;
     protected PlayerAttacks PlayerAttacks;
+    protected Animator PlayerAnimator;
 
     public bool MenuActive;
     public bool CanTakeDamage = true;
@@ -38,6 +39,7 @@ public class PlayerInteraction : MonoBehaviour
         CurrentHealth = MaxHealth;
 
         WorldHandlerScript = FindObjectOfType<WorldHandler>();
+        PlayerAnimator = transform.GetComponentInChildren<Animator>();
 
     }
 
@@ -134,13 +136,17 @@ public class PlayerInteraction : MonoBehaviour
         {
             return;
         }
-        Debug.Log("Damaghe");
+        if (HealthChange <= 0)
+        {
+            PlayerAnimator.SetTrigger("TakeHit");
+        }
+        Debug.Log("Damage");
         CurrentHealth += HealthChange;
         DeathCheck();
         //HandleHeartChanges();
     }
 
-    private void HandleHeartChanges()
+    private void HandleHealthChange()
     {
         if (HeartImages == null)
         {

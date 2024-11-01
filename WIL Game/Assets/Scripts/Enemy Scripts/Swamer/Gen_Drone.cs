@@ -1,35 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
-
-
-//Generator guy
-public class Enim2PH : BaseEnemy
+public class Gen_Drone : BaseEnemy
 {
     public Transform SwarmTransformLocation;
     [SerializeField] private Transform CenterSlerpPoint;
 
     private GameObject PlayerObjectRef;
 
-    [SerializeField]private Vector3 SwarmPosition;
+    [SerializeField] private Vector3 SwarmPosition;
     [SerializeField] private Vector3 OutOfRangePosition;
     private Vector3 RejoinPathOffset;
 
     private GenSwarmLogic SwarmParent;
 
-    [SerializeField]private int MissCount=3;
+    [SerializeField] private int MissCount = 3;
 
-    [SerializeField]private bool Confused = true;
+    [SerializeField] private bool Confused = true;
     [SerializeField] private bool Attacking = false;
 
     private bool GeneralStartupRan = false;
     [SerializeField] private bool WaitTimeFinished = false;
     [SerializeField] public bool AttatchedToParent;
 
-    [SerializeField]private int InternalCounter;
+    [SerializeField] private int InternalCounter;
 
     public float PlayerDistance;
     private float SwarmParentDistance;
@@ -67,7 +62,7 @@ public class Enim2PH : BaseEnemy
         StartCoroutine(AttackDoneWaitTime());
         //Physics.IgnoreLayerCollision(12, 13, true);
     }
-    
+
 
     protected override void CustomStartup()
     {
@@ -75,7 +70,7 @@ public class Enim2PH : BaseEnemy
         MaxHealth = 4;
         CurrentHealth = MaxHealth;
         //BaseMoveSpeed = 16;
-        HealthBar = transform.GetComponentInChildren<Slider>();
+        //HealthBar = transform.GetComponentInChildren<Slider>();
 
         ImmunityTime = 0.25f;
 
@@ -118,7 +113,7 @@ public class Enim2PH : BaseEnemy
 
         //Debug.Log("Hit it");
         CheckDistances();
-        if (PlayerDistance >= 20.25f && SwarmParentDistance >= 40.75f || SwarmParentDistance >= MaxTravelDistance) 
+        if (PlayerDistance >= 20.25f && SwarmParentDistance >= 40.75f || SwarmParentDistance >= MaxTravelDistance)
         {
             //Debug.Log("Bleh" + PlayerDistance + "       " + SwarmParentDistance);
             if (MissCount > 0)
@@ -163,12 +158,12 @@ public class Enim2PH : BaseEnemy
 
 
         CurrentPosition = transform.position.RoundVector(2);
-        transform.position=transform.position.RoundVector(2);
+        transform.position = transform.position.RoundVector(2);
         SwarmPosition = SwarmTransformLocation.position.RoundVector(2);
 
         Retreval();
         //InPos = this.transform.position.RoundVector(2) == SwarmPosition;
-        if (!Confused && this.transform.position.RoundVector(2) == SwarmPosition && RigidbodyRef.velocity==Vector3.zero && Attacking && WaitTimeFinished)
+        if (!Confused && this.transform.position.RoundVector(2) == SwarmPosition && RigidbodyRef.velocity == Vector3.zero && Attacking && WaitTimeFinished)
         {
             //Debug.Log("Is not true");
             Attacking = false;
@@ -194,7 +189,7 @@ public class Enim2PH : BaseEnemy
 
         if (SwarmParentDistance <= 3.5f && WaitTimeFinished)
         {
-            if (transform.parent == null) 
+            if (transform.parent == null)
             {
                 transform.parent = SwarmParent.transform;
                 RigidbodyRef.velocity = Vector3.zero;

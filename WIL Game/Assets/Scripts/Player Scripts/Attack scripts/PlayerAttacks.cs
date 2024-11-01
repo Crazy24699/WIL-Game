@@ -369,9 +369,14 @@ public class PlayerAttacks : MonoBehaviour
         AttackAnimation.SetTrigger("DodgeInput");
     }
 
-    public void HandleDodging()
+    public void EnableTakeDamage()
     {
+        PlayerInteractionScript.CanTakeDamage = true;
+    }
 
+    public void DisableTakeDamage()
+    {
+        PlayerInteractionScript.CanTakeDamage = false;
     }
 
 }
