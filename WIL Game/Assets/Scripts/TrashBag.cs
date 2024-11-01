@@ -56,6 +56,12 @@ public class TrashBag : BaseEnemy
         
     }
 
+
+    public void CreateBehaviourTree()
+    {
+
+    }
+
     private void HandleAttack()
     {
         CurrentPosition = transform.position.RoundVector(2);
