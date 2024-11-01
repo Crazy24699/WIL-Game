@@ -106,6 +106,8 @@ public class BaseEnemy : MonoBehaviour
         CustomStartup();
         HealthStartup();
 
+        BaseMoveSpeed = NavMeshRef.speed;
+
         StartupRan = true;
         Alive = true;
     }

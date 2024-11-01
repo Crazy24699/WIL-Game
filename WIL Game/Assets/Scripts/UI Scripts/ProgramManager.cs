@@ -58,7 +58,7 @@ public static class ExtensionClass
         return VectorOut;
     }
 
-    public static float RoundFloat(float FloatIn, int DecimalRound)
+    public static float RoundFloat(this float FloatIn, int DecimalRound)
     {
         float FloatOut = 0.0f;
 
