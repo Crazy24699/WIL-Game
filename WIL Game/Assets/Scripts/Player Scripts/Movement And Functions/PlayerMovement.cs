@@ -19,6 +19,8 @@ public class PlayerMovement : MonoBehaviour
     public float CurrentSpeed;
     public float Speed;
     public float DetectionRadius=0.35f;
+    private float WalkSpeed;
+    private float RunSpeed;
 
     protected float TurnSmoothingVel;
     public float TurnTime = 0.1f;
@@ -83,6 +85,8 @@ public class PlayerMovement : MonoBehaviour
 
 
         CurrentMoveDelayTime = MovingDelayTimer;
+        WalkSpeed = BaseMoveSpeed * 1;
+        RunSpeed = BaseMoveSpeed * 2.5f;
     }
 
     private void FixedUpdate()
@@ -261,15 +265,25 @@ public class PlayerMovement : MonoBehaviour
                 , VelocityCap.z);
         }
 
+        MoveDirection = PlayerOrientation.forward * InputDirection.z + PlayerOrientation.right * InputDirection.x;
+        //Speed = BaseMoveSpeed * SpeedMultiplier;
+        Rigidbody.AddForce(new Vector3(MoveDirection.x, 0, MoveDirection.z) * 10f * (Speed) , ForceMode.Force);
 
         if (CanMove)
         {
 
-        }
+            if (CurrentSpeed <= WalkSpeed)
+            {
+                PlayerAnimations.SetBool("IsRunning", false);
 
-        MoveDirection = PlayerOrientation.forward * InputDirection.z + PlayerOrientation.right * InputDirection.x;
-        //Speed = BaseMoveSpeed * SpeedMultiplier;
-        Rigidbody.AddForce(new Vector3(MoveDirection.x, 0, MoveDirection.z) * 10f * (Speed) , ForceMode.Force);
+            }
+            else
+            {
+                PlayerAnimations.SetBool("IsRunning", true);
+
+            }
+
+        }
 
     }
 
@@ -277,10 +291,12 @@ public class PlayerMovement : MonoBehaviour
     {
         Attacking = PlayerAnimations.GetBool("IsAttacking");
 
+
         if (PlayerAnimations.GetBool("IsAttacking"))
         {
             //Debug.Log("Its true");
             PlayerAnimations.SetBool("Is Moving", false);
+            PlayerAnimations.SetBool("IsRunning", false);
             return;
         }
         switch (CurrentSpeed)

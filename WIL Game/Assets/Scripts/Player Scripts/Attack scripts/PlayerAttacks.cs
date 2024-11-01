@@ -115,6 +115,7 @@ public class PlayerAttacks : MonoBehaviour
     private void FixedUpdate()
     {
         IsAttacking = AttackAnimation.GetBool("IsAttacking");
+        
         //PlayerMoveScript.CanMove = !IsAttacking;
     }
 
