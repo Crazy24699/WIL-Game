@@ -68,7 +68,7 @@ public class PlayerAttacks : MonoBehaviour
     private void UnlockAttack()
     {
         AttackAnimation.SetBool("IsAttacking", false);
-        Debug.Log("from above ");
+        //Debug.Log("from above ");
     }
 
     // Start is called before the first frame update
@@ -158,7 +158,7 @@ public class PlayerAttacks : MonoBehaviour
         }
         if (NextAttack != AllAttacks.None)
         {
-            Debug.Log("Faster");
+            //Debug.Log("Faster");
             return false;
         }
         return false;
@@ -177,10 +177,10 @@ public class PlayerAttacks : MonoBehaviour
 
             if(!CanChain)
             {
-                Debug.Log("Can not");
+                //Debug.Log("Can not");
                 return;
             }
-            Debug.Log("it can");
+            //Debug.Log("it can");
         }
         
         //Debug.Log("This ran;");
@@ -237,7 +237,7 @@ public class PlayerAttacks : MonoBehaviour
     {
         PlayAttackAnim("SlashAttackTrigger");
         HandleMovementState(false);
-        Debug.Log("rise");
+        //Debug.Log("rise");
     }
 
     private void TailWhipFunction()
@@ -343,7 +343,7 @@ public class PlayerAttacks : MonoBehaviour
         CinemachineBrainScript.enabled = LockCamera;
         CamFunctionScript.enabled = LockCamera;
         PlayerMoveScript.CanMove = LockCamera;
-        Debug.Log(LockCamera + "      " + "and burn;");
+        //Debug.Log(LockCamera + "      " + "and burn;");
         FreeLookCam.SetActive(LockCamera);
     }
 

@@ -227,8 +227,6 @@ public class BaseEnemy : MonoBehaviour
 
     }
 
-
-
     protected void KeepOrbitDistance()
     {
         CurrentPlayerDistance = Vector3.Distance(this.transform.position, PlayerTarget.transform.position);
