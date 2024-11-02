@@ -116,8 +116,7 @@ public class TrashBag : BaseEnemy
         //}
     }
 
-    [SerializeField]
-    private void FireProjectile()
+    public void FireProjectile()
     {
         GameObject SpawnedWebShot = Instantiate(WebShot, FirePoint.transform.position, Quaternion.identity);
         SpawnedWebShot.GetComponent<ProjectileBase>().LifeStartup(transform.up, 125f);
