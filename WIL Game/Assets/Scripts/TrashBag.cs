@@ -25,6 +25,9 @@ public class TrashBag : BaseEnemy
 
     [SerializeField] private bool Attacking;
 
+    [SerializeField] private GameObject WebShot;
+    [SerializeField] private Transform FirePoint;
+
 
     private void Start()
     {
@@ -87,6 +90,10 @@ public class TrashBag : BaseEnemy
     {
         if (!StartupRan) { return; }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            FireProjectile();
+        }
         if(Input.GetKeyDown(KeyCode.M))
         {
             CanAttack = true;
@@ -107,6 +114,13 @@ public class TrashBag : BaseEnemy
         //{
 
         //}
+    }
+
+    [SerializeField]
+    private void FireProjectile()
+    {
+        GameObject SpawnedWebShot = Instantiate(WebShot, FirePoint.transform.position, Quaternion.identity);
+        SpawnedWebShot.GetComponent<ProjectileBase>().LifeStartup(transform.up, 125f);
     }
 
     private void HandleAttackSequence()
