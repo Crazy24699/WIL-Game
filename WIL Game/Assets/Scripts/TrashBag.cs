@@ -45,6 +45,8 @@ public class TrashBag : BaseEnemy
         BaseMoveSpeed = 30;
         ExtraRotSpeed = 145;
 
+        ImmunityTime = 0.35f;
+
         TrashBag_Animations = transform.GetComponentInChildren<Animator>();
         NavMeshRef.enabled = true;
     }

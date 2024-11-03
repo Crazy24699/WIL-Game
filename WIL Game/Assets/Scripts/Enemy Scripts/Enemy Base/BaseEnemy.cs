@@ -13,8 +13,6 @@ public class BaseEnemy : MonoBehaviour
 
     #region Floats
     [Space(5)]
-    protected float ImmunityMaxTime;
-    protected float CurrentImmunTime;
     [SerializeField] protected float KnockbackPower;
 
     [SerializeField] protected float KnockbackTimer = 4f;
