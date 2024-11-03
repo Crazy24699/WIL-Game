@@ -21,9 +21,11 @@ public class TrashBag : BaseEnemy
 
     [SerializeField] private Collider ObjectCollider;
     [SerializeField] private Collider ObjectCollider2;
-    [SerializeField] private Animator TrshBag_Animations;
+    [SerializeField] private Animator TrashBag_Animations;
 
     [SerializeField] private bool Attacking;
+    public bool AttackAnimPlaying = false;
+    private bool CanMove = true;
 
     [SerializeField] private GameObject WebShot;
     [SerializeField] private Transform FirePoint;
@@ -43,7 +45,7 @@ public class TrashBag : BaseEnemy
         BaseMoveSpeed = 30;
         ExtraRotSpeed = 145;
 
-        TrshBag_Animations = transform.GetComponentInChildren<Animator>();
+        TrashBag_Animations = transform.GetComponentInChildren<Animator>();
         NavMeshRef.enabled = true;
     }
 
@@ -54,7 +56,11 @@ public class TrashBag : BaseEnemy
         CanAttack = false;
         NavMeshRef.enabled = false;
         Debug.Log("Look what eve become");
-        
+        if (!AttackAnimPlaying)
+        {
+            TrashBag_Animations.SetTrigger("AttackTrigger");
+            AttackAnimPlaying = true;
+        }
 
     }
 
@@ -99,7 +105,7 @@ public class TrashBag : BaseEnemy
             CanAttack = true;
             
         }
-        if (SeenPlayer)
+        if (SeenPlayer )
         {
             CurrentDistance = Vector3.Distance(PlayerRef.transform.position, transform.position).RoundFloat(2);
             MaintainDistance();
@@ -109,17 +115,13 @@ public class TrashBag : BaseEnemy
 
         HandleAttackSequence();
         HandleAttack();
-        ////add a check here for on the attack list
-        //if (!CanAttack && !Attacking)
-        //{
 
-        //}
     }
 
     public void FireProjectile()
     {
         GameObject SpawnedWebShot = Instantiate(WebShot, FirePoint.transform.position, Quaternion.identity);
-        SpawnedWebShot.GetComponent<ProjectileBase>().LifeStartup(transform.up, 125f);
+        SpawnedWebShot.GetComponent<ProjectileBase>().LifeStartup(FirePoint.transform.forward, 125f);
     }
 
     private void HandleAttackSequence()
@@ -128,7 +130,8 @@ public class TrashBag : BaseEnemy
 
         if (Attacking)
         {
-            this.gameObject.transform.position = Vector3.MoveTowards(transform.position, TargetedPosition, 20f * Time.deltaTime);
+
+            this.gameObject.transform.position = Vector3.MoveTowards(transform.position, TargetedPosition, 27.65f * Time.deltaTime);
             return;
         }
 
@@ -153,14 +156,17 @@ public class TrashBag : BaseEnemy
 
             if (CurrentDistance.RoundFloat(2) > MinFollowDistance)
             {
+
                 NavMeshRef.enabled = true;
+                Debug.Log("wishing us for wicked ways");
                 NavMeshRef.SetDestination(PlayerRef.transform.position);
             }
             else if (CurrentDistance.RoundFloat(2) <= MinFollowDistance + 1 && CanAttack)
             {
-
+                Debug.Log("through the chants");
                 if (NavMeshRef.enabled)
                 {
+                    Debug.Log("and hellish verses");
                     NavMeshRef.ResetPath();
 
                     NavMeshRef.enabled = false;
@@ -196,10 +202,12 @@ public class TrashBag : BaseEnemy
 
                 if (IsPathInvalid(WithdrawPosition))
                 {
+                    Debug.Log("at the alter we start to pray");
                     //WithdrawPosition = FindAlternatePosition();
                 }
                 if (!NavMeshRef.enabled) { NavMeshRef.enabled = true; }
 
+                Debug.Log("Douse the candles end the ritual ");
                 //NavMeshRef.SetDestination(WithdrawPosition);
             }
 
@@ -212,12 +220,14 @@ public class TrashBag : BaseEnemy
         }
         if (ApplySlowdown && CurrentDistance > MinFollowDistance + 2.5f)
         {
+            Debug.Log("to dance a hunt benith the stars");
             NavMeshRef.speed = BaseMoveSpeed;
             ApplySlowdown = false;
             NavMeshRef.isStopped = false;
         }
         if (CurrentDistance > MinFollowDistance+2.5f)
         {
+            Debug.Log("forbidden rites for moonlit nights");
             if (NavMeshRef.isStopped) { NavMeshRef.isStopped = false; }
             Vector3 FollowDirection = (transform.position - PlayerRef.transform.position).normalized ;
             //Debug.DrawRay(PlayerRef.transform.position, FollowDirection * 15,Color.blue);
@@ -229,6 +239,7 @@ public class TrashBag : BaseEnemy
         {
             ApplySlowdown = true;
             NavMeshRef.isStopped = true;
+            Debug.Log("in you lies vein desire");
             //NavMeshRef.enabled = false;
             //Debug.Log("out of here");
             //NavMeshRef.enabled = true;
@@ -271,18 +282,35 @@ public class TrashBag : BaseEnemy
 
     private void HandleAttack()
     {
+
         if (!SeenPlayer) { return; }
         CurrentPosition = transform.position.RoundVector(2);
         CurrentDistance = Vector3.Distance(PlayerRef.transform.position, transform.position);
 
         if (CanAttack)
         {
+            Debug.Log("a mass of darkness gone too far");
             if (CurrentDistance <= AttackDistance)
             {
+                Debug.Log("Unleased now essense of love from above");
+                NavMeshRef.isStopped = true;
+                NavMeshRef.ResetPath();
                 HasTargetPosition = TargetedPosition != Vector3.zero;
                 CalculatePosition();
                 Debug.Log("Dance");
                 Attack();
+            }
+            else if (CurrentDistance > AttackDistance)
+            {
+                if (NavMeshRef.speed < BaseMoveSpeed)
+                {
+                    Debug.Log("fucking move speed");
+                    NavMeshRef.speed = BaseMoveSpeed;
+                }
+                NavMeshRef.isStopped = false;
+                Debug.Log("ive made our hellbent mistake");
+                NavMeshRef.SetDestination(PlayerRef.transform.position);
+                Debug.Log(NavMeshRef.destination);
             }
         }
         if (!CanAttack && Attacking)
@@ -301,6 +329,8 @@ public class TrashBag : BaseEnemy
                 NavMeshRef.enabled = true;
                 NavMeshRef.isStopped = false;
                 Attacking = false;
+                ObjectCollider.enabled = true;
+                ObjectCollider2.enabled = true;
                 StartCoroutine(AttackCooldown());
                 //Debug.Log("monser");
             }
@@ -311,7 +341,8 @@ public class TrashBag : BaseEnemy
     private IEnumerator AttackCooldown()
     {
         Debug.Log("600 deaths at my command");
-        yield return new WaitForSeconds(10.35f);
+        yield return new WaitForSeconds(1.35f);
+        NavMeshRef.isStopped = false;
         CanAttack = true;
     }
 

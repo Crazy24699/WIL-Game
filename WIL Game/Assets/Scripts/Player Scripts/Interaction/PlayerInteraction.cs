@@ -132,6 +132,7 @@ public class PlayerInteraction : MonoBehaviour
 
     public void HandleHealth(int HealthChange)
     {
+        return;
         if(!CanTakeDamage)
         {
             return;
@@ -148,6 +149,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleHealthChange()
     {
+        return;
         if (HeartImages == null)
         {
             return;

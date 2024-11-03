@@ -10,9 +10,15 @@ public class TrshBag_AnimLink : MonoBehaviour
         TrashBagScript = transform.root.root.GetComponent<TrashBag>();
         Debug.Log(TrashBagScript.NavMeshRef.name);
     }
+
     [SerializeField]
     private void Attack()
     {
         TrashBagScript.FireProjectile();
+    }
+
+    [SerializeField] private void UpdateAnimState()
+    {
+        TrashBagScript.AttackAnimPlaying = false;
     }
 }
