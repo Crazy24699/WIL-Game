@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class TrashBag : BaseEnemy
+public class TrashBag : BTBaseEnemy
 {
 
     [SerializeField] private Vector3 TargetedPosition;
@@ -25,17 +26,18 @@ public class TrashBag : BaseEnemy
 
     [SerializeField] private bool Attacking;
     public bool AttackAnimPlaying = false;
-    private bool CanMove = true;
+    [SerializeField]private bool CanMove = true;
 
     [SerializeField] private GameObject WebShot;
     [SerializeField] private Transform FirePoint;
+    public Vector3 Vel;
 
 
     private void Start()
     {
-        //Debug.LogError("Remove this when the enemy is done");
+        Debug.LogError("Remove this when the enemy is done");
         BaseStartup();
-        TargetedPosition.y = transform.position.y;
+
     }
 
     protected override void CustomStartup()
@@ -44,11 +46,15 @@ public class TrashBag : BaseEnemy
         CurrentHealth = MaxHealth;
         BaseMoveSpeed = 30;
         ExtraRotSpeed = 145;
+        base.CustomStartup();
 
-        ImmunityTime = 0.35f;
+        ImmunityTime = 1.35f;
 
         TrashBag_Animations = transform.GetComponentInChildren<Animator>();
         NavMeshRef.enabled = true;
+
+        TargetedPosition.y = transform.position.y;
+        PatrolActive = true;
     }
 
     public override void Attack()
@@ -63,15 +69,6 @@ public class TrashBag : BaseEnemy
             TrashBag_Animations.SetTrigger("AttackTrigger");
             AttackAnimPlaying = true;
         }
-
-    }
-
-    private void HandleVision()
-    {
-        SeenPlayer = true;
-
-        NavMeshRef.speed = BaseMoveSpeed + 5;
-       
 
     }
 
@@ -94,9 +91,17 @@ public class TrashBag : BaseEnemy
 
     }
 
+    protected override void Death()
+    {
+        base.Death();
+        TrashBag_Animations.SetTrigger("DeathTrigger");
+    }
+
     private void Update()
     {
         if (!StartupRan) { return; }
+
+        if (!Alive) { return; }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -107,16 +112,40 @@ public class TrashBag : BaseEnemy
             CanAttack = true;
             
         }
-        if (SeenPlayer )
+        if (SeenPlayer)
         {
             CurrentDistance = Vector3.Distance(PlayerRef.transform.position, transform.position).RoundFloat(2);
-            MaintainDistance();
+            HandleFollowing();
+        }
+
+        if (NavMeshRef.velocity.magnitude > 1)
+        {
+            TrashBag_Animations.SetBool("Moving", true);
+        }
+        else if (NavMeshRef.velocity.magnitude <= 1)
+        {
+            TrashBag_Animations.SetBool("Moving", false);
+            Debug.Log("It could end this fever dream");
         }
 
         RotateToTarget();
 
         HandleAttackSequence();
         HandleAttack();
+        HandlePatrol();
+    }
+
+    
+
+    private void HandlePatrol()
+    {
+        if(SeenPlayer || PatrolOverrdide) { return; }
+
+        Debug.Log("patroling");
+        if(!NavMeshRef.hasPath && !NavMeshRef.pathPending)
+        {
+            SetDestination(WaypointPosition);
+        }
 
     }
 
@@ -128,7 +157,7 @@ public class TrashBag : BaseEnemy
 
     private void HandleAttackSequence()
     {
-        if (!StartupRan) { return; }
+        if (!StartupRan || !CanMove) { return; }
 
         if (Attacking)
         {
@@ -190,9 +219,11 @@ public class TrashBag : BaseEnemy
         }
     }
 
-    private void MaintainDistance()
+    private void HandleFollowing()
     {
-        if (CanAttack || Attacking) { return; }
+        if (CanAttack || Attacking || !CanMove) { return; }
+
+        
         if (CurrentDistance < MinFollowDistance)
         {
 
@@ -216,10 +247,17 @@ public class TrashBag : BaseEnemy
         }
         else if (CurrentDistance > MaxFollowDistance)
         {
-            //Debug.Log("old firend");
-            //if (!NavMeshRef.enabled) { NavMeshRef.enabled = true; }
-            //NavMeshRef.SetDestination(PlayerRef.transform.position);
+            Debug.Log("old firend");
+            if (!NavMeshRef.enabled) { NavMeshRef.enabled = true; }
+            NavMeshRef.SetDestination(PlayerRef.transform.position);
+            NavMeshRef.speed = BaseMoveSpeed + 10;
+            
         }
+        if(CurrentDistance<MaxFollowDistance && NavMeshRef.speed>BaseMoveSpeed)
+        {
+            NavMeshRef.speed = BaseMoveSpeed;
+        }
+
         if (ApplySlowdown && CurrentDistance > MinFollowDistance + 2.5f)
         {
             Debug.Log("to dance a hunt benith the stars");
@@ -242,10 +280,7 @@ public class TrashBag : BaseEnemy
             ApplySlowdown = true;
             NavMeshRef.isStopped = true;
             Debug.Log("in you lies vein desire");
-            //NavMeshRef.enabled = false;
-            //Debug.Log("out of here");
-            //NavMeshRef.enabled = true;
-            //NavMeshRef.ResetPath();
+
         }
     }
 
@@ -282,10 +317,16 @@ public class TrashBag : BaseEnemy
         return BestPosition;
     }
 
+    protected override void TakeHit()
+    {
+        base.TakeHit();
+        TrashBag_Animations.SetTrigger("TakeHitTrigger");
+    }
+
     private void HandleAttack()
     {
 
-        if (!SeenPlayer) { return; }
+        if (!SeenPlayer || !CanMove) { return; }
         CurrentPosition = transform.position.RoundVector(2);
         CurrentDistance = Vector3.Distance(PlayerRef.transform.position, transform.position);
 
@@ -306,7 +347,6 @@ public class TrashBag : BaseEnemy
             {
                 if (NavMeshRef.speed < BaseMoveSpeed)
                 {
-                    Debug.Log("fucking move speed");
                     NavMeshRef.speed = BaseMoveSpeed;
                 }
                 NavMeshRef.isStopped = false;
@@ -315,37 +355,66 @@ public class TrashBag : BaseEnemy
                 Debug.Log(NavMeshRef.destination);
             }
         }
-        if (!CanAttack && Attacking)
-        {
-            //NavMeshRef.SetDestination(TargetedPosition);
-            RigidbodyRef.useGravity = false;
-            ObjectCollider.enabled = false;
-            ObjectCollider2.enabled = false;
-        }
 
         if (Attacking)
         {
-            CurrentPosition=transform.position.RoundVector(2);
-            if(TargetedPosition==CurrentPosition)
+            if (!CanAttack)
             {
+                RigidbodyRef.useGravity = false;
+                ObjectCollider.enabled = false;
+                ObjectCollider2.enabled = false;
+            }
+
+            CurrentPosition=transform.position.RoundVector(2);
+            if (TargetedPosition == CurrentPosition) 
+            {
+                SetMoveState(false);
                 NavMeshRef.enabled = true;
                 NavMeshRef.isStopped = false;
                 Attacking = false;
                 ObjectCollider.enabled = true;
                 ObjectCollider2.enabled = true;
                 StartCoroutine(AttackCooldown());
+                Debug.Log("The devils take at midnight");
                 //Debug.Log("monser");
             }
             
         }
     }
 
+    private void SetMoveState(bool MoveState)
+    {
+        CanMove = MoveState;
+        switch (MoveState)
+        {
+            case true:
+                NavMeshRef.speed = BaseMoveSpeed;
+                NavMeshRef.isStopped = false;
+                break;
+
+            case false:
+                NavMeshRef.enabled = true;
+                NavMeshRef.speed = 0;
+                NavMeshRef.ResetPath();
+                NavMeshRef.isStopped = true;
+                StartCoroutine(MoveDelay());
+                break;
+        }
+    }
+
     private IEnumerator AttackCooldown()
     {
         Debug.Log("600 deaths at my command");
-        yield return new WaitForSeconds(1.35f);
+        yield return new WaitForSeconds(3.35f);
         NavMeshRef.isStopped = false;
         CanAttack = true;
+    }
+
+    private IEnumerator MoveDelay()
+    {
+        
+        yield return new WaitForSeconds(2.75f);
+        SetMoveState(true);
     }
 
 }

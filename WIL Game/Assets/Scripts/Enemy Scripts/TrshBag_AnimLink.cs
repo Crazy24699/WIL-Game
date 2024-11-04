@@ -21,4 +21,16 @@ public class TrshBag_AnimLink : MonoBehaviour
     {
         TrashBagScript.AttackAnimPlaying = false;
     }
+
+    [SerializeField]
+    private void StartImmuneTime()
+    {
+
+    }
+
+    private void EndImmuneTime()
+    {
+
+    }
+
 }

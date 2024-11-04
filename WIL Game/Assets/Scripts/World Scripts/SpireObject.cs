@@ -38,7 +38,7 @@ public class SpireObject : MonoBehaviour
                 return;
             }
 
-            SpewerAi EnemyRef = TriggerObject.GetComponent<SpewerAi>();
+            BTBaseEnemy EnemyRef = TriggerObject.GetComponent<BTBaseEnemy>();
             if (EnemyRef.SeenPlayer)
             {
                 return;

@@ -22,7 +22,7 @@ public class PlayerFunctionality : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.V))
+        if (Input.GetKeyDown(KeyCode.Joystick5Button17))
         {
             StartCoroutine(TakeDamage(1));  
         }

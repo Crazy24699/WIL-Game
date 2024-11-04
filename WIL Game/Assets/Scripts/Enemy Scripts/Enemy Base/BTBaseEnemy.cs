@@ -6,7 +6,6 @@ using UnityEngine.AI;
 
 public class BTBaseEnemy : BaseEnemy
 {
-    protected int CurrentWayPoint = 0;
     [SerializeField] protected int SpireAreaNumber;
 
     [Space(5)]
@@ -21,12 +20,6 @@ public class BTBaseEnemy : BaseEnemy
     [Space(5)]
     [SerializeField] public Transform WaypointPosition;
     [SerializeField] protected Transform WaypointParent;
-
-
-    [Header("Booleans"), Space(5)]
-    public bool IsAttacking;
-    public bool OutOfAttackRange;
-    public bool CanAttackPlayer;
 
 
     [Header("Vectors"), Space(5)]
@@ -141,6 +134,13 @@ public class BTBaseEnemy : BaseEnemy
 
     public void NewPatrolPoint(SpireObject ChosenSpire)
     {
+
+        StartCoroutine(MoveToNewPointDelay(ChosenSpire));
+    }
+
+    protected IEnumerator MoveToNewPointDelay(SpireObject ChosenSpire)
+    {
+        yield return new WaitForSeconds(1.25f);
         int RandomSpire = Random.Range(0, ChosenSpire.NeighboringSpires.Count);
 
         WaypointParent = ChosenSpire.NeighboringSpires[RandomSpire].transform;
@@ -149,13 +149,6 @@ public class BTBaseEnemy : BaseEnemy
 
         SetDestination(ChosenSpire.NeighboringSpires[RandomSpire].WaypointSpot);
         Debug.Log("Patrol");
-
-    }
-
-    protected IEnumerator AttackCooldown(float AttackCooldown)
-    {
-        yield return new WaitForSeconds(AttackCooldown);
-        CanAttackPlayer = true;
     }
 
     protected void LockForAttack()
@@ -173,7 +166,7 @@ public class BTBaseEnemy : BaseEnemy
         //IsAttacking = Locked;
     }
 
-    protected void Die()
+    protected virtual void Die()
     {
         Alive = false;
         WorldHandlerScript.SetNextActive(this.gameObject);

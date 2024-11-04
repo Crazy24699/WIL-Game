@@ -65,8 +65,9 @@ public class CameraFunctionality : MonoBehaviour
         HandleAimCamera();
 
         LockCamera();
-        if (Input.GetKeyDown(KeyCode.V))
+        if (Input.GetKeyDown(KeyCode.Joystick3Button18))
         {
+            return;
             switch (LockView)
             {
                 case false:

@@ -69,6 +69,11 @@ public class BaseEnemy : MonoBehaviour
     [SerializeField]protected bool StartupRan = false;
     [SerializeField] protected bool Alive = false;
     public bool Override = false;
+    public bool PatrolOverrdide = false; [Header("Booleans"), Space(5)]
+
+    public bool IsAttacking;
+    public bool OutOfAttackRange;
+    public bool CanAttackPlayer;
 
     #endregion
 
@@ -78,6 +83,7 @@ public class BaseEnemy : MonoBehaviour
     [SerializeField] protected Slider HealthBar;
     protected Rigidbody RigidbodyRef;
     [SerializeField] protected LayerMask PlayerLayer;
+    private EnemyVision VisionLinkScript;
     #endregion
     
     public void BaseStartup()
@@ -108,6 +114,11 @@ public class BaseEnemy : MonoBehaviour
 
         StartupRan = true;
         Alive = true;
+        if(GetComponent<EnemyVision>() != null)
+        {
+            VisionLinkScript = this.GetComponent<EnemyVision>();
+            VisionLinkScript.Startup(this);
+        }
     }
 
     protected virtual void CustomStartup()
@@ -120,6 +131,7 @@ public class BaseEnemy : MonoBehaviour
         if(Override && !StartupRan)
         {
             BaseStartup();
+            Debug.Log("devils game");
         }
     }
 
@@ -151,13 +163,14 @@ public class BaseEnemy : MonoBehaviour
         //Damage sound effect
         if (!StartupRan) { return; }
         StartCoroutine(ImmunityTimer());
+        Debug.Log("without a passion");
     }
 
 
     public virtual void HandleHealth(int ChangeValue)
     {
         if (!StartupRan) { return; }
-
+        Debug.Log("fucknu");
         HealthBar.value = CurrentHealth;
         if ((CurrentHealth + ChangeValue) > MaxHealth)
         {
@@ -179,7 +192,7 @@ public class BaseEnemy : MonoBehaviour
     
     protected virtual void Death()
     {
-        
+        Alive = false;
     }
 
     public void RotateToTarget()
@@ -292,12 +305,18 @@ public class BaseEnemy : MonoBehaviour
         AdvancedRetreat = true;
     }
 
-    private IEnumerator RetreatCooldown()
+    protected IEnumerator RetreatCooldown()
     {
         UpdateRetretPosition = false;
         yield return new WaitForSeconds(1.75f);
         UpdateRetretPosition = true;
     }
+
+    protected IEnumerator AttackCooldown(float CooldownTime)
+    {
+        yield return new WaitForSeconds(CooldownTime);
+        CanAttackPlayer = true;
+    } 
 
     protected IEnumerator ImmunityTimer()
     {
@@ -305,7 +324,7 @@ public class BaseEnemy : MonoBehaviour
         if (ImmunityTime <= 0)
         {
             Debug.LogError("ImmunityTimer not set on: " + this.gameObject.name);
-            ImmunityTime = 2.55f;
+            ImmunityTime = 3.55f;
         }
         yield return new WaitForSeconds(ImmunityTime);
         CanTakeDamage = true;

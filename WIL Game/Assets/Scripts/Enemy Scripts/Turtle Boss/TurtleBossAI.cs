@@ -114,14 +114,14 @@ public class TurtleBossAI : BossBase
         ValueTracking();
 
         BubbleAttackMethod();
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            Debug.Log("Hello");
-            //BubbleAttackMethod();
-            ActiveAttack("BubbleAttack");
+        //if (Input.GetKeyDown(KeyCode.V))
+        //{
+        //    Debug.Log("Hello");
+        //    //BubbleAttackMethod();
+        //    ActiveAttack("BubbleAttack");
 
-            //PerformingAttack = true;
-        }
+        //    //PerformingAttack = true;
+        //}
 
         if (Input.GetKeyDown(KeyCode.I))
         {
