@@ -256,16 +256,16 @@ public class PlayerMovement : MonoBehaviour
         if (!CanMove) { return; }
         //Debug.Log("turn to rust");
 
-
-
-        if (PlayerVelocity.magnitude > Speed) 
+        PlayerVelocity.y = (Grounded) ? 0 : PlayerVelocity.y;
+        Vector3 CustomVelocity = new Vector3(Rigidbody.velocity.x, 0, Rigidbody.velocity.z);
+        if (CustomVelocity.magnitude > Speed) 
         {
-            Vector3 VelocityCap = PlayerVelocity.normalized * Speed;
+            Vector3 VelocityCap = CustomVelocity.normalized * Speed;
             Rigidbody.velocity = new Vector3(VelocityCap.x, 0
                 , VelocityCap.z);
         }
-
         MoveDirection = PlayerOrientation.forward * InputDirection.z + PlayerOrientation.right * InputDirection.x;
+        MoveDirection.y = 0;
         //Speed = BaseMoveSpeed * SpeedMultiplier;
         Rigidbody.AddForce(new Vector3(MoveDirection.x, 0, MoveDirection.z) * 10f * (Speed) , ForceMode.Force);
 
