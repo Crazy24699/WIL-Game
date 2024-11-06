@@ -41,6 +41,7 @@ public class BaseEnemy : MonoBehaviour
     [Space(15)]
     protected GameObject EnemyObjectRef;
     protected GameObject PlayerRef;
+    [SerializeField]protected GameObject PolutionShardPrefab;
 
     [Space(5)]
     public Transform PlayerTarget;
@@ -170,7 +171,6 @@ public class BaseEnemy : MonoBehaviour
     public virtual void HandleHealth(int ChangeValue)
     {
         if (!StartupRan) { return; }
-        Debug.Log("fucknu");
         HealthBar.value = CurrentHealth;
         if ((CurrentHealth + ChangeValue) > MaxHealth)
         {
@@ -193,6 +193,7 @@ public class BaseEnemy : MonoBehaviour
     protected virtual void Death()
     {
         Alive = false;
+        Instantiate(PolutionShardPrefab, transform.position, Quaternion.identity);
     }
 
     public void RotateToTarget()

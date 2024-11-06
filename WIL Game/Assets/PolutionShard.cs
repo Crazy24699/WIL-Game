@@ -9,6 +9,7 @@ public class PolutionShard : MonoBehaviour
     private void Start()
     {
         ShardBodyRef = transform.GetComponentInChildren<MeshRenderer>().gameObject;
+        this.gameObject.name = ShardBodyRef.name + "" + Random.Range(-965, 956);
     }
 
     private void OnTriggerEnter(Collider Collision)

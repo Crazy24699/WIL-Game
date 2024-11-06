@@ -61,6 +61,12 @@ public class ShardBlocker : MonoBehaviour
             //Play animations 
             //play sound
             //play vfx
+            StartCoroutine(DestroyBlocker());
         }
+    }
+    private IEnumerator DestroyBlocker()
+    {
+        yield return new WaitForSeconds(1.35f);
+        Destroy(this.gameObject);
     }
 }

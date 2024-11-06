@@ -95,7 +95,9 @@ public class TrashBag : BTBaseEnemy
     {
         base.Death();
         TrashBag_Animations.SetTrigger("DeathTrigger");
+        Destroy(this.gameObject);
     }
+    
 
     private void Update()
     {
