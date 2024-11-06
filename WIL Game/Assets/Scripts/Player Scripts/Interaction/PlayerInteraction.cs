@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,13 +18,19 @@ public class PlayerInteraction : MonoBehaviour
 
     public bool MenuActive;
     public bool CanTakeDamage = true;
+    public bool InBlockerRange;
 
     public int MaxHealth;
     public int CurrentHealth;
     private int OldHealth;
+    public int CurrentGemCount;
+    public int CurrentShardCount;
 
     private WorldHandler WorldHandlerScript;
     private Slider PlayerHealthBar;
+    [SerializeField]private TextMeshProUGUI ShardCounter;
+    [SerializeField] private TextMeshProUGUI GemCounter;
+    public ShardBlocker CurrentShardBlocker;
 
 
     public GameObject[] HeartImages;
@@ -54,6 +61,27 @@ public class PlayerInteraction : MonoBehaviour
         PlayerInputRef.PlayerInteraction.ShowMenu.Enable();
         PlayerInputRef.PlayerInteraction.ShowMenu.performed += ChangeMenuState;
 
+    }
+
+    public void HandleShardUpdate()
+    {
+        CurrentShardCount++;
+        if( CurrentShardCount>= 3 )
+        {
+            CurrentShardCount -= 3;
+
+            CurrentGemCount++;
+            GemCounter.text = CurrentGemCount.ToString();
+        }
+        ShardCounter.text = CurrentShardCount.ToString() + "/3";
+    }
+
+    private void HandleGemUpdate()
+    {
+        if( CurrentGemCount <=0  ) { return; }
+        CurrentShardBlocker.RemoveBlockLevel();
+        CurrentGemCount--;
+        GemCounter.text = CurrentGemCount.ToString();
     }
 
     public void OnDisable()
@@ -112,6 +140,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         DeathCheck();
         HandleInputTest();
+        HandleEnvrionmentInteraction();
     }
 
     private void DeathCheck()
@@ -123,6 +152,17 @@ public class PlayerInteraction : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             Time.timeScale = 0;
         }
+    }
+
+    private void HandleEnvrionmentInteraction()
+    {
+        if(!InBlockerRange) { return; }
+
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            HandleGemUpdate();
+        }
+
     }
 
     private void HandleInputTest()
