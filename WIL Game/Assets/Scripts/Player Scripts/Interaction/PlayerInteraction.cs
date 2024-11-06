@@ -4,6 +4,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class PlayerInteraction : MonoBehaviour
     private int OldHealth;
 
     private WorldHandler WorldHandlerScript;
+    private Slider PlayerHealthBar;
 
 
     public GameObject[] HeartImages;
@@ -40,7 +42,8 @@ public class PlayerInteraction : MonoBehaviour
 
         WorldHandlerScript = FindObjectOfType<WorldHandler>();
         PlayerAnimator = transform.GetComponentInChildren<Animator>();
-
+        PlayerHealthBar = transform.Find("Player UI").GetComponentInChildren<Slider>();
+        PlayerHealthBar.maxValue = MaxHealth;
     }
 
     public void OnEnable()
@@ -132,7 +135,6 @@ public class PlayerInteraction : MonoBehaviour
 
     public void HandleHealth(int HealthChange)
     {
-        return;
         if(!CanTakeDamage)
         {
             return;
@@ -144,11 +146,12 @@ public class PlayerInteraction : MonoBehaviour
         Debug.Log("Damage");
         CurrentHealth += HealthChange;
         DeathCheck();
-        //HandleHeartChanges();
+        HandleHealthChange();
     }
 
     private void HandleHealthChange()
     {
+        PlayerHealthBar.value = CurrentHealth;
         return;
         if (HeartImages == null)
         {
