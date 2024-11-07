@@ -43,7 +43,7 @@ public class SpewerAi : BTBaseEnemy
         WorldHandlerScript.AllEnemies.Add(this.gameObject);
         MaxHealth = 10;
         CurrentHealth = MaxHealth;
-
+        ImmunityTime = 0.375f;
         
     }
 

@@ -19,6 +19,7 @@ public class PlayerInteraction : MonoBehaviour
     public bool MenuActive;
     public bool CanTakeDamage = true;
     public bool InBlockerRange;
+    public bool PoweredUp = false;
 
     public int MaxHealth;
     public int CurrentHealth;
@@ -222,6 +223,10 @@ public class PlayerInteraction : MonoBehaviour
             {
                 WorldHandlerScript.SetActiveArea("Final Boss Area");
             }
+        }
+        if (Collision.CompareTag("BarrierBreakPowerup"))
+        {
+            PoweredUp = true;
         }
     }
 

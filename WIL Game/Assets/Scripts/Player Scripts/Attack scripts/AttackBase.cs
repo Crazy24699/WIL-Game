@@ -6,12 +6,14 @@ public class AttackBase : MonoBehaviour
 {
     [SerializeField]protected PlayerAttacks PlayerAttackRef;
     [SerializeField] protected PlayerMovement PlayerMoveScript;
+    [SerializeField] protected PlayerInteraction PlayerInteractionScript;
     public int AppliedDamage;
 
     [SerializeField] protected Collider AttackCollider;
 
     public void Start()
     {
+        PlayerInteractionScript = this.transform.parent.root.root.GetComponent<PlayerInteraction>();
         PlayerAttackRef = FindObjectOfType<PlayerAttacks>();
         if(PlayerMoveScript == null)
         {
@@ -48,5 +50,12 @@ public class AttackBase : MonoBehaviour
             EnemyBaseScript.HandleHealth(-AppliedDamage);
 
         }
+
+        if (Collision.CompareTag("LevelBarrier") && PlayerInteractionScript.PoweredUp) 
+        {
+            Destroy(Collision.gameObject);
+            PlayerInteractionScript.PoweredUp = false;
+        }
+
     }
 }
