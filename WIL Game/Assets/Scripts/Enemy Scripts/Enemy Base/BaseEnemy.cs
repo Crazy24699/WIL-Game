@@ -8,14 +8,14 @@ public class BaseEnemy : MonoBehaviour
 {
     #region Ints
     protected int MaxHealth = 2;
-    [SerializeField] protected int CurrentHealth;
+    protected int CurrentHealth;
     #endregion
 
     #region Floats
     [Space(5)]
     [SerializeField] protected float KnockbackPower;
 
-    [SerializeField] protected float KnockbackTimer = 4f;
+    protected float KnockbackTimer = 4f;
     protected float KnockbackTime;
     //[SerializeField] protected float CurrentImmunityTime;
     [Space(3)]
@@ -24,62 +24,63 @@ public class BaseEnemy : MonoBehaviour
 
 
     [Space(8)]
-    public float CurrentPlayerDistance;
+    [HideInInspector] public float CurrentPlayerDistance;
     protected float ImmunityTime;
 
     [SerializeField]protected float MaxFollowDistance;
     public float MaxAttackDistance;
     [HideInInspector]public float CurrentMoveSpeed;
 
-    public float CloseRangeSpeedMulti;
+    protected float CloseRangeSpeedMulti;
     public float PathfindAwayDistance;
 
-    public float OrbitingDistance;
+    [HideInInspector] public float OrbitingDistance;
     #endregion
 
     #region Gameobjects and transforms
     [Space(15)]
-    protected GameObject EnemyObjectRef;
+    [HideInInspector] protected GameObject EnemyObjectRef;
     protected GameObject PlayerRef;
     [SerializeField]protected GameObject PolutionShardPrefab;
 
     [Space(5)]
-    public Transform PlayerTarget;
+    [HideInInspector] public Transform PlayerTarget;
     #endregion
 
-    protected Vector3 PlayerDirection;
-    [SerializeField]protected Vector3 RetreatPosition;
-    protected Vector3 CurrentPosition;
+    [HideInInspector] protected Vector3 PlayerDirection;
+    protected Vector3 RetreatPosition;
+    [HideInInspector] protected Vector3 CurrentPosition;
 
     [Header("Booleans"), Space(5)]
     #region Bools
-    protected bool CanTakeDamage = true;
-    public bool SeenPlayer = false;
-    public bool PatrolActive;
-    public bool PlayerEscaped;
+    [HideInInspector] protected bool CanTakeDamage = true;
+    [HideInInspector] public bool SeenPlayer = false;
+    [HideInInspector] public bool PatrolActive;
+    [HideInInspector] public bool PlayerEscaped;
 
     protected bool ReduceKnockbackForce;
-    public bool OnAttackingList = false;
+    [HideInInspector] public bool OnAttackingList = false;
 
-    [SerializeField]protected bool CanAttack = true;
-    public bool Orbiting;
+    protected bool CanAttack = true;
+    protected bool Orbiting;
 
-    public bool UpdateRetretPosition;
-    [SerializeField] protected bool AdvancedRetreat = false;
+    protected bool UpdateRetretPosition;
+    protected bool AdvancedRetreat = false;
 
-    [SerializeField]protected bool StartupRan = false;
-    [SerializeField] protected bool Alive = false;
+    protected bool StartupRan = false;
+    protected bool Alive = false;
     public bool Override = false;
     public bool PatrolOverrdide = false; [Header("Booleans"), Space(5)]
+    public bool AttackAreaOverride = false;
 
-    public bool IsAttacking;
-    public bool OutOfAttackRange;
-    public bool CanAttackPlayer;
+    [HideInInspector] public bool IsAttacking;
+    [HideInInspector] public bool OutOfAttackRange;
+    [HideInInspector] public bool CanAttackPlayer;
 
     #endregion
 
     #region Scripts
-    public NavMeshAgent NavMeshRef;
+    [HideInInspector] public NavMeshAgent NavMeshRef;
     protected WorldHandler WorldHandlerScript;
     [SerializeField] protected Slider HealthBar;
     protected Rigidbody RigidbodyRef;

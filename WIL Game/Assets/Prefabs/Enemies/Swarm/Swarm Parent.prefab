@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8470166410979336904
 Transform:
   m_ObjectHideFlags: 0
@@ -50,8 +50,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GeneratorEnemy: {fileID: 2610401700660308599, guid: a731357dcff0295469a8203a0cad0868, type: 3}
   SwarmLocations: []
-  MinPlayerDistance: 25
-  MaxPlayerDistance: 65
+  MinPlayerDistance: 50
+  MaxPlayerDistance: 70
   ExtraOrbitDistance: 0
   CurrentPlayerDistance: 0
   PlayerDirection: {x: 0, y: 0, z: 0}
@@ -70,7 +70,7 @@ MonoBehaviour:
   ThisPosition: {x: 0, y: 0, z: 0}
   CurrentPosition: {x: 0, y: 0, z: 0}
   RetreatPosition: {x: 0, y: 0, z: 0}
-  MaxFollowDistance: 0
+  MaxFollowDistance: 40
   SpawningMask:
     serializedVersion: 2
     m_Bits: 4294967295

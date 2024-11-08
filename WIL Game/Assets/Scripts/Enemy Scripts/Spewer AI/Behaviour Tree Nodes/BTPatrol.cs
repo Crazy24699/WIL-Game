@@ -35,7 +35,7 @@ public class BTPatrol : BTNodeBase
     public override NodeStateOptions RunLogicAndState()
     {
 
-        if(EnemyScript.PatrolActive)
+        if(EnemyScript.PatrolActive && !EnemyScript.AttackAreaOverride)
         {
             Debug.Log("Patrol Active");
             EnemyScript.SetDestination(EnemyScript.WaypointPosition);

@@ -11,11 +11,10 @@ public class BTBaseEnemy : BaseEnemy
     [Space(5)]
     //[SerializeField] protected float CurrentImmunityTime;
     [Space(3)]
-    public float NextWaypointDistance = 5f;
 
     [Space(8)]
     protected float OutOfRangeTimer = 4.25f;
-    public float CurrentRangeTime;
+    [HideInInspector] public float CurrentRangeTime;
 
     [Space(5)]
     [SerializeField] public Transform WaypointPosition;

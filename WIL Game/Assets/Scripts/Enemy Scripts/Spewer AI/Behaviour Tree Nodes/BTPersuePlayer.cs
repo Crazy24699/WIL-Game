@@ -25,7 +25,7 @@ public class BTPersuePlayer : BTNodeBase
 
         if (EnemyScript.SeenPlayer)
         {
-            //EnemyScript.NavMeshRef.isStopped = false;
+
             EnemyScript.PatrolActive = false;
 
             EnemyScript.SetDestination(EnemyScript.PlayerTarget);
@@ -35,6 +35,13 @@ public class BTPersuePlayer : BTNodeBase
 
             return NodeStateOptions.Running;
         }
+
+        if (EnemyScript.AttackAreaOverride && EnemyScript.SeenPlayer)
+        {
+            EnemyScript.SetDestination(EnemyScript.PlayerTarget);
+            return NodeStateOptions.Running;
+        }
+
         if(EnemyScript.OutOfAttackRange)
         {
             EnemyScript.CanAttackPlayer = false;

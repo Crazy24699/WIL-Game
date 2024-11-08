@@ -14,12 +14,10 @@ using OpenCover;
 public class SpewerAi : BTBaseEnemy
 {
 
-    public bool SearchSequenceActive = false;
-    public bool SpeedBoost;
     [SerializeField] private GameObject Dropplet;
     [SerializeField] private GameObject SpewPoint;
 
-    public float PlayerDistance;
+    protected float PlayerDistance;
     public float MaxAttackDist;
 
 
@@ -62,16 +60,6 @@ public class SpewerAi : BTBaseEnemy
             Destroy(gameObject);
         }
         HandleForce();
-
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            //Attacking = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            //CanAttackPlayer = true;
-        }
 
 
         CurrentMoveSpeed = NavMeshRef.velocity.magnitude;
