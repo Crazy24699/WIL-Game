@@ -127,7 +127,7 @@ public class TrashBag : BTBaseEnemy
         else if (NavMeshRef.velocity.magnitude <= 1)
         {
             TrashBag_Animations.SetBool("Moving", false);
-            Debug.Log("It could end this fever dream");
+            //Debug.Log("It could end this fever dream");
         }
 
         RotateToTarget();

@@ -37,6 +37,7 @@ public class PlayerInteraction : MonoBehaviour
     public GameObject[] HeartImages;
     public GameObject PauseScreen;
     public GameObject DeathScreen;
+    [SerializeField] private Sound[] PlayerSounds;
 
     // Start is called before the first frame update
     void Awake()
@@ -62,6 +63,26 @@ public class PlayerInteraction : MonoBehaviour
         PlayerInputRef.PlayerInteraction.ShowMenu.Enable();
         PlayerInputRef.PlayerInteraction.ShowMenu.performed += ChangeMenuState;
 
+    }
+
+    public AudioClip HandleAudioClip(string Name, bool Stop)
+    {
+        bool SoundExists = PlayerSounds.Any(Snd => Snd.Name == Name);
+        if (!SoundExists) { Debug.LogError("Sound doesnt exist"); return null; }
+        
+
+        switch (Stop)
+        {
+            case true:
+                Sound SoundClip = PlayerSounds.FirstOrDefault(Snd => Snd.Name == Name);
+
+                return SoundClip.SoundClip;
+
+            case false:
+
+                break;
+        }
+        return null;
     }
 
     public void HandleShardUpdate()
@@ -194,20 +215,6 @@ public class PlayerInteraction : MonoBehaviour
     {
         PlayerHealthBar.value = CurrentHealth;
         return;
-        if (HeartImages == null)
-        {
-            return;
-        }
-
-        if (OldHealth < CurrentHealth)
-        {
-            HeartImages[CurrentHealth].SetActive(false);
-        }
-        if(OldHealth> CurrentHealth)
-        {
-            HeartImages[CurrentHealth].SetActive(true);
-
-        }
     }
 
     private void OnTriggerEnter(Collider Collision)

@@ -147,7 +147,7 @@ public class BTBaseEnemy : BaseEnemy
         SpireLoaction = ChosenSpire.NeighboringSpires[RandomSpire].ThisSpire;
 
         SetDestination(ChosenSpire.NeighboringSpires[RandomSpire].WaypointSpot);
-        Debug.Log("Patrol");
+        //Debug.Log("Patrol");
     }
 
     protected void LockForAttack()

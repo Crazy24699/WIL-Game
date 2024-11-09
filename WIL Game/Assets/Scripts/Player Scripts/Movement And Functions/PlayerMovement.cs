@@ -10,9 +10,14 @@ public class PlayerMovement : MonoBehaviour
     private PlayerAttacks PlayerAttackScript;
     [SerializeField] private PlayerInput PlayerInputRef;
     [SerializeField] private PlayerInput DashInput;
+    [SerializeField] private PlayerInteraction PlayerInteractScript;
+
     public LayerMask GroundLayers;
     private RaycastHit SlopeHit;
+    [SerializeField]private AudioSource PlayerAudioSource;
 
+
+    [SerializeField]private string CurrentClipName;
 
     public float BaseMoveSpeed;
     public float SpeedMultiplier;
@@ -82,11 +87,12 @@ public class PlayerMovement : MonoBehaviour
         PlayerInputRef.BasePlayerMovement.DashMovement.performed += Context => StartDash();
 
         PlayerAttackScript = GetComponentInChildren<PlayerAttacks>();
-
+        PlayerInteractScript = gameObject.GetComponent<PlayerInteraction>();
 
         CurrentMoveDelayTime = MovingDelayTimer;
         WalkSpeed = BaseMoveSpeed * 1;
         RunSpeed = BaseMoveSpeed * 2.5f;
+        PlayerAudioSource = this.GetComponent<AudioSource>();
     }
 
     private void FixedUpdate()
@@ -148,6 +154,9 @@ public class PlayerMovement : MonoBehaviour
     {
         if (DashDirection != Vector2.zero && !PlayerDashing)
         {
+            PlayerAudioSource.Stop();
+            PlayerAudioSource.clip = PlayerInteractScript.HandleAudioClip("Dashing", true);
+
             Debug.Log("kickback;");
             Vector3 SetDashDirection = (PlayerOrientation.forward * DashDirection.y + PlayerOrientation.right * DashDirection.x) * DashDistance;
             PlayerAttackScript.SetDodgeInfo((PlayerOrientation.forward * DashDirection.y + PlayerOrientation.right * DashDirection.x).normalized);
@@ -250,11 +259,27 @@ public class PlayerMovement : MonoBehaviour
         {
             Rigidbody.velocity = new Vector3(0,Rigidbody.velocity.y,0);
             CanMove = false;
+            PlayerAudioSource.Stop();
             return;
         }
 
+        if (PlayerAudioSource.clip == null || CurrentClipName != PlayerAudioSource.clip.name )
+        {
+            PlayerAudioSource.clip = PlayerInteractScript.HandleAudioClip("Walking", true);
+        }
+        if (CurrentSpeed <= 5)
+        {
+            Debug.Log("Fuck");
+            PlayerAudioSource.Stop();
+        }
         if (!CanMove) { return; }
         //Debug.Log("turn to rust");
+
+        if(!PlayerAudioSource.isPlaying && CurrentSpeed > 4)
+        {
+            PlayerAudioSource.Play();
+            Debug.Log(PlayerAudioSource.isPlaying);
+        }
 
         PlayerVelocity.y = (Grounded) ? 0 : PlayerVelocity.y;
         Vector3 CustomVelocity = new Vector3(Rigidbody.velocity.x, 0, Rigidbody.velocity.z);
@@ -269,10 +294,11 @@ public class PlayerMovement : MonoBehaviour
         //Speed = BaseMoveSpeed * SpeedMultiplier;
         Rigidbody.AddForce(new Vector3(MoveDirection.x, 0, MoveDirection.z) * 10f * (Speed) , ForceMode.Force);
 
+
         if (CanMove)
         {
 
-            if (CurrentSpeed <= WalkSpeed)
+            if (CurrentSpeed <= WalkSpeed+3)
             {
                 PlayerAnimations.SetBool("IsRunning", false);
 

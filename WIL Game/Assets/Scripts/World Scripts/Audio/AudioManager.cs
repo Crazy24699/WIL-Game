@@ -3,15 +3,18 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public Sound[] Sounds;
+    private void Awake()
     {
-        
+        foreach (Sound CurrentSound in Sounds)
+        {
+            CurrentSound.Source = gameObject.AddComponent<AudioSource>();
+            CurrentSound.Source.clip = CurrentSound.SoundClip;
+
+            CurrentSound.Source.volume = CurrentSound.Volume;
+            CurrentSound.Source.pitch = CurrentSound.Pitch;
+            CurrentSound.Source.loop = CurrentSound.Looping;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
