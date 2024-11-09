@@ -23,7 +23,7 @@ public class BTWebMove : BTNodeBase
         if (!WebbinScript.EngagePlayer) { return NodeStateOptions.Failed; }
         BeyondAllAttacks = WebbinScript.BeyondMaxRange();
         CatchingPlayer = BeyondAllAttacks && !CatchingPlayer;
-        if (WebbinScript.CanAttack) { return NodeStateOptions.Failed; }
+        //if (WebbinScript.CanAttack) { return NodeStateOptions.Failed; }
 
         Debug.Log(BeyondAllAttacks);
 

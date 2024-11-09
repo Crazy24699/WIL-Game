@@ -13,7 +13,7 @@ public class WebbinEnemy : BossBase
     public bool EngagePlayer = false;
     public bool ActionDelayActive;
     public bool AttackChosen;
-    public bool CanAttack;
+    public bool CanAttack = true;
 
     [Space(5), Header("Floats")]
     public float CurrentPlayerDistance;
@@ -21,8 +21,8 @@ public class WebbinEnemy : BossBase
     [SerializeField] private float ActionLockoutTime;
     [SerializeField] private float AttackLockoutTime;
     [Space(2)]
-    public float CloseRangeDistance;
-    public float LongRangeDistance;
+    public float BashAttackRange;
+    public float WebSpitAttack;
     [SerializeField] private float MaxAttackDistance;
     public float AttackWaitTime;
 

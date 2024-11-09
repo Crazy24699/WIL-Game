@@ -19,6 +19,7 @@ public class BTWebAttack : BTNodeBase
 
     public override NodeStateOptions RunLogicAndState()
     {
+        Debug.Log("The fuckening");
         BeyondAllAttacks = WebbinScript.BeyondMaxRange();
         if (!WebbinScript.EngagePlayer) { return NodeStateOptions.Failed; }
         if (BeyondAllAttacks)
@@ -45,19 +46,23 @@ public class BTWebAttack : BTNodeBase
     {
 
         Debug.Log("Choosing attack");
-        float Values = WebbinScript.CurrentPlayerDistance;
-        if (Values > 100 && Values <= 215)
+        Debug.Log("Choosing attack");
+        float DistanceValue = WebbinScript.CurrentPlayerDistance;
+
+        if (DistanceValue < WebbinScript.WebSpitAttack + 10 && DistanceValue > WebbinScript.StoppingDistance)
         {
-            ChosenAttack = "Coal";
+            ChosenAttack = "Webspit";
+
             WebbinScript.ChosenAttack = WebbinEnemy.AttackOptions.WebSpit;
         }
-        if (Values > 40 && Values <= 100)
+
+        if (DistanceValue < WebbinScript.BashAttackRange + 25 && DistanceValue > WebbinScript.WebSpitAttack)
         {
             ChosenAttack = "GroundSlam";
             WebbinScript.ChosenAttack = WebbinEnemy.AttackOptions.RollBash;
         }
 
-        WebbinScript.AttackChosen = true;
+        //WebbinScript.AttackChosen = true;
         return;
     }
 
