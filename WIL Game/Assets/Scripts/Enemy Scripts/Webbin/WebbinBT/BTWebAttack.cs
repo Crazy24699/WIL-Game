@@ -46,7 +46,6 @@ public class BTWebAttack : BTNodeBase
     {
 
         Debug.Log("Choosing attack");
-        Debug.Log("Choosing attack");
         float DistanceValue = WebbinScript.CurrentPlayerDistance;
 
         if (DistanceValue < WebbinScript.WebSpitAttack + 10 && DistanceValue > WebbinScript.StoppingDistance)
@@ -62,7 +61,7 @@ public class BTWebAttack : BTNodeBase
             WebbinScript.ChosenAttack = WebbinEnemy.AttackOptions.RollBash;
         }
 
-        //WebbinScript.AttackChosen = true;
+        WebbinScript.AttackChosen = true;
         return;
     }
 

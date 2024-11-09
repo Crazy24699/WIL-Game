@@ -23,8 +23,9 @@ public class WebbinEnemy : BossBase
     [Space(2)]
     public float BashAttackRange;
     public float WebSpitAttack;
-    [SerializeField] private float MaxAttackDistance;
+    [SerializeField] public float MaxAttackDistance;
     public float AttackWaitTime;
+    public float BaseMoveSpeed;
 
     [Space(5)]
     public int CurrentContactDamage;
@@ -42,7 +43,25 @@ public class WebbinEnemy : BossBase
     public AttackOptions ChosenAttack;
     public WebSpit WebAttack;
 
+    private void SetMoveState(bool MoveState)
+    {
+        CanMove = MoveState;
+        switch (MoveState)
+        {
+            case true:
+                NavMeshRef.speed = BaseMoveSpeed;
+                NavMeshRef.isStopped = false;
+                break;
 
+            case false:
+                NavMeshRef.enabled = true;
+                NavMeshRef.speed = 0;
+                NavMeshRef.ResetPath();
+                NavMeshRef.isStopped = true;
+                //StartCoroutine(MoveDelay());
+                break;
+        }
+    }
 
     private void Start()
     {
@@ -57,6 +76,7 @@ public class WebbinEnemy : BossBase
         MaxHealth = 8;
         CurrentHealth = MaxHealth;
         CreateBehaviourTree();
+        BaseMoveSpeed = NavMeshRef.speed;
     }
 
     private void CreateBehaviourTree()

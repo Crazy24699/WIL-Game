@@ -10605,19 +10605,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 958757144226772664, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.000000045281404
+      value: 0.00000003677668
       objectReference: {fileID: 0}
     - target: {fileID: 958757144226772664, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.0000000069105104
+      value: 0.000000005612583
       objectReference: {fileID: 0}
     - target: {fileID: 958757144226772664, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.98855424
+      value: 0.9885543
       objectReference: {fileID: 0}
     - target: {fileID: 958757144226772664, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.1508658
+      value: -0.15086576
       objectReference: {fileID: 0}
     - target: {fileID: 1062518012877003342, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10673,11 +10673,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1350814672311814053, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.0000000645533
+      value: 0.000000026368298
       objectReference: {fileID: 0}
     - target: {fileID: 1350814672311814053, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000007967174
+      value: 0.0000000032543774
       objectReference: {fileID: 0}
     - target: {fileID: 1350814672311814053, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.y
@@ -10922,6 +10922,7 @@ MonoBehaviour:
   WebSpitAttack: 0
   MaxAttackDistance: 0
   AttackWaitTime: 0
+  BaseMoveSpeed: 0
   CurrentContactDamage: 0
   ChosenAttack: 0
 --- !u!4 &1668351616
@@ -16876,10 +16877,11 @@ MonoBehaviour:
   StoppingDistance: 20
   ActionLockoutTime: 0
   AttackLockoutTime: 0
-  BashAttackRange: 95
-  WebSpitAttack: 40
-  MaxAttackDistance: 95
+  BashAttackRange: 40
+  WebSpitAttack: 27
+  MaxAttackDistance: 40
   AttackWaitTime: 3
+  BaseMoveSpeed: 0
   CurrentContactDamage: 10
   ChosenAttack: 0
 --- !u!195 &8690984407092924431
@@ -16892,8 +16894,8 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 2
-  m_Speed: 20
-  m_Acceleration: 8
+  m_Speed: 30
+  m_Acceleration: 30
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0
