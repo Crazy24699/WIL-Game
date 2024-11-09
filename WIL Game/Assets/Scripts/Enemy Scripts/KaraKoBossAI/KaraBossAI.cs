@@ -60,7 +60,7 @@ public class KaraBossAI : BossBase
     public CoalBarrangeAttackClass CoalAttack;
     public EarthShakerAttackClass EarthAttack;
 
-    public NavMeshAgent NavMeshRef;
+
 
     private Animator KaraAnimations;
 

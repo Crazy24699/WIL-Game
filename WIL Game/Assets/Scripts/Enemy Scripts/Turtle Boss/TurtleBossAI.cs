@@ -12,7 +12,6 @@ public class TurtleBossAI : BossBase
 
     [SerializeField]public BubbleAttack BubbleAttackClass;
     public BucketAttack BucketAttackClass;
-    [SerializeField] private NavMeshAgent NavMeshRef;
 
     [SerializeField]private Vector3 PositionLockCords;
     public Vector3 CurrentVelocity;
@@ -68,7 +67,7 @@ public class TurtleBossAI : BossBase
 
         TurtleAnimation = transform.GetComponentInChildren<Animator>();
         PlayerRef = FindObjectOfType<PlayerInteraction>().gameObject;
-
+        NavMeshRef = GetComponent<NavMeshAgent>();
         Alive = true;
         HealthBar.maxValue = MaxHealth;
         StartupRan = true;
@@ -114,14 +113,6 @@ public class TurtleBossAI : BossBase
         ValueTracking();
 
         BubbleAttackMethod();
-        //if (Input.GetKeyDown(KeyCode.V))
-        //{
-        //    Debug.Log("Hello");
-        //    //BubbleAttackMethod();
-        //    ActiveAttack("BubbleAttack");
-
-        //    //PerformingAttack = true;
-        //}
 
         if (Input.GetKeyDown(KeyCode.I))
         {
@@ -271,8 +262,6 @@ public class TurtleBossAI : BossBase
         public void BubbleShot(int ShotIndex, string NameNumbers)
         {
             
-            //ShootPoint.transform.localPosition = BubbleShootPoints[ShotIndex];
-            //ShootPoint.transform.localRotation = Quaternion.Euler(BubbleShootRotations[ShotIndex]);
 
             GameObject BubbleShotObejct = Instantiate(BubblePrefab, ShootPoint.transform.position, ShootPoint.transform.rotation);
             BubbleShotObejct.GetComponent<ProjectileBase>().LifeStartup(ShootPoint.transform.forward, 300);

@@ -186,7 +186,7 @@ public class PlayerMovement : MonoBehaviour
             if (DashDelayTimer <= 0)
             {
                 DashDirection = Vector2.zero;
-                Debug.Log("all of my dreams");
+                //Debug.Log("all of my dreams");
                 DashDelayTimer = DashSetTime;
             }
         }
@@ -278,7 +278,7 @@ public class PlayerMovement : MonoBehaviour
         if(!PlayerAudioSource.isPlaying && CurrentSpeed > 4)
         {
             PlayerAudioSource.Play();
-            Debug.Log(PlayerAudioSource.isPlaying);
+            //Debug.Log(PlayerAudioSource.isPlaying);
         }
 
         PlayerVelocity.y = (Grounded) ? 0 : PlayerVelocity.y;
