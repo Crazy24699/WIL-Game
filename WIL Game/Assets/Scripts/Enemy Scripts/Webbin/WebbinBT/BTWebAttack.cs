@@ -7,7 +7,6 @@ public class BTWebAttack : BTNodeBase
     private WebbinEnemy WebbinScript;
     private GameObject BossObjectRef;
 
-    private WebbinEnemy.AttackOptions[] AvalibleAttacks;
     private string ChosenAttack;
     public bool BeyondAllAttacks;
 
@@ -34,8 +33,6 @@ public class BTWebAttack : BTNodeBase
         }
         else if (WebbinScript.CanAttack && WebbinScript.AttackChosen)
         {
-            Debug.Log(ChosenAttack);
-            //WebbinScript.RunChosenAttack();
             return NodeStateOptions.Running;
         }
 
@@ -48,20 +45,38 @@ public class BTWebAttack : BTNodeBase
         Debug.Log("Choosing attack");
         float DistanceValue = WebbinScript.CurrentPlayerDistance;
 
-        if (DistanceValue < WebbinScript.WebSpitAttack + 10 && DistanceValue > WebbinScript.StoppingDistance)
+        if(WebbinScript.BashAttack.AttackCoodldownActive && !WebbinScript.WebAttack.AttackCoodldownActive)
+        {
+            WebbinScript.ChosenAttack = WebbinEnemy.AttackOptions.WebSpit;
+            ChosenAttack = "WebSpit";
+            return;
+        }
+        if(WebbinScript.WebAttack.AttackCoodldownActive && !WebbinScript.BashAttack.AttackCoodldownActive)
+        {
+            ChosenAttack = "BashAttack";
+            Debug.Log("dark");
+            WebbinScript.ChosenAttack = WebbinEnemy.AttackOptions.RollBash;
+            return;
+        }
+
+        if (DistanceValue < WebbinScript.WebSpitRange && DistanceValue > WebbinScript.StoppingDistance)
         {
             ChosenAttack = "Webspit";
-
+            Debug.Log("dark");
             WebbinScript.ChosenAttack = WebbinEnemy.AttackOptions.WebSpit;
         }
 
-        if (DistanceValue < WebbinScript.BashAttackRange + 25 && DistanceValue > WebbinScript.WebSpitAttack)
+        if (DistanceValue < WebbinScript.BashAttackRange && DistanceValue > WebbinScript.WebSpitRange)
         {
-            ChosenAttack = "GroundSlam";
+            ChosenAttack = "RollBash";
+            Debug.Log("and i rolled a 1");
             WebbinScript.ChosenAttack = WebbinEnemy.AttackOptions.RollBash;
         }
 
-        WebbinScript.AttackChosen = true;
+        if(ChosenAttack!=null)
+        {
+            WebbinScript.AttackChosen = true;
+        }
         return;
     }
 

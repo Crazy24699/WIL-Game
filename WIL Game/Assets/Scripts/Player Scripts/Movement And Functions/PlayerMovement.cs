@@ -186,7 +186,6 @@ public class PlayerMovement : MonoBehaviour
             if (DashDelayTimer <= 0)
             {
                 DashDirection = Vector2.zero;
-                //Debug.Log("all of my dreams");
                 DashDelayTimer = DashSetTime;
             }
         }

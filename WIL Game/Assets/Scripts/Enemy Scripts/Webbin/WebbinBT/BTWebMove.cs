@@ -27,6 +27,8 @@ public class BTWebMove : BTNodeBase
 
         Debug.Log(BeyondAllAttacks);
 
+        StoppingDistance();
+
         if (CatchingPlayer)
         {
             if (!SpeedActive)
@@ -51,8 +53,8 @@ public class BTWebMove : BTNodeBase
         if (WebbinScript.CurrentPlayerDistance <= WebbinScript.MaxAttackDistance)
         {
             Debug.Log("Unleased now essense of love from above");
-            WebbinScript.NavMeshRef.isStopped = true;
-            WebbinScript.NavMeshRef.ResetPath();
+            WebbinScript.HandleMovingState(false);
+
             Debug.Log("Dance");
         }
         else if (WebbinScript.CurrentPlayerDistance > WebbinScript.MaxAttackDistance)
@@ -61,10 +63,10 @@ public class BTWebMove : BTNodeBase
             {
                 WebbinScript.NavMeshRef.speed = WebbinScript.BaseMoveSpeed;
             }
-            WebbinScript.NavMeshRef.isStopped = false;
+            WebbinScript.HandleMovingState(true);
             Debug.Log("ive made our hellbent mistake");
             WebbinScript.NavMeshRef.SetDestination(WebbinScript.PlayerRef.transform.position);
-            Debug.Log(WebbinScript.NavMeshRef.destination);
+
         }
     }
 

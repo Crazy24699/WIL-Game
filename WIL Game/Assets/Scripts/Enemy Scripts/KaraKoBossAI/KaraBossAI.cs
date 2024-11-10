@@ -377,21 +377,6 @@ public class KaraBossAI : BossBase
             }
         }
 
-        //public IEnumerator CoalBarrage()
-        //{
-
-        //    for (int i = 0; i < 2; i++)
-        //    {
-        //        for (int j = 0; j < MorterPoints.Length; j++)
-        //        {
-        //            SpawnCoal(MorterPoints[j].gameObject, j + 0 + i);
-        //            yield return new WaitForSeconds(0.15f);
-        //        }
-        //        yield return new WaitForSeconds(1.25f);
-        //    }
-        //    AttackCooldownActive = true;
-        //}
-
         private void SpawnCoal(GameObject FirePoint, int SpawnNumer)
         {
             GameObject SpawnedObject = Instantiate(CoalObject, FirePoint.transform.position, FirePoint.transform.rotation);

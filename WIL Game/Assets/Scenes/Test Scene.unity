@@ -10605,11 +10605,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 958757144226772664, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.00000003677668
+      value: 0.00000003737445
       objectReference: {fileID: 0}
     - target: {fileID: 958757144226772664, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000005612583
+      value: 0.0000000057038103
       objectReference: {fileID: 0}
     - target: {fileID: 958757144226772664, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.y
@@ -10659,6 +10659,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1242344083140566919, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1350814672311814053, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -10673,11 +10677,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1350814672311814053, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.000000026368298
+      value: 0.00000007089733
       objectReference: {fileID: 0}
     - target: {fileID: 1350814672311814053, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.0000000032543774
+      value: 0.0000000087501535
       objectReference: {fileID: 0}
     - target: {fileID: 1350814672311814053, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.y
@@ -10685,7 +10689,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1350814672311814053, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.12249068
+      value: -0.122490674
       objectReference: {fileID: 0}
     - target: {fileID: 1777714556686848606, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_Name
@@ -10742,6 +10746,14 @@ PrefabInstance:
     - target: {fileID: 4512246260573951975, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_FollowOffset.z
       value: -41.64
+      objectReference: {fileID: 0}
+    - target: {fileID: 6744221188821249932, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
+      propertyPath: MaxHealth
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 6744221188821249932, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6744221188821249932, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: PlayerSounds.Array.size
@@ -10917,13 +10929,25 @@ MonoBehaviour:
   CurrentPlayerDistance: 0
   StoppingDistance: 0
   ActionLockoutTime: 0
-  AttackLockoutTime: 0
+  LockoutTimer: 0
   BashAttackRange: 0
-  WebSpitAttack: 0
+  WebSpitRange: 0
   MaxAttackDistance: 0
   AttackWaitTime: 0
   BaseMoveSpeed: 0
+  CurrentAttackDistance: 0
   CurrentContactDamage: 0
+  WebAttack:
+    AttackCoodldownActive: 0
+    AttackActive: 0
+    ActionLockoutTime: 0
+    SpitCounter: 0
+  BashAttack:
+    AttackCoodldownActive: 0
+    AttackActive: 0
+    ActionLockoutTime: 0
+    StartingPosition: {x: 0, y: 0, z: 0}
+    EndingPosition: {x: 0, y: 0, z: 0}
   ChosenAttack: 0
 --- !u!4 &1668351616
 Transform:
@@ -16876,13 +16900,25 @@ MonoBehaviour:
   CurrentPlayerDistance: 0
   StoppingDistance: 20
   ActionLockoutTime: 0
-  AttackLockoutTime: 0
-  BashAttackRange: 40
-  WebSpitAttack: 27
-  MaxAttackDistance: 40
+  LockoutTimer: 0
+  BashAttackRange: 65
+  WebSpitRange: 0
+  MaxAttackDistance: 65
   AttackWaitTime: 3
   BaseMoveSpeed: 0
+  CurrentAttackDistance: 0
   CurrentContactDamage: 10
+  WebAttack:
+    AttackCoodldownActive: 0
+    AttackActive: 0
+    ActionLockoutTime: 0
+    SpitCounter: 0
+  BashAttack:
+    AttackCoodldownActive: 0
+    AttackActive: 0
+    ActionLockoutTime: 1.5
+    StartingPosition: {x: 0, y: 0, z: 0}
+    EndingPosition: {x: 0, y: 0, z: 0}
   ChosenAttack: 0
 --- !u!195 &8690984407092924431
 NavMeshAgent:
@@ -16921,7 +16957,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -16951,7 +16987,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112

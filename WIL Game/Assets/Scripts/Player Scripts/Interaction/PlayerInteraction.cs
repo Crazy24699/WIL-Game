@@ -193,6 +193,16 @@ public class PlayerInteraction : MonoBehaviour
         {
             HandleHealth(-1);
         }
+        
+    }
+
+    public void TakeHit(int DamageTaken)
+    {
+        //hit effects
+        //hit sound
+        //Applied Knockback
+        //immunity timer
+        HandleHealth(DamageTaken);
     }
 
     public void HandleHealth(int HealthChange)
@@ -209,6 +219,11 @@ public class PlayerInteraction : MonoBehaviour
         CurrentHealth += HealthChange;
         DeathCheck();
         HandleHealthChange();
+    }
+
+    private IEnumerator ImmunityTimer()
+    {
+        yield return new WaitForSeconds(2.75f);
     }
 
     private void HandleHealthChange()
