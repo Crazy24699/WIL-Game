@@ -9,7 +9,7 @@ public class BossBase : MonoBehaviour
     protected int MaxHealth;
     [SerializeField]protected int CurrentHealth;
 
-public GameObject PlayerRef;
+    public GameObject PlayerRef;
     [SerializeField] private GameObject EndZoneArea;
 
 

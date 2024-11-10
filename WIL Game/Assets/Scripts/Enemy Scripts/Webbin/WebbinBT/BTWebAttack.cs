@@ -19,6 +19,10 @@ public class BTWebAttack : BTNodeBase
     public override NodeStateOptions RunLogicAndState()
     {
         Debug.Log("The fuckening");
+        if(WebbinScript.CanAttack)
+        {
+            ChosenAttack = null;
+        }
         BeyondAllAttacks = WebbinScript.BeyondMaxRange();
         if (!WebbinScript.EngagePlayer) { return NodeStateOptions.Failed; }
         if (BeyondAllAttacks)
@@ -28,6 +32,7 @@ public class BTWebAttack : BTNodeBase
 
         if (WebbinScript.CanAttack && !WebbinScript.AttackChosen)
         {
+            Debug.Log("here what we are going to do ");
             ChooseAttack();
             return NodeStateOptions.Passed;
         }
@@ -49,6 +54,7 @@ public class BTWebAttack : BTNodeBase
         {
             WebbinScript.ChosenAttack = WebbinEnemy.AttackOptions.WebSpit;
             ChosenAttack = "WebSpit";
+            WebbinScript.CurrentAttackDistance = WebbinScript.WebSpitRange;
             return;
         }
         if(WebbinScript.WebAttack.AttackCoodldownActive && !WebbinScript.BashAttack.AttackCoodldownActive)
@@ -56,14 +62,16 @@ public class BTWebAttack : BTNodeBase
             ChosenAttack = "BashAttack";
             Debug.Log("dark");
             WebbinScript.ChosenAttack = WebbinEnemy.AttackOptions.RollBash;
+            WebbinScript.CurrentAttackDistance = WebbinScript.BashAttackRange;
             return;
         }
 
         if (DistanceValue < WebbinScript.WebSpitRange && DistanceValue > WebbinScript.StoppingDistance)
         {
             ChosenAttack = "Webspit";
-            Debug.Log("dark");
+            Debug.Log("chosen web spit");
             WebbinScript.ChosenAttack = WebbinEnemy.AttackOptions.WebSpit;
+            WebbinScript.CurrentAttackDistance = WebbinScript.WebSpitRange;
         }
 
         if (DistanceValue < WebbinScript.BashAttackRange && DistanceValue > WebbinScript.WebSpitRange)
@@ -71,9 +79,10 @@ public class BTWebAttack : BTNodeBase
             ChosenAttack = "RollBash";
             Debug.Log("and i rolled a 1");
             WebbinScript.ChosenAttack = WebbinEnemy.AttackOptions.RollBash;
+            WebbinScript.CurrentAttackDistance = WebbinScript.BashAttackRange;
         }
 
-        if(ChosenAttack!=null)
+        if (ChosenAttack!=null)
         {
             WebbinScript.AttackChosen = true;
         }

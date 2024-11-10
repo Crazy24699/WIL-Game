@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static WebbinEnemy;
 
 public class WebbinEnemy : BossBase
 {
@@ -22,6 +23,7 @@ public class WebbinEnemy : BossBase
     [SerializeField] private float ActionLockoutTime;
     [SerializeField] private float LockoutTimer;
 
+
     [Space(2)]
     public float BashAttackRange;
     public float WebSpitRange;
@@ -36,7 +38,7 @@ public class WebbinEnemy : BossBase
     [Space(5), Header("Scripts")]
     public WebSpit WebAttack;
     public RollBash BashAttack;
-
+    private Animator WebbinAnimations;
 
 
     //Script area 
@@ -50,29 +52,10 @@ public class WebbinEnemy : BossBase
 
     public AttackOptions ChosenAttack;
 
-    private void SetMoveState(bool MoveState)
-    {
-        CanMove = MoveState;
-        switch (MoveState)
-        {
-            case true:
-                NavMeshRef.speed = BaseMoveSpeed;
-                NavMeshRef.isStopped = false;
-                break;
-
-            case false:
-                NavMeshRef.enabled = true;
-                NavMeshRef.speed = 0;
-                NavMeshRef.ResetPath();
-                NavMeshRef.isStopped = true;
-                //StartCoroutine(MoveDelay());
-                break;
-        }
-    }
-
     private void Start()
     {
         BossStartup();
+        WebbinAnimations = transform.GetComponentInChildren<Animator>();
     }
 
     public override void BossStartup()
@@ -181,6 +164,7 @@ public class WebbinEnemy : BossBase
             case false:
                 NavMeshRef.isStopped = true;
                 NavMeshRef.ResetPath();
+                NavMeshRef.speed = 0;
                 break;
         }
     }
@@ -197,10 +181,11 @@ public class WebbinEnemy : BossBase
         {
             RunChosenAttack();
         }
-        if(ChosenAttack==AttackOptions.RollBash && CheckRollAttack())
+        if (ChosenAttack == AttackOptions.RollBash && CheckRollAttack()) 
         {
             BashAttack.AttackActive = false;
             PerformingAttack = false;
+            StartCoroutine(BashAttack.AttackCooldown());
         }
         HandleLockoutTime();
     }
@@ -213,18 +198,18 @@ public class WebbinEnemy : BossBase
         switch (ChosenAttack)
         {
             case AttackOptions.WebSpit:
+                if (WebAttack.AttackActive) { return; }
                 ActionLockoutTime = WebAttack.ActionLockoutTime;
                 ActionAvaliable = false;
                 PerformingAttack = true;
-                WebAttack.AttackPerform();
+                WebbinAnimations.SetTrigger("WebAttack");
+                WebAttack.AttackActive = true;
                 break;
 
             case AttackOptions.RollBash:
                 ActionLockoutTime = BashAttack.ActionLockoutTime;
                 ActionAvaliable = false;
                 PerformingAttack = true;
-
-                //HandleMovingState(false);
                 BashAttack.AttackPerform();
                 break;
         }
@@ -238,8 +223,10 @@ public class WebbinEnemy : BossBase
         HandleMovingState(false);
         PerformingAttack = false;
         ActionAvaliable = false;
+
         BashAttack.AttackActive = false;
         NavMeshRef.SetDestination(transform.position);
+        StartCoroutine(BashAttack.AttackCooldown());
     }
 
 
@@ -279,7 +266,8 @@ public class WebbinEnemy : BossBase
 
         public int SpitCounter;
         private WebbinEnemy ParentScriptLink;
-
+        [SerializeField] private Transform AttackPoint;
+        [SerializeField] private GameObject WebShotPrefab;
 
         public void AttackStartup(WebbinEnemy LinkedScript)
         {
@@ -293,8 +281,11 @@ public class WebbinEnemy : BossBase
                 yield return new WaitForSeconds(0.78f);
                 //Play animation
                 //fire web spit
+                GameObject SpawnedWebShot= Instantiate(WebShotPrefab, AttackPoint.transform.position, Quaternion.identity);
+                SpawnedWebShot.GetComponent<ProjectileBase>().LifeStartup(AttackPoint.transform.forward, 125f);
+
                 SpitCounter++;
-                if (SpitCounter == 3)
+                if (SpitCounter >= 5)
                 {
                     AttackActive = false;
                     ParentScriptLink.PerformingAttack = false;
@@ -303,15 +294,12 @@ public class WebbinEnemy : BossBase
             }
         }
 
-        private IEnumerator AttackCooldown()
-        {
-            yield return new WaitForSeconds(3.5f);
-        }
 
-        public void AttackPerform()
+        public IEnumerator AttackCooldown()
         {
-            
-            Debug.Log("worthy of affection");
+            AttackCoodldownActive = true;
+            yield return new WaitForSeconds(7.5f);
+            AttackCoodldownActive = false;
         }
     }
 
@@ -358,9 +346,11 @@ public class WebbinEnemy : BossBase
             return EndingPosition;
         }
 
-        private IEnumerator AttackCooldown()
+        public IEnumerator AttackCooldown()
         {
-            yield return new WaitForSeconds(5.5f);
+            AttackCoodldownActive = true;
+            yield return new WaitForSeconds(10.5f);
+            AttackCoodldownActive = false;
         }
 
     }

@@ -23,12 +23,21 @@ public class BTWebMove : BTNodeBase
         if (!WebbinScript.EngagePlayer) { return NodeStateOptions.Failed; }
         BeyondAllAttacks = WebbinScript.BeyondMaxRange();
         CatchingPlayer = BeyondAllAttacks && !CatchingPlayer;
-        //if (WebbinScript.CanAttack) { return NodeStateOptions.Failed; }
+
+        if (WebbinScript.AttackChosen && WebbinScript.CurrentPlayerDistance < WebbinScript.CurrentAttackDistance)  
+        {
+            WebbinScript.HandleMovingState(false);
+            return NodeStateOptions.Failed; 
+        }
 
         Debug.Log(BeyondAllAttacks);
 
         StoppingDistance();
-
+        if (WebbinScript.CurrentPlayerDistance > WebbinScript.CurrentAttackDistance)
+        {
+            WebbinScript.NavMeshRef.SetDestination(WebbinScript.PlayerRef.transform.position);
+            return NodeStateOptions.Running;
+        }
         if (CatchingPlayer)
         {
             if (!SpeedActive)
@@ -50,7 +59,8 @@ public class BTWebMove : BTNodeBase
 
     private void StoppingDistance()
     {
-        if (WebbinScript.CurrentPlayerDistance <= WebbinScript.MaxAttackDistance)
+
+        if (WebbinScript.CurrentPlayerDistance <= WebbinScript.StoppingDistance)
         {
             Debug.Log("Unleased now essense of love from above");
             WebbinScript.HandleMovingState(false);

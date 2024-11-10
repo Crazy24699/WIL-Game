@@ -15,7 +15,12 @@ public class WebbinAnimLink : MonoBehaviour
 
     private void StartAttackCooldown()
     {
+        WebbinScript.StartCoroutine(WebbinScript.WebAttack.AttackCooldown());
+    }
 
+    private void StartWebBarrage()
+    {
+        StartCoroutine(WebbinScript.WebAttack.SpitBurst());
     }
 
     private void StartActionDelay()
