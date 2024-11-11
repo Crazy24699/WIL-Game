@@ -16,12 +16,14 @@ public class WebbinAnimLink : MonoBehaviour
     private void StartAttackCooldown()
     {
         WebbinScript.StartCoroutine(WebbinScript.WebAttack.AttackCooldown());
+        StartCoroutine(WebbinScript.AttackCooldown());
     }
 
     private void StartWebBarrage()
     {
         StartCoroutine(WebbinScript.WebAttack.SpitBurst());
         WebbinScript.HandleMovingState(false);
+        Debug.Log("Web barrage");
     }
 
     private void StartActionDelay()

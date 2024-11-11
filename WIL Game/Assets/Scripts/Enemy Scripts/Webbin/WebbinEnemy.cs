@@ -16,6 +16,7 @@ public class WebbinEnemy : BossBase
     public bool AttackChosen;
     public bool CanAttack = true;
     public bool BeyondCurrentAttackRange;
+    public bool Override;
 
     private bool ApplySlowdown = false;
 
@@ -96,7 +97,7 @@ public class WebbinEnemy : BossBase
 
     private void FixedUpdate()
     {
-        if (!Alive) { return; }
+        if (!Alive || Override) { return; }
 
         UpdateDistance();
         if (ActionAvaliable && StartupRan)
@@ -152,6 +153,7 @@ public class WebbinEnemy : BossBase
     public IEnumerator ActionDelay()
     {
         yield return new WaitForSeconds(2.52f);
+        ActionAvaliable = true;
     }
 
     public void HandleEnemySpeed(bool OutOfRange)
@@ -191,8 +193,15 @@ public class WebbinEnemy : BossBase
         return !(CurrentPlayerDistance < MaxAttackDistance);
     }
 
+
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            WebbinAnimations.SetTrigger("WebAttack");
+
+        }
+        if (Override) { return; }
         UpdateDistance();
         if (AttackChosen && ActionAvaliable && CanAttack)
         {
@@ -226,7 +235,6 @@ public class WebbinEnemy : BossBase
                 ActionAvaliable = false;
                 PerformingAttack = true;
                 WebbinAnimations.SetTrigger("WebAttack");
-                WebAttack.AttackActive = true;
                 break;
 
             case AttackOptions.RollBash:
@@ -254,7 +262,7 @@ public class WebbinEnemy : BossBase
         StartCoroutine(AttackCooldown());
     }
 
-    private IEnumerator AttackCooldown()
+    public IEnumerator AttackCooldown()
     {
         yield return new WaitForSeconds(5.5f);
         CanAttack = true;
@@ -305,6 +313,9 @@ public class WebbinEnemy : BossBase
 
         public IEnumerator SpitBurst()
         {
+            
+            Debug.Log("Spit");
+            AttackActive = true;
             while (AttackActive)
             {
                 yield return new WaitForSeconds(0.05f);
@@ -312,6 +323,8 @@ public class WebbinEnemy : BossBase
                 //fire web spit
                 GameObject SpawnedWebShot= Instantiate(WebShotPrefab, AttackPoint.transform.position, Quaternion.identity);
                 SpawnedWebShot.GetComponent<ProjectileBase>().LifeStartup(AttackPoint.transform.forward, 125f);
+                Debug.Log("this spit");
+
 
                 SpitCounter++;
                 if (SpitCounter >= 5)
