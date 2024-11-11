@@ -193,6 +193,22 @@ public class WebbinEnemy : BossBase
         return !(CurrentPlayerDistance < MaxAttackDistance);
     }
 
+    private void HandleAnimationSwitching()
+    {
+        if (NavMeshRef.velocity.magnitude > 2)
+        {
+            WebbinAnimations.SetBool("Moving", true);
+            return;
+        }
+        else if(NavMeshRef.velocity.magnitude<=1)
+        {
+            WebbinAnimations.SetBool("Moving", false);
+            return;
+        }
+
+
+
+    }
 
     private void Update()
     {
@@ -242,6 +258,7 @@ public class WebbinEnemy : BossBase
                 ActionAvaliable = false;
                 PerformingAttack = true;
                 BashAttack.AttackPerform();
+                WebbinAnimations.SetTrigger("RollAttack");
                 break;
         }
         AttackChosen = true;

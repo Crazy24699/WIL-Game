@@ -12,6 +12,7 @@ public class SeanAI : BaseEnemy
     private bool KeepAttackDistance = false;
     [SerializeField]private bool Stalking = false;
     private bool RetreatDelayActive = false;
+    public bool AttackUp=false;
 
     //Stalking Floats
     [SerializeField] private float MaxStalkDistance;
@@ -77,7 +78,7 @@ public class SeanAI : BaseEnemy
             //StartCoroutine(AttackCooldown());
             StartCoroutine(RetreatDelay());
         }
-        
+        AttackUp = CanAttack;
     }
 
     private void Update()
