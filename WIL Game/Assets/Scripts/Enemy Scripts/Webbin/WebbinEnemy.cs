@@ -234,6 +234,8 @@ public class WebbinEnemy : BossBase
         }
         HandleLockoutTime();
         RotateToTarget();
+
+        HandleAnimationSwitching();
     }
 
 
@@ -281,6 +283,7 @@ public class WebbinEnemy : BossBase
 
     public IEnumerator AttackCooldown()
     {
+        Debug.Log("cant attack");
         yield return new WaitForSeconds(5.5f);
         CanAttack = true;
     }
