@@ -9,19 +9,22 @@ public class WebbinEnemy : BossBase
 {
     [Space(2), Header("Bools")]
     public bool PerformingAttack;
-    public bool CustomLocationChosen = false;
     public bool CanMove=true;
     public bool ActionAvaliable = true;
     public bool EngagePlayer = false;
     public bool ActionDelayActive;
     public bool AttackChosen;
     public bool CanAttack = true;
+    public bool BeyondCurrentAttackRange;
+
+    private bool ApplySlowdown = false;
 
     [Space(5), Header("Floats")]
     public float CurrentPlayerDistance;
     public float StoppingDistance;
     [SerializeField] private float ActionLockoutTime;
     [SerializeField] private float LockoutTimer;
+    public float offset;
 
 
     [Space(2)]
@@ -71,6 +74,8 @@ public class WebbinEnemy : BossBase
 
         WebAttack.AttackStartup(this);
         BashAttack.AttackStartup(this);
+
+        StartupRan = true;
     }
 
     private void CreateBehaviourTree()
@@ -93,12 +98,22 @@ public class WebbinEnemy : BossBase
     {
         if (!Alive) { return; }
 
-        if (ActionAvaliable)
+        UpdateDistance();
+        if (ActionAvaliable && StartupRan)
         {
             RootNode.RunLogicAndState();
         }
 
+        BeyondCurrentAttackRange = TrackAttackRange();
+    }
 
+    private bool TrackAttackRange()
+    {
+        if (CurrentPlayerDistance>CurrentAttackDistance && AttackChosen)
+        {
+            return true;
+        }
+        return false;
     }
 
     private bool CheckRollAttack()
@@ -131,6 +146,7 @@ public class WebbinEnemy : BossBase
 
     private void UpdateDistance()
     {
+        Debug.Log("pay me wher ei belong");
         CurrentPlayerDistance = Vector3.Distance(PlayerRef.transform.position, transform.position);
     }
     public IEnumerator ActionDelay()
@@ -152,9 +168,9 @@ public class WebbinEnemy : BossBase
         }
     }
 
-    public void HandleMovingState(bool StopMoving)
+    public void HandleMovingState(bool Moving)
     {
-        switch (StopMoving)
+        switch (Moving)
         {
             case true:
                 NavMeshRef.isStopped = false;
@@ -165,6 +181,7 @@ public class WebbinEnemy : BossBase
                 NavMeshRef.isStopped = true;
                 NavMeshRef.ResetPath();
                 NavMeshRef.speed = 0;
+                NavMeshRef.velocity = Vector3.zero;
                 break;
         }
     }
@@ -177,18 +194,24 @@ public class WebbinEnemy : BossBase
     private void Update()
     {
         UpdateDistance();
-        if (AttackChosen && ActionAvaliable)
+        if (AttackChosen && ActionAvaliable && CanAttack)
         {
             RunChosenAttack();
         }
-        if (ChosenAttack == AttackOptions.RollBash && CheckRollAttack()) 
+        if (ChosenAttack == AttackOptions.RollBash && CheckRollAttack() && BashAttack.AttackActive) 
         {
             BashAttack.AttackActive = false;
             PerformingAttack = false;
             StartCoroutine(BashAttack.AttackCooldown());
+            BashAttack.DisableCollider();
+            //Debug.Log("tales as old as time you know what i mean begs you the question what are theese jokers in the court you are holding");
+            StartCoroutine(AttackCooldown());
         }
         HandleLockoutTime();
+        RotateToTarget();
     }
+
+
 
     private void RunChosenAttack()
     {
@@ -215,7 +238,7 @@ public class WebbinEnemy : BossBase
         }
         AttackChosen = true;
         LockoutTimer = ActionLockoutTime;
-
+        CanAttack = false;
     }
 
     public void BashHit()
@@ -227,9 +250,15 @@ public class WebbinEnemy : BossBase
         BashAttack.AttackActive = false;
         NavMeshRef.SetDestination(transform.position);
         StartCoroutine(BashAttack.AttackCooldown());
+        BashAttack.DisableCollider();
+        StartCoroutine(AttackCooldown());
     }
 
-
+    private IEnumerator AttackCooldown()
+    {
+        yield return new WaitForSeconds(5.5f);
+        CanAttack = true;
+    }
 
     private void OnTriggerEnter(Collider Collision)
     {
@@ -278,7 +307,7 @@ public class WebbinEnemy : BossBase
         {
             while (AttackActive)
             {
-                yield return new WaitForSeconds(0.78f);
+                yield return new WaitForSeconds(0.05f);
                 //Play animation
                 //fire web spit
                 GameObject SpawnedWebShot= Instantiate(WebShotPrefab, AttackPoint.transform.position, Quaternion.identity);
@@ -289,6 +318,7 @@ public class WebbinEnemy : BossBase
                 {
                     AttackActive = false;
                     ParentScriptLink.PerformingAttack = false;
+                    SpitCounter = 0;
                     yield break;
                 }
             }
@@ -301,6 +331,16 @@ public class WebbinEnemy : BossBase
             yield return new WaitForSeconds(7.5f);
             AttackCoodldownActive = false;
         }
+        
+    }
+
+    private void RotateToTarget()
+    {
+        Vector3 TargetDirection = PlayerRef.transform.position - this.transform.position;
+        TargetDirection.y = 0.0f;
+        Quaternion TargetRotation = Quaternion.LookRotation(TargetDirection + new Vector3(offset, 0, 0));
+
+        this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, TargetRotation, (35f + 100) * Time.deltaTime);
     }
 
     [System.Serializable]
@@ -314,6 +354,7 @@ public class WebbinEnemy : BossBase
         private WebbinEnemy ParentScriptLink;
         public Vector3 StartingPosition;
         public Vector3 EndingPosition;
+        public Collider RollBashCollider;
 
 
         public void AttackStartup(WebbinEnemy LinkedScript)
@@ -325,13 +366,24 @@ public class WebbinEnemy : BossBase
             if (AttackActive) { return; }
             Debug.Log("where i bleong");
             EndingPosition = EndBashLocation();
+            
             ParentScriptLink.NavMeshRef.SetDestination(EndingPosition);
             ParentScriptLink.NavMeshRef.speed = ParentScriptLink.BaseMoveSpeed * 1.75f;
+            
+            EnableCollider();
 
             AttackActive = true;
         }
 
-        
+        public void EnableCollider()
+        {
+            RollBashCollider.enabled = true;
+        }
+
+        public void DisableCollider()
+        {
+            RollBashCollider.enabled = false;
+        }
 
         public Vector3 EndBashLocation()
         {
@@ -349,7 +401,7 @@ public class WebbinEnemy : BossBase
         public IEnumerator AttackCooldown()
         {
             AttackCoodldownActive = true;
-            yield return new WaitForSeconds(10.5f);
+            yield return new WaitForSeconds(12.5f);
             AttackCoodldownActive = false;
         }
 

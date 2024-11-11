@@ -26,15 +26,28 @@ public class BTWebMove : BTNodeBase
 
         if (WebbinScript.AttackChosen && WebbinScript.CurrentPlayerDistance < WebbinScript.CurrentAttackDistance)  
         {
+            Debug.Log("king and queen");
             WebbinScript.HandleMovingState(false);
             return NodeStateOptions.Failed; 
         }
 
         Debug.Log(BeyondAllAttacks);
 
+        if(WebbinScript.CurrentPlayerDistance>WebbinScript.StoppingDistance)
+        {
+            Debug.Log("What the fuck");
+            if (WebbinScript.NavMeshRef.speed <= 0)
+            {
+                WebbinScript.HandleMovingState(true);
+            }
+            WebbinScript.NavMeshRef.SetDestination(WebbinScript.PlayerRef.transform.position);
+            return NodeStateOptions.Running;
+        }
+
         StoppingDistance();
         if (WebbinScript.CurrentPlayerDistance > WebbinScript.CurrentAttackDistance)
         {
+            Debug.Log("deal me in and let me play a hand");
             WebbinScript.NavMeshRef.SetDestination(WebbinScript.PlayerRef.transform.position);
             return NodeStateOptions.Running;
         }

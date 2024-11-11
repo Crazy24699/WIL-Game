@@ -18,13 +18,15 @@ public class BTWebAttack : BTNodeBase
 
     public override NodeStateOptions RunLogicAndState()
     {
-        Debug.Log("The fuckening");
-        if(WebbinScript.CanAttack)
-        {
-            ChosenAttack = null;
-        }
+        //if(WebbinScript.CanAttack)
+        //{
+        //    ChosenAttack = null;
+        //}
+
         BeyondAllAttacks = WebbinScript.BeyondMaxRange();
-        if (!WebbinScript.EngagePlayer) { return NodeStateOptions.Failed; }
+        if (!WebbinScript.EngagePlayer || !WebbinScript.CanAttack) { return NodeStateOptions.Failed; }
+
+        Debug.Log("The fuckening");
         if (BeyondAllAttacks)
         {
             return NodeStateOptions.Failed;
@@ -55,6 +57,7 @@ public class BTWebAttack : BTNodeBase
             WebbinScript.ChosenAttack = WebbinEnemy.AttackOptions.WebSpit;
             ChosenAttack = "WebSpit";
             WebbinScript.CurrentAttackDistance = WebbinScript.WebSpitRange;
+            WebbinScript.AttackChosen = true;
             return;
         }
         if(WebbinScript.WebAttack.AttackCoodldownActive && !WebbinScript.BashAttack.AttackCoodldownActive)
@@ -63,6 +66,7 @@ public class BTWebAttack : BTNodeBase
             Debug.Log("dark");
             WebbinScript.ChosenAttack = WebbinEnemy.AttackOptions.RollBash;
             WebbinScript.CurrentAttackDistance = WebbinScript.BashAttackRange;
+            WebbinScript.AttackChosen = true;
             return;
         }
 
@@ -81,6 +85,7 @@ public class BTWebAttack : BTNodeBase
             WebbinScript.ChosenAttack = WebbinEnemy.AttackOptions.RollBash;
             WebbinScript.CurrentAttackDistance = WebbinScript.BashAttackRange;
         }
+        Debug.Log(ChosenAttack);
 
         if (ChosenAttack!=null)
         {
