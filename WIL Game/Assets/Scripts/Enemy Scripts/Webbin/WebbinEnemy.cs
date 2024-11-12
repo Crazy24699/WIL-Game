@@ -25,7 +25,7 @@ public class WebbinEnemy : BossBase
     public float StoppingDistance;
     [SerializeField] private float ActionLockoutTime;
     [SerializeField] private float LockoutTimer;
-    public float offset;
+    public float RotationOffset;
 
 
     [Space(2)]
@@ -371,7 +371,7 @@ public class WebbinEnemy : BossBase
     {
         Vector3 TargetDirection = PlayerRef.transform.position - this.transform.position;
         TargetDirection.y = 0.0f;
-        Quaternion TargetRotation = Quaternion.LookRotation(TargetDirection + new Vector3(offset, 0, 0));
+        Quaternion TargetRotation = Quaternion.LookRotation(TargetDirection + new Vector3(RotationOffset, 0, 0));
 
         this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, TargetRotation, (35f + 100) * Time.deltaTime);
     }

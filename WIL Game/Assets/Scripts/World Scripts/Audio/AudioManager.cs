@@ -8,7 +8,7 @@ public class AudioManager : MonoBehaviour
     {
         foreach (Sound CurrentSound in Sounds)
         {
-            CurrentSound.Source = gameObject.AddComponent<AudioSource>();
+            //CurrentSound.Source = gameObject.AddComponent<AudioSource>();
             CurrentSound.Source.clip = CurrentSound.SoundClip;
 
             CurrentSound.Source.volume = CurrentSound.Volume;

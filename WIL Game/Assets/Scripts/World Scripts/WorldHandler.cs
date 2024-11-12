@@ -7,7 +7,7 @@ using UnityEngine.Events;
 
 public class WorldHandler : MonoBehaviour
 {
-
+    public UnityEvent GamePause;
     public UnityEvent RunLoadingScreen;
     [SerializeField] private GameObject LoadingScreenPanel;
     [Space(1.2f), Header(" ")]
@@ -33,6 +33,10 @@ public class WorldHandler : MonoBehaviour
 
     void Start()
     {
+        if (AllSpires.Count == 0)
+        {
+
+        }
         if (RunLoadscreen)
         {
             RunLoadingScreen.AddListener(() => StartCoroutine(HandleLoadingScreen()));

@@ -105,6 +105,9 @@ public class TrashBag : BTBaseEnemy
 
         if (!Alive) { return; }
 
+        CheckSoundPlayState();
+
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             FireProjectile();
@@ -123,10 +126,16 @@ public class TrashBag : BTBaseEnemy
         if (NavMeshRef.velocity.magnitude > 1)
         {
             TrashBag_Animations.SetBool("Moving", true);
+            EnemyAudioManager.PlaySound(EnemySoundManager.SoundOptions.Moving);
         }
         else if (NavMeshRef.velocity.magnitude <= 1)
         {
             TrashBag_Animations.SetBool("Moving", false);
+            if (!Attacking)
+            {
+                EnemyAudioManager.PlaySound(EnemySoundManager.SoundOptions.Silence);
+            }
+
             //Debug.Log("It could end this fever dream");
         }
 
@@ -155,6 +164,7 @@ public class TrashBag : BTBaseEnemy
     {
         GameObject SpawnedWebShot = Instantiate(WebShot, FirePoint.transform.position, Quaternion.identity);
         SpawnedWebShot.GetComponent<ProjectileBase>().LifeStartup(FirePoint.transform.forward, 125f);
+        EnemyAudioManager.PlaySound(EnemySoundManager.SoundOptions.Attack);
     }
 
     private void HandleAttackSequence()
@@ -378,6 +388,7 @@ public class TrashBag : BTBaseEnemy
                 ObjectCollider2.enabled = true;
                 StartCoroutine(AttackCooldown());
                 Debug.Log("The devils take at midnight");
+                EnemyAudioManager.PlaySound(EnemySoundManager.SoundOptions.Silence);
                 //Debug.Log("monser");
             }
             

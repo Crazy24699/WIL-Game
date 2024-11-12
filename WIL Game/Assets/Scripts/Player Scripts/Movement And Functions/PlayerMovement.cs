@@ -69,6 +69,7 @@ public class PlayerMovement : MonoBehaviour
     private bool CanDash = false;
     [SerializeField]public bool Grounded;
     [SerializeField] private bool IsMoving;
+    public bool StunLocked = false;
 
     // Start is called before the first frame update
     void Start()
@@ -97,7 +98,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(Input.GetKey(KeyCode.L))
+        if (StunLocked) { return; }
+
+        if (Input.GetKey(KeyCode.L))
         {
             Instantiate(HitParticle, transform.position, Quaternion.identity);
         }
@@ -120,6 +123,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (StunLocked) { return; }
         TrackPlayerMovement();
 
         DashResetTimer();
