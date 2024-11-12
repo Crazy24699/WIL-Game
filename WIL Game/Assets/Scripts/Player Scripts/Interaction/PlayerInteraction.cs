@@ -34,9 +34,15 @@ public class PlayerInteraction : MonoBehaviour
     public ShardBlocker CurrentShardBlocker;
 
 
-    public GameObject[] HeartImages;
+    //public GameObject[] HeartImages;
     public GameObject PauseScreen;
     public GameObject DeathScreen;
+
+    [SerializeField] private GameObject PlayerUI_Panel;
+    [SerializeField] private GameObject PlayerMenu;
+    [SerializeField] private GameObject PlayerStoryMenu;
+
+
     [SerializeField] private Sound[] PlayerSounds;
 
     // Start is called before the first frame update
@@ -53,6 +59,7 @@ public class PlayerInteraction : MonoBehaviour
         PlayerAnimator = transform.GetComponentInChildren<Animator>();
         PlayerHealthBar = transform.Find("Player UI").GetComponentInChildren<Slider>();
         PlayerHealthBar.maxValue = MaxHealth;
+        WorldHandlerScript.PlayerInteractionScript = this;
     }
 
     public void OnEnable()
@@ -61,7 +68,7 @@ public class PlayerInteraction : MonoBehaviour
         InputRef.Enable();
 
         PlayerInputRef.PlayerInteraction.ShowMenu.Enable();
-        PlayerInputRef.PlayerInteraction.ShowMenu.performed += ChangeMenuState;
+        PlayerInputRef.PlayerInteraction.ShowMenu.performed += Context => ChangeMenu();
 
     }
 
@@ -114,6 +121,7 @@ public class PlayerInteraction : MonoBehaviour
 
     public void ChangeMenu()
     {
+        if(WorldHandlerScript.CurrentMode!=WorldHandler.GameModes.Gameplay) { return; }
         switch (MenuActive)
         {
             default:
@@ -132,6 +140,12 @@ public class PlayerInteraction : MonoBehaviour
                 MenuActive = false;
                 break;
         }
+    }
+
+    public void ActivateUIPanel()
+    {
+        PlayerStoryMenu.SetActive(true);
+        PlayerUI_Panel.SetActive(false);
     }
 
     public void ChangeMenuState(InputAction.CallbackContext InputCallBack)
@@ -186,6 +200,21 @@ public class PlayerInteraction : MonoBehaviour
         }
 
     }
+
+    public void HandleStoryState(bool StoryModeActive)
+    {
+        switch (StoryModeActive)
+        {
+            case true:
+                PlayerStoryMenu.SetActive(true);
+                PlayerUI_Panel.SetActive(false);
+                break;
+
+            case false:
+                break;
+        }
+    }
+
 
     private void HandleInputTest()
     {

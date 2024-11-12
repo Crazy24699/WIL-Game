@@ -7,11 +7,13 @@ using UnityEngine.Events;
 
 public class WorldHandler : MonoBehaviour
 {
+    public UnityEvent ModeChange;
     public UnityEvent GamePause;
     public UnityEvent RunLoadingScreen;
     [SerializeField] private GameObject LoadingScreenPanel;
     [Space(1.2f), Header(" ")]
     [SerializeField] private GameObject PlayerStartPosition;
+    public PlayerInteraction PlayerInteractionScript;
 
     public Dictionary<int, List<SpireObject>> AllSpires = new Dictionary<int, List<SpireObject>>();
 
@@ -28,6 +30,15 @@ public class WorldHandler : MonoBehaviour
     public float CurrentTimescale;
 
     [SerializeField] private List<GameObject> Entities = new List<GameObject>();
+
+    public enum GameModes
+    {
+        Story,
+        Menu,
+        Gameplay
+    };
+
+    public GameModes CurrentMode;
 
     private bool RunLoadscreen = false;
 
@@ -50,9 +61,29 @@ public class WorldHandler : MonoBehaviour
         //StartCoroutine(TempSetActiveEnemy());
         Debug.Log(AllSpires.Count);
         Debug.Log(AllSpires.ElementAt(0).Value.Count);
-        
+
+        ModeChange.AddListener(() => ChangeInputMode(CurrentMode));
+
+    }
 
 
+    public void ChangeInputMode(GameModes ChosenMode)
+    {
+        switch (ChosenMode)
+        {
+            case GameModes.Story:
+                PlayerInteractionScript.HandleStoryState(true);
+                break;
+
+            case GameModes.Menu:
+                PlayerInteractionScript.HandleStoryState(false);
+                break;
+
+            case GameModes.Gameplay:
+                PlayerInteractionScript.HandleStoryState(false);
+                break;
+            
+        }
     }
 
     private void HandleLoadValues()

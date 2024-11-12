@@ -257,6 +257,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CancelAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""55a1674a-a349-4f4b-a957-0e2928f8ea2e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -292,6 +301,65 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Third Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8658800a-7368-4e8a-a60f-d25ae4dfb9b5"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CancelAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""StoryMenu"",
+            ""id"": ""096330d9-7cdd-4f08-b000-0fba19ad26a4"",
+            ""actions"": [
+                {
+                    ""name"": ""Click"",
+                    ""type"": ""Button"",
+                    ""id"": ""d5840965-3c9e-4819-a452-de8dc3ba4390"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""EndStory"",
+                    ""type"": ""Button"",
+                    ""id"": ""d5feac9c-f4e9-4d43-9211-ef77b103a116"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""c67c9b3e-3376-4a78-806c-c75d62ec29b1"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a68a70c5-28cb-4c87-9fb0-190fbb615b0c"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""EndStory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -324,6 +392,11 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_PlayerAttack_PrimaryAttack = m_PlayerAttack.FindAction("Primary Attack", throwIfNotFound: true);
         m_PlayerAttack_SecondaryAttack = m_PlayerAttack.FindAction("Secondary Attack", throwIfNotFound: true);
         m_PlayerAttack_ThirdAttack = m_PlayerAttack.FindAction("Third Attack", throwIfNotFound: true);
+        m_PlayerAttack_CancelAttack = m_PlayerAttack.FindAction("CancelAttack", throwIfNotFound: true);
+        // StoryMenu
+        m_StoryMenu = asset.FindActionMap("StoryMenu", throwIfNotFound: true);
+        m_StoryMenu_Click = m_StoryMenu.FindAction("Click", throwIfNotFound: true);
+        m_StoryMenu_EndStory = m_StoryMenu.FindAction("EndStory", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -504,6 +577,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerAttack_PrimaryAttack;
     private readonly InputAction m_PlayerAttack_SecondaryAttack;
     private readonly InputAction m_PlayerAttack_ThirdAttack;
+    private readonly InputAction m_PlayerAttack_CancelAttack;
     public struct PlayerAttackActions
     {
         private @PlayerInput m_Wrapper;
@@ -511,6 +585,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @PrimaryAttack => m_Wrapper.m_PlayerAttack_PrimaryAttack;
         public InputAction @SecondaryAttack => m_Wrapper.m_PlayerAttack_SecondaryAttack;
         public InputAction @ThirdAttack => m_Wrapper.m_PlayerAttack_ThirdAttack;
+        public InputAction @CancelAttack => m_Wrapper.m_PlayerAttack_CancelAttack;
         public InputActionMap Get() { return m_Wrapper.m_PlayerAttack; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -529,6 +604,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @ThirdAttack.started += instance.OnThirdAttack;
             @ThirdAttack.performed += instance.OnThirdAttack;
             @ThirdAttack.canceled += instance.OnThirdAttack;
+            @CancelAttack.started += instance.OnCancelAttack;
+            @CancelAttack.performed += instance.OnCancelAttack;
+            @CancelAttack.canceled += instance.OnCancelAttack;
         }
 
         private void UnregisterCallbacks(IPlayerAttackActions instance)
@@ -542,6 +620,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @ThirdAttack.started -= instance.OnThirdAttack;
             @ThirdAttack.performed -= instance.OnThirdAttack;
             @ThirdAttack.canceled -= instance.OnThirdAttack;
+            @CancelAttack.started -= instance.OnCancelAttack;
+            @CancelAttack.performed -= instance.OnCancelAttack;
+            @CancelAttack.canceled -= instance.OnCancelAttack;
         }
 
         public void RemoveCallbacks(IPlayerAttackActions instance)
@@ -559,6 +640,60 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         }
     }
     public PlayerAttackActions @PlayerAttack => new PlayerAttackActions(this);
+
+    // StoryMenu
+    private readonly InputActionMap m_StoryMenu;
+    private List<IStoryMenuActions> m_StoryMenuActionsCallbackInterfaces = new List<IStoryMenuActions>();
+    private readonly InputAction m_StoryMenu_Click;
+    private readonly InputAction m_StoryMenu_EndStory;
+    public struct StoryMenuActions
+    {
+        private @PlayerInput m_Wrapper;
+        public StoryMenuActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Click => m_Wrapper.m_StoryMenu_Click;
+        public InputAction @EndStory => m_Wrapper.m_StoryMenu_EndStory;
+        public InputActionMap Get() { return m_Wrapper.m_StoryMenu; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(StoryMenuActions set) { return set.Get(); }
+        public void AddCallbacks(IStoryMenuActions instance)
+        {
+            if (instance == null || m_Wrapper.m_StoryMenuActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_StoryMenuActionsCallbackInterfaces.Add(instance);
+            @Click.started += instance.OnClick;
+            @Click.performed += instance.OnClick;
+            @Click.canceled += instance.OnClick;
+            @EndStory.started += instance.OnEndStory;
+            @EndStory.performed += instance.OnEndStory;
+            @EndStory.canceled += instance.OnEndStory;
+        }
+
+        private void UnregisterCallbacks(IStoryMenuActions instance)
+        {
+            @Click.started -= instance.OnClick;
+            @Click.performed -= instance.OnClick;
+            @Click.canceled -= instance.OnClick;
+            @EndStory.started -= instance.OnEndStory;
+            @EndStory.performed -= instance.OnEndStory;
+            @EndStory.canceled -= instance.OnEndStory;
+        }
+
+        public void RemoveCallbacks(IStoryMenuActions instance)
+        {
+            if (m_Wrapper.m_StoryMenuActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IStoryMenuActions instance)
+        {
+            foreach (var item in m_Wrapper.m_StoryMenuActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_StoryMenuActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public StoryMenuActions @StoryMenu => new StoryMenuActions(this);
     private int m_KeyboardSchemeIndex = -1;
     public InputControlScheme KeyboardScheme
     {
@@ -584,5 +719,11 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnPrimaryAttack(InputAction.CallbackContext context);
         void OnSecondaryAttack(InputAction.CallbackContext context);
         void OnThirdAttack(InputAction.CallbackContext context);
+        void OnCancelAttack(InputAction.CallbackContext context);
+    }
+    public interface IStoryMenuActions
+    {
+        void OnClick(InputAction.CallbackContext context);
+        void OnEndStory(InputAction.CallbackContext context);
     }
 }
