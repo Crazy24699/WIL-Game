@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -15,6 +16,7 @@ public class PlayerInteraction : MonoBehaviour
     protected InputAction InputRef;
     protected PlayerAttacks PlayerAttacks;
     protected Animator PlayerAnimator;
+    private PlayerMovement PlayerMoveScript;
 
     public bool MenuActive;
     public bool CanTakeDamage = true;
@@ -48,7 +50,11 @@ public class PlayerInteraction : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        PlayerMoveScript = GetComponent<PlayerMovement>();
+
         PlayerCamFunction = this.transform.root.GetComponentInChildren<CameraFunctionality>();
+
+
         Cursor.lockState = CursorLockMode.Locked;
         MenuActive = false ;
         PlayerInputRef = new PlayerInput();
@@ -254,34 +260,51 @@ public class PlayerInteraction : MonoBehaviour
         
     }
 
-    public void TakeHit(int DamageTaken)
+    public void TakeHit(int DamageTaken, Vector3 ObjectHitPosition)
     {
+        if (!CanTakeDamage) { return; }
         //hit effects
         //hit sound
         //Applied Knockback
-        //immunity timer
+        ObjectHitPosition.y = this.transform.position.y;
+        Vector3 Direction = (transform.position - ObjectHitPosition).normalized;
+        Direction.y = 0;
+        Debug.DrawRay(ObjectHitPosition, Direction*20,Color.blue,300.0f);
+
+        StartCoroutine(HandleStunLock());
+        StartCoroutine(ImmunityTimer());
+        PlayerMoveScript.ApplyKnockback(Direction);
+
         HandleHealth(DamageTaken);
     }
 
     public void HandleHealth(int HealthChange)
     {
-        if(!CanTakeDamage)
-        {
-            return;
-        }
+        if (!CanTakeDamage) { return; }
+
         if (HealthChange <= 0)
         {
             PlayerAnimator.SetTrigger("TakeHit");
         }
         Debug.Log("Damage");
         CurrentHealth += HealthChange;
+
         DeathCheck();
         HandleHealthChange();
     }
 
     private IEnumerator ImmunityTimer()
     {
-        yield return new WaitForSeconds(2.75f);
+        CanTakeDamage = false;
+        yield return new WaitForSeconds(1.75f);
+        CanTakeDamage = true;
+    }
+
+    private IEnumerator HandleStunLock()
+    {
+        PlayerMoveScript.StunLocked = true;
+        yield return new WaitForSeconds(0.35f);
+        PlayerMoveScript.StunLocked = false;
     }
 
     private void HandleHealthChange()

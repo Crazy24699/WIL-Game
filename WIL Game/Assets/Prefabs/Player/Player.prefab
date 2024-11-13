@@ -230,6 +230,8 @@ MonoBehaviour:
   FreeLookCamera: {fileID: 0}
   AimCamera: {fileID: 8011278577453095645}
   AimCamRotator: {fileID: 5701009480670178258}
+  FrozeCam_X_Value: 0
+  FrozeCam_Y_Value: 0
   ViewDirection: {x: 0, y: 0, z: 0}
   CameraView: {x: 0, y: 0, z: 0}
   PlayerVelocity: {x: 0, y: 0, z: 0}
@@ -237,6 +239,7 @@ MonoBehaviour:
   MoveDirection: {x: 0, y: 0, z: 0}
   PlayerMovementScript: {fileID: 1242344083140566919}
   Brain: {fileID: 8487017906920466996}
+  FreeLockCamRef: {fileID: 0}
 --- !u!1 &343289726329985864
 GameObject:
   m_ObjectHideFlags: 0
@@ -1551,7 +1554,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42124c2965e4bb4419f72f16fa9db2eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rigidbody: {fileID: 0}
+  RigidbodyRef: {fileID: 0}
   PlayerActionMap: {fileID: 8421640015991488014, guid: 0cb833d8b6cd3384cbf8e4c382a539af, type: 3}
   PlayerInteractScript: {fileID: 0}
   GroundLayers:
@@ -2665,7 +2668,7 @@ MonoBehaviour:
   m_YAxis:
     Value: 1
     m_SpeedMode: 0
-    m_MaxSpeed: 3
+    m_MaxSpeed: 10
     m_AccelTime: 0.2
     m_DecelTime: 0.1
     m_InputAxisName: Mouse Y

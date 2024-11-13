@@ -117,12 +117,12 @@ public class CameraFunctionality : MonoBehaviour
             FreeLockCamRef.enabled = !LockView;
             return;
         }
-        FreeLockCamRef.m_XAxis.m_InputAxisValue = 0;
-        FreeLockCamRef.m_YAxis.m_InputAxisValue = 0;
+        //FreeLockCamRef.m_XAxis.m_InputAxisValue = 0;
+        //FreeLockCamRef.m_YAxis.m_InputAxisValue = 0;
 
 
-        FreeLockCamRef.m_XAxis.Value = FrozeCam_X_Value;
-        FreeLockCamRef.m_YAxis.Value = FrozeCam_Y_Value;
+        //FreeLockCamRef.m_XAxis.Value = FrozeCam_X_Value;
+        //FreeLockCamRef.m_YAxis.Value = FrozeCam_Y_Value;
 
         StartCoroutine(RetakeDelay());
 

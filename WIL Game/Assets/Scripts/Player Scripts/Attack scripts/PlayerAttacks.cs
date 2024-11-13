@@ -294,7 +294,7 @@ public class PlayerAttacks : MonoBehaviour
     protected void HandleMovementState(bool LockMovement)
     {
         PlayerMoveScript.CanMove = LockMovement;
-        PlayerMoveScript.Rigidbody.velocity = Vector3.zero;
+        PlayerMoveScript.RigidbodyRef.velocity = Vector3.zero;
     }
 
     public void SetClawState(int ActiveState)

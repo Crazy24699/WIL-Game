@@ -305,10 +305,10 @@ public class WebbinEnemy : BossBase
 
             if(Collision.GetComponent<PlayerInteraction>() == null)
             {
-                Collision.transform.parent.root.GetComponent<PlayerInteraction>().TakeHit(-20);
+                Collision.transform.parent.root.GetComponent<PlayerInteraction>().TakeHit(-20,transform.position);
                 return;
             }
-            Collision.GetComponent<PlayerInteraction>().TakeHit(-20);
+            Collision.GetComponent<PlayerInteraction>().TakeHit(-20,transform.position);
         }
     }
 
