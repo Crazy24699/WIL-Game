@@ -44,6 +44,7 @@ public class WorldHandler : MonoBehaviour
 
     void Start()
     {
+        CurrentMode = GameModes.Gameplay;
         if (AllSpires.Count == 0)
         {
 
@@ -73,6 +74,7 @@ public class WorldHandler : MonoBehaviour
         {
             case GameModes.Story:
                 PlayerInteractionScript.HandleStoryState(true);
+
                 break;
 
             case GameModes.Menu:

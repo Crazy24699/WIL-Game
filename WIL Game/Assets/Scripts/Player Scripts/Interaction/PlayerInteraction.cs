@@ -32,7 +32,7 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField]private TextMeshProUGUI ShardCounter;
     [SerializeField] private TextMeshProUGUI GemCounter;
     public ShardBlocker CurrentShardBlocker;
-
+    private CameraFunctionality PlayerCamFunction;
 
     //public GameObject[] HeartImages;
     public GameObject PauseScreen;
@@ -48,7 +48,7 @@ public class PlayerInteraction : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-
+        PlayerCamFunction = this.transform.root.GetComponentInChildren<CameraFunctionality>();
         Cursor.lockState = CursorLockMode.Locked;
         MenuActive = false ;
         PlayerInputRef = new PlayerInput();
@@ -67,9 +67,9 @@ public class PlayerInteraction : MonoBehaviour
         InputRef = PlayerInputRef.PlayerInteraction.ShowMenu;
         InputRef.Enable();
 
-        PlayerInputRef.PlayerInteraction.ShowMenu.Enable();
         PlayerInputRef.PlayerInteraction.ShowMenu.performed += Context => ChangeMenu();
-
+        PlayerInputRef.PlayerInteraction.ShowMenu.Enable();
+        PlayerInputRef.StoryMenu.EndStory.performed += Context => EndStory();
     }
 
     public AudioClip HandleAudioClip(string Name, bool Stop)
@@ -121,7 +121,7 @@ public class PlayerInteraction : MonoBehaviour
 
     public void ChangeMenu()
     {
-        if(WorldHandlerScript.CurrentMode!=WorldHandler.GameModes.Gameplay) { return; }
+        //if(WorldHandlerScript.CurrentMode!=WorldHandler.GameModes.Gameplay) { return; }
         switch (MenuActive)
         {
             default:
@@ -140,6 +140,13 @@ public class PlayerInteraction : MonoBehaviour
                 MenuActive = false;
                 break;
         }
+    }
+
+    private void EndStory()
+    {
+        WorldHandlerScript.CurrentMode = WorldHandler.GameModes.Gameplay;
+        HandleStoryState(false);
+        WorldHandlerScript.ModeChange.Invoke();
     }
 
     public void ActivateUIPanel()
@@ -174,6 +181,10 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            PlayerInputRef.PlayerInteraction.ShowMenu.Enable();
+        }
         DeathCheck();
         HandleInputTest();
         HandleEnvrionmentInteraction();
@@ -208,13 +219,31 @@ public class PlayerInteraction : MonoBehaviour
             case true:
                 PlayerStoryMenu.SetActive(true);
                 PlayerUI_Panel.SetActive(false);
+                PlayerCamFunction.HandleCameraLockstate(true);
+                
+                PlayerInputRef.PlayerInteraction.ShowMenu.Disable();
+                PlayerInputRef.StoryMenu.Enable();
                 break;
 
             case false:
+                PlayerCamFunction.HandleCameraLockstate(false) ;
+                PlayerStoryMenu.SetActive(false);
+                PlayerUI_Panel.SetActive(true);
+
+                PlayerInputRef.StoryMenu.Disable();
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                StartCoroutine(ReactivateWaitTime());
+                //PlayerInputRef.PlayerInteraction.ShowMenu.Enable();
                 break;
         }
     }
 
+    private IEnumerator ReactivateWaitTime()
+    {
+        yield return new WaitForSeconds(0.25f);
+        PlayerInputRef.PlayerInteraction.ShowMenu.Enable();
+    }
 
     private void HandleInputTest()
     {

@@ -38,6 +38,8 @@ public class CameraFunctionality : MonoBehaviour
     [SerializeField] private Transform AimCamera;
     [SerializeField] private Transform AimCamRotator;
 
+    public float FrozeCam_X_Value;
+    public float FrozeCam_Y_Value;
 
     public Vector3 ViewDirection;
     public Vector3 CameraView;
@@ -47,6 +49,7 @@ public class CameraFunctionality : MonoBehaviour
 
     [SerializeField] private PlayerMovement PlayerMovementScript;
     public Cinemachine.CinemachineBrain Brain;
+    public Cinemachine.CinemachineFreeLook FreeLockCamRef;
 
     // Start is called before the first frame update
     void Start()
@@ -56,16 +59,27 @@ public class CameraFunctionality : MonoBehaviour
         PlayerMovementScript=transform.root.root.GetComponent<PlayerMovement>();
         CameraActive = true;
         MouseSensitivity = 120f;
+        FreeLockCamRef = GetComponentInChildren<CinemachineFreeLook>();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            //FreeLockCamRef.enabled = !FreeLockCamRef.isActiveAndEnabled;
+            //Brain.enabled = !Brain.isActiveAndEnabled;
+            //FrozeCam_X_Value = FreeLockCamRef.m_XAxis.Value;
+            HandleCameraLockstate(!LockView);
+        }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            FreeLockCamRef.m_XAxis.Value = FrozeCam_X_Value;
+        }
         HandleAimCamera();
 
-        LockCamera();
-        if (Input.GetKeyDown(KeyCode.Joystick3Button18))
+        //LockCamera();
+        if (Input.GetKeyDown(KeyCode.U))
         {
             return;
             switch (LockView)
@@ -89,13 +103,37 @@ public class CameraFunctionality : MonoBehaviour
 
     }
 
-    private void LockCamera()
+    
+
+    public void HandleCameraLockstate(bool LockState)
     {
-        Brain.enabled = !LockView;
+        LockView = LockState;
         if (LockView)
         {
-            Brain.gameObject.transform.position = Vector3.one;
+            Brain.enabled = !LockView;
+
+            FrozeCam_X_Value = FreeLockCamRef.m_XAxis.Value;
+            FrozeCam_Y_Value = FreeLockCamRef.m_YAxis.Value;
+            FreeLockCamRef.enabled = !LockView;
+            return;
         }
+        FreeLockCamRef.m_XAxis.m_InputAxisValue = 0;
+        FreeLockCamRef.m_YAxis.m_InputAxisValue = 0;
+
+
+        FreeLockCamRef.m_XAxis.Value = FrozeCam_X_Value;
+        FreeLockCamRef.m_YAxis.Value = FrozeCam_Y_Value;
+
+        StartCoroutine(RetakeDelay());
+
+
+    }
+
+    private IEnumerator RetakeDelay()
+    {
+        yield return new WaitForSeconds(0.75f);
+        Brain.enabled = !LockView;
+        FreeLockCamRef.enabled = !LockView;
     }
 
     public void RotateToView()

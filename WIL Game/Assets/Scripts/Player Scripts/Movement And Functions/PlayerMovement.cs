@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private PlayerInput PlayerInputRef;
     [SerializeField] private PlayerInput DashInput;
     [SerializeField] private PlayerInteraction PlayerInteractScript;
+    private WorldHandler WorldHandlerScript;
 
     public LayerMask GroundLayers;
     private RaycastHit SlopeHit;
@@ -94,6 +95,7 @@ public class PlayerMovement : MonoBehaviour
         WalkSpeed = BaseMoveSpeed * 1;
         RunSpeed = BaseMoveSpeed * 2.5f;
         PlayerAudioSource = this.GetComponent<AudioSource>();
+        WorldHandlerScript = FindObjectOfType<WorldHandler>();
     }
 
     private void FixedUpdate()
