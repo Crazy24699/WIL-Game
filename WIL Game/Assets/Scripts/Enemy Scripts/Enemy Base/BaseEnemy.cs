@@ -69,6 +69,7 @@ public class BaseEnemy : MonoBehaviour
 
     protected bool StartupRan = false;
     protected bool Alive = false;
+    protected bool SoundPlaying = false;
     public bool Override = false;
     public bool PatrolOverrdide = false; [Header("Booleans"), Space(5)]
     public bool AttackAreaOverride = false;
@@ -86,10 +87,29 @@ public class BaseEnemy : MonoBehaviour
     protected Rigidbody RigidbodyRef;
     [SerializeField] protected LayerMask PlayerLayer;
     private EnemyVision VisionLinkScript;
+    protected EnemySoundManager EnemyAudioManager;
     #endregion
     
     public void BaseStartup()
     {
+        StartCoroutine(StartDelay());
+
+    }
+
+    protected virtual void CustomStartup()
+    {
+
+    }
+    private IEnumerator StartDelay()
+    {
+        yield return new WaitForSeconds(0.15f);
+
+        EnemyAudioManager = GetComponent<EnemySoundManager>();
+        if (EnemyAudioManager == null)
+        {
+            Debug.Log("There is no audi manager on enemy: " + this.gameObject.name);
+        }
+
         CanAttack = true;
         RigidbodyRef = GetComponent<Rigidbody>();
         EnemyObjectRef = this.gameObject;
@@ -104,7 +124,7 @@ public class BaseEnemy : MonoBehaviour
         }
 
         HealthBar = GetComponent<Slider>();
-        if(HealthBar == null)
+        if (HealthBar == null)
         {
             HealthBar = transform.GetComponentInChildren<Slider>();
         }
@@ -116,17 +136,13 @@ public class BaseEnemy : MonoBehaviour
 
         StartupRan = true;
         Alive = true;
-        if(GetComponent<EnemyVision>() != null)
+        if (GetComponent<EnemyVision>() != null)
         {
             VisionLinkScript = this.GetComponent<EnemyVision>();
             VisionLinkScript.Startup(this);
         }
     }
 
-    protected virtual void CustomStartup()
-    {
-
-    }
 
     private void LateUpdate()
     {
@@ -135,6 +151,12 @@ public class BaseEnemy : MonoBehaviour
             BaseStartup();
             Debug.Log("devils game");
         }
+
+    }
+
+    protected void CheckSoundPlayState()
+    {
+        SoundPlaying = EnemyAudioManager.SoundPlaying;
     }
 
     public virtual void ApplyKnockback()

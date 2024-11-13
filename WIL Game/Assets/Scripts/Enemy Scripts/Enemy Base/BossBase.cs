@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class BossBase : MonoBehaviour
@@ -8,10 +9,11 @@ public class BossBase : MonoBehaviour
     protected int MaxHealth;
     [SerializeField]protected int CurrentHealth;
 
-    [HideInInspector]public GameObject PlayerRef;
+    public GameObject PlayerRef;
     [SerializeField] private GameObject EndZoneArea;
 
 
+    public NavMeshAgent NavMeshRef;
     [HideInInspector] public BTNodeBase RootNode;
     [HideInInspector] public List<BTNodeBase> AllNodeChoices;
     protected bool StartupRan;

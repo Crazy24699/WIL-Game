@@ -27,12 +27,14 @@ public class SeanAnimLink : MonoBehaviour
     [SerializeField]
     private void ActivateAttackBox()
     {
+        Debug.Log("base");
         CollisionBox.SetActive(true);
     }
 
     [SerializeField]
     private void DeactivateAttackBox()
     {
+        Debug.Log("switch");
         CollisionBox.SetActive(false);
     }
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -15,6 +16,7 @@ public class PlayerInteraction : MonoBehaviour
     protected InputAction InputRef;
     protected PlayerAttacks PlayerAttacks;
     protected Animator PlayerAnimator;
+    private PlayerMovement PlayerMoveScript;
 
     public bool MenuActive;
     public bool CanTakeDamage = true;
@@ -32,16 +34,26 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField]private TextMeshProUGUI ShardCounter;
     [SerializeField] private TextMeshProUGUI GemCounter;
     public ShardBlocker CurrentShardBlocker;
+    private CameraFunctionality PlayerCamFunction;
 
-
-    public GameObject[] HeartImages;
+    //public GameObject[] HeartImages;
     public GameObject PauseScreen;
     public GameObject DeathScreen;
+
+    [SerializeField] private GameObject PlayerUI_Panel;
+    [SerializeField] private GameObject PlayerMenu;
+    [SerializeField] private GameObject PlayerStoryMenu;
+
+
     [SerializeField] private Sound[] PlayerSounds;
 
     // Start is called before the first frame update
     void Awake()
     {
+        PlayerMoveScript = GetComponent<PlayerMovement>();
+
+        PlayerCamFunction = this.transform.root.GetComponentInChildren<CameraFunctionality>();
+
 
         Cursor.lockState = CursorLockMode.Locked;
         MenuActive = false ;
@@ -53,6 +65,7 @@ public class PlayerInteraction : MonoBehaviour
         PlayerAnimator = transform.GetComponentInChildren<Animator>();
         PlayerHealthBar = transform.Find("Player UI").GetComponentInChildren<Slider>();
         PlayerHealthBar.maxValue = MaxHealth;
+        WorldHandlerScript.PlayerInteractionScript = this;
     }
 
     public void OnEnable()
@@ -60,9 +73,9 @@ public class PlayerInteraction : MonoBehaviour
         InputRef = PlayerInputRef.PlayerInteraction.ShowMenu;
         InputRef.Enable();
 
+        PlayerInputRef.PlayerInteraction.ShowMenu.performed += Context => ChangeMenu();
         PlayerInputRef.PlayerInteraction.ShowMenu.Enable();
-        PlayerInputRef.PlayerInteraction.ShowMenu.performed += ChangeMenuState;
-
+        PlayerInputRef.StoryMenu.EndStory.performed += Context => EndStory();
     }
 
     public AudioClip HandleAudioClip(string Name, bool Stop)
@@ -114,6 +127,7 @@ public class PlayerInteraction : MonoBehaviour
 
     public void ChangeMenu()
     {
+        //if(WorldHandlerScript.CurrentMode!=WorldHandler.GameModes.Gameplay) { return; }
         switch (MenuActive)
         {
             default:
@@ -132,6 +146,19 @@ public class PlayerInteraction : MonoBehaviour
                 MenuActive = false;
                 break;
         }
+    }
+
+    private void EndStory()
+    {
+        WorldHandlerScript.CurrentMode = WorldHandler.GameModes.Gameplay;
+        HandleStoryState(false);
+        WorldHandlerScript.ModeChange.Invoke();
+    }
+
+    public void ActivateUIPanel()
+    {
+        PlayerStoryMenu.SetActive(true);
+        PlayerUI_Panel.SetActive(false);
     }
 
     public void ChangeMenuState(InputAction.CallbackContext InputCallBack)
@@ -160,6 +187,10 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            PlayerInputRef.PlayerInteraction.ShowMenu.Enable();
+        }
         DeathCheck();
         HandleInputTest();
         HandleEnvrionmentInteraction();
@@ -187,28 +218,93 @@ public class PlayerInteraction : MonoBehaviour
 
     }
 
+    public void HandleStoryState(bool StoryModeActive)
+    {
+        switch (StoryModeActive)
+        {
+            case true:
+                PlayerStoryMenu.SetActive(true);
+                PlayerUI_Panel.SetActive(false);
+                PlayerCamFunction.HandleCameraLockstate(true);
+                
+                PlayerInputRef.PlayerInteraction.ShowMenu.Disable();
+                PlayerInputRef.StoryMenu.Enable();
+                break;
+
+            case false:
+                PlayerCamFunction.HandleCameraLockstate(false) ;
+                PlayerStoryMenu.SetActive(false);
+                PlayerUI_Panel.SetActive(true);
+
+                PlayerInputRef.StoryMenu.Disable();
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                StartCoroutine(ReactivateWaitTime());
+                //PlayerInputRef.PlayerInteraction.ShowMenu.Enable();
+                break;
+        }
+    }
+
+    private IEnumerator ReactivateWaitTime()
+    {
+        yield return new WaitForSeconds(0.25f);
+        PlayerInputRef.PlayerInteraction.ShowMenu.Enable();
+    }
+
     private void HandleInputTest()
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
             HandleHealth(-1);
         }
+        
+    }
+
+    public void TakeHit(int DamageTaken, Vector3 ObjectHitPosition)
+    {
+        if (!CanTakeDamage) { return; }
+        //hit effects
+        //hit sound
+        //Applied Knockback
+        ObjectHitPosition.y = this.transform.position.y;
+        Vector3 Direction = (transform.position - ObjectHitPosition).normalized;
+        Direction.y = 0;
+        Debug.DrawRay(ObjectHitPosition, Direction*20,Color.blue,300.0f);
+
+        StartCoroutine(HandleStunLock());
+        StartCoroutine(ImmunityTimer());
+        PlayerMoveScript.ApplyKnockback(Direction);
+
+        HandleHealth(DamageTaken);
     }
 
     public void HandleHealth(int HealthChange)
     {
-        if(!CanTakeDamage)
-        {
-            return;
-        }
+        if (!CanTakeDamage) { return; }
+
         if (HealthChange <= 0)
         {
             PlayerAnimator.SetTrigger("TakeHit");
         }
         Debug.Log("Damage");
         CurrentHealth += HealthChange;
+
         DeathCheck();
         HandleHealthChange();
+    }
+
+    private IEnumerator ImmunityTimer()
+    {
+        CanTakeDamage = false;
+        yield return new WaitForSeconds(1.75f);
+        CanTakeDamage = true;
+    }
+
+    private IEnumerator HandleStunLock()
+    {
+        PlayerMoveScript.StunLocked = true;
+        yield return new WaitForSeconds(0.35f);
+        PlayerMoveScript.StunLocked = false;
     }
 
     private void HandleHealthChange()

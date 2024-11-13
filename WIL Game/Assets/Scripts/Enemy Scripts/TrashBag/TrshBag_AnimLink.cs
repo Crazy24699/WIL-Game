@@ -8,8 +8,9 @@ public class TrshBag_AnimLink : MonoBehaviour
     private void Start()
     {
         TrashBagScript = transform.root.root.GetComponent<TrashBag>();
-        Debug.Log(TrashBagScript.NavMeshRef.name);
+        //Debug.Log(TrashBagScript.NavMeshRef.name);
     }
+
 
     [SerializeField]
     private void Attack()

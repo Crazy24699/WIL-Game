@@ -60,7 +60,7 @@ public class KaraBossAI : BossBase
     public CoalBarrangeAttackClass CoalAttack;
     public EarthShakerAttackClass EarthAttack;
 
-    public NavMeshAgent NavMeshRef;
+
 
     private Animator KaraAnimations;
 
@@ -376,21 +376,6 @@ public class KaraBossAI : BossBase
                 SpawnCoal(MorterPoints[i].gameObject, i + 0 + i);
             }
         }
-
-        //public IEnumerator CoalBarrage()
-        //{
-
-        //    for (int i = 0; i < 2; i++)
-        //    {
-        //        for (int j = 0; j < MorterPoints.Length; j++)
-        //        {
-        //            SpawnCoal(MorterPoints[j].gameObject, j + 0 + i);
-        //            yield return new WaitForSeconds(0.15f);
-        //        }
-        //        yield return new WaitForSeconds(1.25f);
-        //    }
-        //    AttackCooldownActive = true;
-        //}
 
         private void SpawnCoal(GameObject FirePoint, int SpawnNumer)
         {

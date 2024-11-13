@@ -15,6 +15,7 @@ TagManager:
   - LevelSwitch
   - BarrierBreakPowerup
   - LevelBarrier
+  - SpireParent
   layers:
   - Default
   - TransparentFX

@@ -12,7 +12,7 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -235,6 +235,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "CancelAttack",
+                    "type": "Button",
+                    "id": "55a1674a-a349-4f4b-a957-0e2928f8ea2e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -268,6 +277,65 @@
                     "processors": "",
                     "groups": "",
                     "action": "Third Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8658800a-7368-4e8a-a60f-d25ae4dfb9b5",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CancelAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "StoryMenu",
+            "id": "096330d9-7cdd-4f08-b000-0fba19ad26a4",
+            "actions": [
+                {
+                    "name": "Click",
+                    "type": "Button",
+                    "id": "d5840965-3c9e-4819-a452-de8dc3ba4390",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "EndStory",
+                    "type": "Button",
+                    "id": "d5feac9c-f4e9-4d43-9211-ef77b103a116",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "c67c9b3e-3376-4a78-806c-c75d62ec29b1",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a68a70c5-28cb-4c87-9fb0-190fbb615b0c",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "EndStory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

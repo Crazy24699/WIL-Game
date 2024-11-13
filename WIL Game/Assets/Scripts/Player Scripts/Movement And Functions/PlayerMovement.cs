@@ -5,12 +5,13 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
 
-    public Rigidbody Rigidbody;
+    public Rigidbody RigidbodyRef;
     public InputActionReference PlayerActionMap;
     private PlayerAttacks PlayerAttackScript;
     [SerializeField] private PlayerInput PlayerInputRef;
     [SerializeField] private PlayerInput DashInput;
     [SerializeField] private PlayerInteraction PlayerInteractScript;
+    private WorldHandler WorldHandlerScript;
 
     public LayerMask GroundLayers;
     private RaycastHit SlopeHit;
@@ -69,12 +70,13 @@ public class PlayerMovement : MonoBehaviour
     private bool CanDash = false;
     [SerializeField]public bool Grounded;
     [SerializeField] private bool IsMoving;
+    public bool StunLocked = false;
 
     // Start is called before the first frame update
     void Start()
     {
         CanMove = true;
-        Rigidbody = GetComponent<Rigidbody>();
+        RigidbodyRef = GetComponent<Rigidbody>();
         CurrentSpeed = 0;
 
         PlayerInputRef = new PlayerInput();
@@ -93,11 +95,14 @@ public class PlayerMovement : MonoBehaviour
         WalkSpeed = BaseMoveSpeed * 1;
         RunSpeed = BaseMoveSpeed * 2.5f;
         PlayerAudioSource = this.GetComponent<AudioSource>();
+        WorldHandlerScript = FindObjectOfType<WorldHandler>();
     }
 
     private void FixedUpdate()
     {
-        if(Input.GetKey(KeyCode.L))
+        if (StunLocked) { return; }
+
+        if (Input.GetKey(KeyCode.L))
         {
             Instantiate(HitParticle, transform.position, Quaternion.identity);
         }
@@ -105,23 +110,26 @@ public class PlayerMovement : MonoBehaviour
 
         if (PlayerAnimations.GetBool("IsAttacking"))
         {
-            Rigidbody.velocity = Vector3.zero;
+            RigidbodyRef.velocity = Vector3.zero;
             //Debug.Log("laced with poison");
             return;
         }
 
         //Keep this in the fixed update method because if it isnt then it
         //causes the player to jitter and stutter
+        /*  This may cause a problem with jitter and it may also cause cinemachine to break and bug
+
+
+        */
         Speed = BaseMoveSpeed * SpeedMultiplier;
 
         MovePlayer();
-
+        TrackPlayerMovement();
     }
 
     private void Update()
     {
-        TrackPlayerMovement();
-
+        if (StunLocked) { return; }
         DashResetTimer();
 
         TrackBatloOrientation();
@@ -132,7 +140,7 @@ public class PlayerMovement : MonoBehaviour
         if (MessuredVelocity.magnitude > Speed && !PlayerDashing)
         {
             Vector3 VelocityCap = PlayerVelocity.normalized * Speed;
-            Rigidbody.velocity = new Vector3(VelocityCap.x, Rigidbody.velocity.y
+            RigidbodyRef.velocity = new Vector3(VelocityCap.x, RigidbodyRef.velocity.y
                 , VelocityCap.z);
         }
 
@@ -148,8 +156,6 @@ public class PlayerMovement : MonoBehaviour
         SpeedMultiplier = Multiplier;
     }
 
-
-
     private void StartDash()
     {
         if (DashDirection != Vector2.zero && !PlayerDashing)
@@ -161,18 +167,25 @@ public class PlayerMovement : MonoBehaviour
             Vector3 SetDashDirection = (PlayerOrientation.forward * DashDirection.y + PlayerOrientation.right * DashDirection.x) * DashDistance;
             PlayerAttackScript.SetDodgeInfo((PlayerOrientation.forward * DashDirection.y + PlayerOrientation.right * DashDirection.x).normalized);
             
-            Rigidbody.AddForce(SetDashDirection * 25, ForceMode.Impulse);
+            RigidbodyRef.AddForce(SetDashDirection * 25, ForceMode.Impulse);
             PlayerDashing = true;
 
             StartCoroutine(DashTime());
         }
     }
 
+    public void ApplyKnockback(Vector3 Direction)
+    {
+        Direction.y = 0.5f;
+        Vector3 Force = Direction + (PlayerVelocity * -1)/3;
+        RigidbodyRef.AddForce(Force * 30, ForceMode.Impulse);
+    }
+
     private void ReduceDashVelocity()
     {
         if(PlayerDashing)
         {
-            Rigidbody.velocity *= 0.975f;
+            RigidbodyRef.velocity *= 0.975f;
         }
     }
 
@@ -186,7 +199,6 @@ public class PlayerMovement : MonoBehaviour
             if (DashDelayTimer <= 0)
             {
                 DashDirection = Vector2.zero;
-                Debug.Log("all of my dreams");
                 DashDelayTimer = DashSetTime;
             }
         }
@@ -232,14 +244,14 @@ public class PlayerMovement : MonoBehaviour
         Grounded = FrontGrounded || BackGrounded;
 
         float VerticalGravity = Grounded ? -0.81f : -9.81f*2;
-        Rigidbody.AddForce(new Vector3(0, VerticalGravity, 0), ForceMode.Acceleration);
+        RigidbodyRef.AddForce(new Vector3(0, VerticalGravity, 0), ForceMode.Acceleration);
 
         HandleAnimationStates();
         InputDirection = PlayerInputRef.BasePlayerMovement.Movement.ReadValue<Vector3>().normalized;
         InputDirection = InputDirection.RoundVector(0);
 
-        PlayerVelocity = new Vector3(Rigidbody.velocity.x, Rigidbody.velocity.y, Rigidbody.velocity.z);
-        CurrentSpeed = Rigidbody.velocity.magnitude;
+        PlayerVelocity = new Vector3(RigidbodyRef.velocity.x, RigidbodyRef.velocity.y, RigidbodyRef.velocity.z);
+        CurrentSpeed = RigidbodyRef.velocity.magnitude;
     }
 
     protected void MovePlayer()
@@ -250,14 +262,14 @@ public class PlayerMovement : MonoBehaviour
         if (Attacking || AttackLocked)
         {
             CanMove = false;
-            Rigidbody.velocity = Vector3.zero;
+            RigidbodyRef.velocity = Vector3.zero;
             return;
         }
 
         MoveDelay();
         if (InputDirection.magnitude <= 0.1f )
         {
-            Rigidbody.velocity = new Vector3(0,Rigidbody.velocity.y,0);
+            RigidbodyRef.velocity = new Vector3(0,RigidbodyRef.velocity.y,0);
             CanMove = false;
             PlayerAudioSource.Stop();
             return;
@@ -278,21 +290,20 @@ public class PlayerMovement : MonoBehaviour
         if(!PlayerAudioSource.isPlaying && CurrentSpeed > 4)
         {
             PlayerAudioSource.Play();
-            Debug.Log(PlayerAudioSource.isPlaying);
+            //Debug.Log(PlayerAudioSource.isPlaying);
         }
 
         PlayerVelocity.y = (Grounded) ? 0 : PlayerVelocity.y;
-        Vector3 CustomVelocity = new Vector3(Rigidbody.velocity.x, 0, Rigidbody.velocity.z);
+        Vector3 CustomVelocity = new Vector3(RigidbodyRef.velocity.x, 0, RigidbodyRef.velocity.z);
         if (CustomVelocity.magnitude > Speed) 
         {
             Vector3 VelocityCap = CustomVelocity.normalized * Speed;
-            Rigidbody.velocity = new Vector3(VelocityCap.x, 0
+            RigidbodyRef.velocity = new Vector3(VelocityCap.x, 0
                 , VelocityCap.z);
         }
         MoveDirection = PlayerOrientation.forward * InputDirection.z + PlayerOrientation.right * InputDirection.x;
         MoveDirection.y = 0;
-        //Speed = BaseMoveSpeed * SpeedMultiplier;
-        Rigidbody.AddForce(new Vector3(MoveDirection.x, 0, MoveDirection.z) * 10f * (Speed) , ForceMode.Force);
+        RigidbodyRef.AddForce(new Vector3(MoveDirection.x, 0, MoveDirection.z) * 10f * (Speed) , ForceMode.Force);
 
 
         if (CanMove)
