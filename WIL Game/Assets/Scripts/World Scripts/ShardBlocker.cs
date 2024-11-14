@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ShardBlocker : MonoBehaviour
 {
     [SerializeField] private int MaxblockLevel;
     private int CurrentBlockLevel;
+
+    [SerializeField] private TextMeshProUGUI RemainingCounter;
 
     [SerializeField]private PlayerInteraction PlayerInteractScript;
     [SerializeField]private bool PlayerInBounds = false;
@@ -19,6 +22,7 @@ public class ShardBlocker : MonoBehaviour
             MaxblockLevel = 3;
         }
         CurrentBlockLevel = MaxblockLevel;
+        RemainingCounter.text = "Needed Gems: " + CurrentBlockLevel.ToString();
     }
 
 
@@ -56,6 +60,7 @@ public class ShardBlocker : MonoBehaviour
     public void RemoveBlockLevel()
     {
         CurrentBlockLevel--;
+        RemainingCounter.text="Needed Gems: "+CurrentBlockLevel.ToString();
         if (CurrentBlockLevel <= 0)
         {
             //Play animations 

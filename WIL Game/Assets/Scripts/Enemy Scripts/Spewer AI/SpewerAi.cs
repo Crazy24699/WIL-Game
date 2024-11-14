@@ -45,20 +45,37 @@ public class SpewerAi : BTBaseEnemy
         
     }
 
+    private void Start()
+    {
+        if(TutorialOverride)
+        {
+            MaxHealth = 10;
+            CurrentHealth = MaxHealth;
+            StartupRan = true;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
+        
+        if(TutorialOverride)
+        {
+
+            HealthBar.value = CurrentHealth;
+            if (CurrentHealth <= 0)
+            {
+                Death();
+                Destroy(gameObject);
+            }
+        }
         if (!StartupRan)
         {
             return;
         }
 
-        HealthBar.value = CurrentHealth;
-        if (CurrentHealth <= 0)
-        {
-            Death();
-            Destroy(gameObject);
-        }
+
+        if (TutorialOverride) { return; }
         HandleForce();
 
 
@@ -69,6 +86,8 @@ public class SpewerAi : BTBaseEnemy
 
     private void FixedUpdate()
     {
+        if(TutorialOverride) { return; }
+
         if (StartupRan && Alive)
         {
             Debug.Log("This Is running");

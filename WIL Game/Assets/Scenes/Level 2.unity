@@ -1534,6 +1534,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpireParentLevel: 1
+  EnemyChildrem: []
 --- !u!4 &472728076
 Transform:
   m_ObjectHideFlags: 0
@@ -2571,6 +2572,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpireParentLevel: 1
+  EnemyChildrem: []
 --- !u!1001 &754993929
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5327,6 +5329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpireParentLevel: 1
+  EnemyChildrem: []
 --- !u!1001 &1303888458
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6403,6 +6406,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpireParentLevel: 1
+  EnemyChildrem: []
 --- !u!1 &1499711119
 GameObject:
   m_ObjectHideFlags: 0
@@ -7287,6 +7291,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpireParentLevel: 1
+  EnemyChildrem: []
 --- !u!1 &1787903964
 GameObject:
   m_ObjectHideFlags: 0

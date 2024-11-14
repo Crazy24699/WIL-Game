@@ -290,13 +290,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7b5775f7a292c4458cf012fc61546cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentHealth: 0
   KnockbackPower: 100
-  KnockbackTimer: 4
   BaseMoveSpeed: 10
+  ExtraRotSpeed: 0
   CurrentPlayerDistance: 0
+  MaxFollowDistance: 0
   MaxAttackDistance: 15
   CurrentMoveSpeed: 60
+  PathfindAwayDistance: 0
+  OrbitingDistance: 0
+  PolutionShardPrefab: {fileID: 3294361129638444983, guid: f6881c5ab4517c64a82674d315fb1512, type: 3}
   PlayerTarget: {fileID: 0}
   SeenPlayer: 0
   PatrolActive: 0
@@ -304,30 +307,31 @@ MonoBehaviour:
   OnAttackingList: 0
   StartupRan: 0
   Alive: 1
+  Override: 0
+  PatrolOverrdide: 0
+  AttackAreaOverride: 0
+  IsAttacking: 0
+  OutOfAttackRange: 0
+  CanAttackPlayer: 0
   NavMeshRef: {fileID: 0}
   HealthBar: {fileID: 1940078667021057516}
   PlayerLayer:
     serializedVersion: 2
     m_Bits: 8192
   SpireAreaNumber: 0
-  NextWaypointDistance: 5
   CurrentRangeTime: 0
   WaypointPosition: {fileID: 0}
   WaypointParent: {fileID: 0}
-  IsAttacking: 0
-  OutOfAttackRange: 0
-  CanAttackPlayer: 0
   PositionLock: {x: 0, y: 0, z: 0}
   RootNode:
     CurrentNodeState: 0
   AllNodeChoices: []
   SpireLoaction: {fileID: 0}
-  SearchSequenceActive: 0
-  SpeedBoost: 0
+  SpireParentScript: {fileID: 0}
   Dropplet: {fileID: 4202391225557946259, guid: 48effde0c951f16449ffaafa24e9afce, type: 3}
   SpewPoint: {fileID: 8941987920333540598}
-  PlayerDistance: 0
   MaxAttackDist: 0
+  TutorialOverride: 0
 --- !u!195 &4367929386131366846
 NavMeshAgent:
   m_ObjectHideFlags: 0

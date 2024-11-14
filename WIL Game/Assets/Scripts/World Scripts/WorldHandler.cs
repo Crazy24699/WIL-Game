@@ -60,8 +60,8 @@ public class WorldHandler : MonoBehaviour
         
         //Move all spires into a different script
         //StartCoroutine(TempSetActiveEnemy());
-        Debug.Log(AllSpires.Count);
-        Debug.Log(AllSpires.ElementAt(0).Value.Count);
+        //Debug.Log(AllSpires.Count);
+        //Debug.Log(AllSpires.ElementAt(0).Value.Count);
 
         ModeChange.AddListener(() => ChangeInputMode(CurrentMode));
 

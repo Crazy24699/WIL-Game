@@ -111,6 +111,11 @@ public class PlayerInteraction : MonoBehaviour
         ShardCounter.text = CurrentShardCount.ToString() + "/3";
     }
 
+    public void IncrimentGemCount()
+    {
+        CurrentGemCount++;
+    }
+
     private void HandleGemUpdate()
     {
         if( CurrentGemCount <=0  ) { return; }

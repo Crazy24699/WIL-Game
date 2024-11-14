@@ -14,7 +14,7 @@ public class PolutionShard : MonoBehaviour
 
     private void OnTriggerEnter(Collider Collision)
     {
-        if (Collision.CompareTag("Player") && Collision.gameObject.GetComponent<PlayerInteraction>() != null)
+        if (Collision.CompareTag("Player") && Collision.gameObject.GetComponent<PlayerInteraction>() != null && !Uncounted)
         {
             //Play anim
             //hide the shard body

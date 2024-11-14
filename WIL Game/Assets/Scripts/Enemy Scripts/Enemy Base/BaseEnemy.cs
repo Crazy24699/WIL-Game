@@ -57,6 +57,7 @@ public class BaseEnemy : MonoBehaviour
     [HideInInspector] public bool SeenPlayer = false;
     [HideInInspector] public bool PatrolActive;
     [HideInInspector] public bool PlayerEscaped;
+    [SerializeField] protected bool TutorialOverride;
 
     protected bool ReduceKnockbackForce;
     [HideInInspector] public bool OnAttackingList = false;
@@ -220,7 +221,7 @@ public class BaseEnemy : MonoBehaviour
     {
         //Damage effect
         //Damage sound effect
-        if (!StartupRan) { return; }
+        if (!StartupRan || TutorialOverride) { return; }
         StartCoroutine(ImmunityTimer());
         Debug.Log("without a passion");
     }

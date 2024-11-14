@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CoalProjectile : ProjectileBase
+public class TutorialProjectile : ProjectileBase
 {
     private float CurrentLifeTime = 0.0f;
     private Vector3 IntialCoalSize;
     private Vector3 FinalCoalSize;
 
+    public GameObject PlayerRef;
+
+    public bool StartupRan=false;
     private bool OnGround = false;
 
     private float VelocityReductionCap = -75.5f;
@@ -25,6 +28,12 @@ public class CoalProjectile : ProjectileBase
         InvokeRepeating("VelocityReduction", 0, 0.15f);
     }
 
+    private void Update()
+    {
+        if (!StartupRan) { return; }
+        transform.position=Vector3.MoveTowards(transform.position, PlayerRef.transform.position, 150*Time.deltaTime);
+    }
+
     private void VelocityReduction()
     {
         if (RigidBodyRef.velocity.y <= VelocityReductionCap)
@@ -36,30 +45,6 @@ public class CoalProjectile : ProjectileBase
         Vector3 ChangedVelocity = new Vector3(CurrentVelocity.x, CurrentVelocity.y - 6.5f, CurrentVelocity.z);
         RigidBodyRef.velocity = ChangedVelocity;
     }
-
-    private void Update()
-    {
-        if (CurrentLifeTime <= 0)
-        {
-            CurrentLifeTime = 0;
-            //Destroy(gameObject);
-            return;
-        }
-
-        CurrentLifeTime -= Time.deltaTime;
-        if(transform.localScale.x < FinalCoalSize.x)
-        {
-            float SizeIncreaseTime = 2f;
-            float XScaleIncrease = Mathf.Lerp(IntialCoalSize.x, FinalCoalSize.x, SizeIncreaseTime);
-
-            Vector3 CoalScaleChange = Vector3.one * XScaleIncrease;
-            transform.localScale = CoalScaleChange;
-
-        }
-
-
-    }
-
 
     private void OnCollisionEnter(Collision ObjectCollision)
     {
