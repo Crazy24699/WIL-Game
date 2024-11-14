@@ -20,7 +20,7 @@ public class SpireObject : MonoBehaviour
         SpireParentScript = transform.GetComponentInParent<SpireParent>();
         WaypointSpot = transform.Find("Location");
 
-        foreach (var Spire in SpireParentScript.SpireObjects)
+        foreach (var Spire in SpireParentScript.SpireOptions)
         {
             if (!Spire.name.Equals(ThisSpire.name))
             {

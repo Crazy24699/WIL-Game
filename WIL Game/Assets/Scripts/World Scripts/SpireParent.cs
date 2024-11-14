@@ -9,11 +9,13 @@ public class SpireParent : MonoBehaviour
 
     public int SpireParentLevel;
 
-    public HashSet<SpireObject> SpireObjects = new HashSet<SpireObject>();
+    public HashSet<SpireObject> SpireOptions = new HashSet<SpireObject>();
+    public List<BaseEnemy> EnemyChildrem = new List<BaseEnemy>();
 
     // Start is called before the first frame update
     void Start()
     {
+        GetAllEnemies();
         PopulateSpires();
     }
 
@@ -22,19 +24,31 @@ public class SpireParent : MonoBehaviour
         foreach (var SpireObject in this.transform.GetComponentsInChildren<SpireObject>())
         {
             Debug.Log("run");
-            SpireObjects.Add(SpireObject);
+            SpireOptions.Add(SpireObject);
             SpireObject.LevelSpire = SpireParentLevel;
         }
 
-        foreach (var SpireScript in SpireObjects)
+        foreach (var SpireScript in SpireOptions)
         {
             SpireScript.Startup();
         }
 
         WorldHandler WorldHandler = FindObjectOfType<WorldHandler>();
 
-        WorldHandler.AllSpires.Add(SpireParentLevel, SpireObjects.ToList());
-        //Debug.Log(WorldHandler.AllSpires.Count);
+        WorldHandler.AllSpires.Add(SpireParentLevel, SpireOptions.ToList());
+        Debug.Log(WorldHandler.AllSpires.Count+"        "+this.name);
+    }
+
+    private void GetAllEnemies()
+    {
+        HashSet<BaseEnemy> Enemies = new HashSet<BaseEnemy>();
+        BaseEnemy[] AllEnemies = transform.GetComponentsInChildren<BaseEnemy>(true);
+        Enemies = AllEnemies.ToHashSet();
+        EnemyChildrem = Enemies.ToList();
+        foreach (var Enemy in EnemyChildrem)
+        {
+            Enemy.GetComponent<BTBaseEnemy>().SpireParentScript = this;
+        }
     }
 
     private void GetSpawningGroup()

@@ -75,6 +75,7 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        StunLocked = false;
         CanMove = true;
         RigidbodyRef = GetComponent<Rigidbody>();
         CurrentSpeed = 0;
@@ -117,10 +118,7 @@ public class PlayerMovement : MonoBehaviour
 
         //Keep this in the fixed update method because if it isnt then it
         //causes the player to jitter and stutter
-        /*  This may cause a problem with jitter and it may also cause cinemachine to break and bug
 
-
-        */
         Speed = BaseMoveSpeed * SpeedMultiplier;
 
         MovePlayer();
@@ -286,7 +284,6 @@ public class PlayerMovement : MonoBehaviour
         }
         if (!CanMove) { return; }
         //Debug.Log("turn to rust");
-
         if(!PlayerAudioSource.isPlaying && CurrentSpeed > 4)
         {
             PlayerAudioSource.Play();
@@ -294,15 +291,16 @@ public class PlayerMovement : MonoBehaviour
         }
 
         PlayerVelocity.y = (Grounded) ? 0 : PlayerVelocity.y;
-        Vector3 CustomVelocity = new Vector3(RigidbodyRef.velocity.x, 0, RigidbodyRef.velocity.z);
+        Vector3 CustomVelocity = new Vector3(RigidbodyRef.velocity.x, RigidbodyRef.velocity.y, RigidbodyRef.velocity.z);
         if (CustomVelocity.magnitude > Speed) 
         {
+            return;
             Vector3 VelocityCap = CustomVelocity.normalized * Speed;
-            RigidbodyRef.velocity = new Vector3(VelocityCap.x, 0
+            RigidbodyRef.velocity = new Vector3(VelocityCap.x, VelocityCap.y
                 , VelocityCap.z);
         }
+
         MoveDirection = PlayerOrientation.forward * InputDirection.z + PlayerOrientation.right * InputDirection.x;
-        MoveDirection.y = 0;
         RigidbodyRef.AddForce(new Vector3(MoveDirection.x, 0, MoveDirection.z) * 10f * (Speed) , ForceMode.Force);
 
 

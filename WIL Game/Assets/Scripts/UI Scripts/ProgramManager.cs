@@ -15,11 +15,15 @@ public class ProgramManager : MonoBehaviour
         if(ProgramManagerInstance == null)
         {
             ProgramManagerInstance = this;
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(this.gameObject);
             return;
         }
-
-        Destroy(ProgramManagerInstance);
+        else
+        {
+            Destroy(this.gameObject);
+        }
+        Debug.Log("got one");
+        
     }
 
 

@@ -67,8 +67,8 @@ public class BaseEnemy : MonoBehaviour
     protected bool UpdateRetretPosition;
     protected bool AdvancedRetreat = false;
 
-    protected bool StartupRan = false;
-    protected bool Alive = false;
+    [SerializeField]protected bool StartupRan = false;
+    [SerializeField] protected bool Alive = false;
     protected bool SoundPlaying = false;
     public bool Override = false;
     public bool PatrolOverrdide = false; [Header("Booleans"), Space(5)]
@@ -92,8 +92,43 @@ public class BaseEnemy : MonoBehaviour
     
     public void BaseStartup()
     {
-        StartCoroutine(StartDelay());
+        EnemyAudioManager = GetComponent<EnemySoundManager>();
+        if (EnemyAudioManager == null)
+        {
+            Debug.Log("There is no audi manager on enemy: " + this.gameObject.name);
+        }
 
+        CanAttack = true;
+        RigidbodyRef = GetComponent<Rigidbody>();
+        EnemyObjectRef = this.gameObject;
+        PlayerRef = GameObject.FindGameObjectWithTag("Player");
+        PlayerTarget = PlayerRef.transform;
+
+        WorldHandlerScript = FindObjectOfType<WorldHandler>();
+
+        if (NavMeshRef == null)
+        {
+            NavMeshRef = GetComponent<NavMeshAgent>();
+        }
+
+        HealthBar = GetComponent<Slider>();
+        if (HealthBar == null)
+        {
+            HealthBar = transform.GetComponentInChildren<Slider>();
+        }
+
+        CustomStartup();
+        HealthStartup();
+
+        BaseMoveSpeed = NavMeshRef.speed;
+
+        StartupRan = true;
+        Alive = true;
+        if (GetComponent<EnemyVision>() != null)
+        {
+            VisionLinkScript = this.GetComponent<EnemyVision>();
+            VisionLinkScript.Startup(this);
+        }
     }
 
     protected virtual void CustomStartup()

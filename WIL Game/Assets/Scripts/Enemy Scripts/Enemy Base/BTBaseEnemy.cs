@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class BTBaseEnemy : BaseEnemy
 {
-    [SerializeField] protected int SpireAreaNumber;
+    [SerializeField] public int SpireAreaNumber;
 
     [Space(5)]
     //[SerializeField] protected float CurrentImmunityTime;
@@ -30,6 +30,7 @@ public class BTBaseEnemy : BaseEnemy
     [HideInInspector] public List<BTNodeBase> AllNodeChoices;
 
     [HideInInspector] public SpireObject SpireLoaction;
+    public SpireParent SpireParentScript;
 
     protected override void CustomStartup()
     {
@@ -61,9 +62,8 @@ public class BTBaseEnemy : BaseEnemy
 
     private void PopulateSpire()
     {
-        SpireAreaNumber = 0;
 
-        List<SpireObject> SpireListChosen = WorldHandlerScript.AllSpires.ElementAt(0).Value;
+        List<SpireObject> SpireListChosen = SpireParentScript.SpireOptions.ToList();
         Debug.Log(SpireListChosen.Count);
         SpireLoaction = SpireListChosen[Random.Range(0, SpireListChosen.Count)];
         WaypointParent = SpireLoaction.transform.GetComponentInParent<SpireObject>().WaypointSpot;
