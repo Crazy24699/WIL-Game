@@ -50,7 +50,7 @@ public class EnemyVision : MonoBehaviour
     private void FieldOfViewCheck()
     {
         Collider[] RangeChecks = Physics.OverlapSphere(transform.position, Radius, TargetMask);
-
+        Debug.Log("sing and grieve");
         if (RangeChecks.Length != 0)
         {
             Transform Target = RangeChecks[0].transform;

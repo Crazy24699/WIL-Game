@@ -24,7 +24,7 @@ public class BaseEnemy : MonoBehaviour
 
 
     [Space(8)]
-    [HideInInspector] public float CurrentPlayerDistance;
+ public float CurrentPlayerDistance;
     protected float ImmunityTime;
 
     [SerializeField]protected float MaxFollowDistance;
@@ -54,9 +54,9 @@ public class BaseEnemy : MonoBehaviour
     [Header("Booleans"), Space(5)]
     #region Bools
     [HideInInspector] protected bool CanTakeDamage = true;
-    [HideInInspector] public bool SeenPlayer = false;
-    [HideInInspector] public bool PatrolActive;
-    [HideInInspector] public bool PlayerEscaped;
+ public bool SeenPlayer = false;
+ public bool PatrolActive;
+    public bool PlayerEscaped;
     [SerializeField] protected bool TutorialOverride;
 
     protected bool ReduceKnockbackForce;
@@ -76,7 +76,7 @@ public class BaseEnemy : MonoBehaviour
     public bool AttackAreaOverride = false;
 
     [HideInInspector] public bool IsAttacking;
-    [HideInInspector] public bool OutOfAttackRange;
+    public bool OutOfAttackRange;
     [HideInInspector] public bool CanAttackPlayer;
 
     #endregion
@@ -87,7 +87,7 @@ public class BaseEnemy : MonoBehaviour
     [SerializeField] protected Slider HealthBar;
     protected Rigidbody RigidbodyRef;
     [SerializeField] protected LayerMask PlayerLayer;
-    private EnemyVision VisionLinkScript;
+    [SerializeField]private EnemyVision VisionLinkScript;
     protected EnemySoundManager EnemyAudioManager;
     #endregion
     

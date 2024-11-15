@@ -103,10 +103,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (StunLocked) { return; }
 
-        if (Input.GetKey(KeyCode.L))
-        {
-            Instantiate(HitParticle, transform.position, Quaternion.identity);
-        }
+        //if (Input.GetKey(KeyCode.L))
+        //{
+        //    Instantiate(HitParticle, transform.position, Quaternion.identity);
+        //}
 
         TrackPlayerMovement();
         if (PlayerAnimations.GetBool("IsAttacking"))

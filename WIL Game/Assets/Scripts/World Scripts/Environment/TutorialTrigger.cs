@@ -25,13 +25,16 @@ public class TutorialTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider Collision)
     {
-        if(Triggered || LastObjective) { return; }
+        if (Triggered) { return; }
         if (Collision.CompareTag("Player"))
         {
-            NextObjective.SetActive(true);
             TutorialText.text = UI_Text;
-            this.gameObject.SetActive(false);
             Triggered = true;
+
+            if (LastObjective) { return; }
+
+            NextObjective.SetActive(true);
+            this.gameObject.SetActive(false);
         }
 
     }

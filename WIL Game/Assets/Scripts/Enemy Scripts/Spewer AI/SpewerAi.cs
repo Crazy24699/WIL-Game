@@ -27,6 +27,7 @@ public class SpewerAi : BTBaseEnemy
 
     protected override void CustomStartup()
     {
+        
         MaxFollowDistance = 20.25f;
         base.CustomStartup();
         CreateBehaviourTree();
@@ -58,14 +59,21 @@ public class SpewerAi : BTBaseEnemy
     // Update is called once per frame
     void Update()
     {
-        
-        if(TutorialOverride)
+        //CurrentPosition = transform.position.RoundVector(2);
+        //CurrentPlayerDistance = Vector3.Distance(this.transform.position, PlayerTarget.transform.position);
+
+        if(SeenPlayer)
+        {
+            PatrolActive = false;
+        }
+
+        if (TutorialOverride)
         {
 
             HealthBar.value = CurrentHealth;
             if (CurrentHealth <= 0)
             {
-                Death();
+                //Death();
                 Destroy(gameObject);
             }
         }

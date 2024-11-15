@@ -122,6 +122,7 @@ public class PlayerInteraction : MonoBehaviour
     private void HandleGemUpdate()
     {
         if( CurrentGemCount <=0  ) { return; }
+        if (!InBlockerRange) { return; }
         CurrentShardBlocker.RemoveBlockLevel();
         CurrentGemCount--;
         GemCounter.text = CurrentGemCount.ToString();
@@ -354,6 +355,7 @@ public class PlayerInteraction : MonoBehaviour
         if (Collision.CompareTag("BarrierBreakPowerup"))
         {
             PoweredUp = true;
+            Destroy(Collision.gameObject);
         }
     }
 

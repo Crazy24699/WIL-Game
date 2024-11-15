@@ -20,18 +20,25 @@ public class PolutionShard : MonoBehaviour
             //hide the shard body
             //Destroy shard after a moment
 
-            Collision.GetComponent<PlayerInteraction>().HandleShardUpdate();
-            Uncounted = true;
+
+            if(!Uncounted)
+            {
+                Uncounted = true;
+                Collision.GetComponent<PlayerInteraction>().HandleShardUpdate();
+                Destroy(this.gameObject);
+                return;
+            }
+
             StartCoroutine(ShardInteraction()); 
         }
     }
 
     private IEnumerator ShardInteraction()
     {
-
+        if(!Uncounted) { yield break; }
         ShardBodyRef.gameObject.SetActive(false);
         yield return new WaitForSeconds(1.25f);
-        Destroy(this.gameObject);
+
     }
 
 }

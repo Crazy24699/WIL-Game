@@ -85,11 +85,11 @@ public class SeanAI : BaseEnemy
     {
         if (!StartupRan) { return; }
 
-        if(Input.GetKeyDown(KeyCode.L))
-        {
-            //NavMeshRef.isStopped = true;
+        //if(Input.GetKeyDown(KeyCode.L))
+        //{
+        //    //NavMeshRef.isStopped = true;
 
-        }
+        //}
         RetreatPosition.y = transform.position.RoundVector(2).y;
 
         CurrentPosition = transform.position.RoundVector(2);

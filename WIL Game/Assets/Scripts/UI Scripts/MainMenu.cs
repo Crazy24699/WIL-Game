@@ -25,7 +25,7 @@ public class MainMenu : MonoBehaviour
 
     public void PlayGame()
     {
-        SceneManager.LoadScene("Level 1 Greybox"); 
+        SceneManager.LoadScene("Tutorial"); 
         Time.timeScale = 1.0f;
     }
 

@@ -108,15 +108,15 @@ public class TrashBag : BTBaseEnemy
         CheckSoundPlayState();
 
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            FireProjectile();
-        }
-        if(Input.GetKeyDown(KeyCode.M))
-        {
-            CanAttack = true;
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    FireProjectile();
+        //}
+        //if(Input.GetKeyDown(KeyCode.M))
+        //{
+        //    CanAttack = true;
             
-        }
+        //}
         if (SeenPlayer)
         {
             CurrentDistance = Vector3.Distance(PlayerRef.transform.position, transform.position).RoundFloat(2);

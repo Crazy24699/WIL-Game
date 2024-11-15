@@ -1735,6 +1735,7 @@ GameObject:
   - component: {fileID: 6011452434393844684}
   - component: {fileID: 5556662404449390179}
   - component: {fileID: 6876396681573678820}
+  - component: {fileID: 7237624700460793633}
   m_Layer: 0
   m_Name: TrashBag Enemy
   m_TagString: Enemy
@@ -1750,7 +1751,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5264924548282321936}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 64.2, y: -1.3699999, z: -179.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1829,8 +1830,11 @@ MonoBehaviour:
   SeenPlayer: 0
   PatrolActive: 0
   PlayerEscaped: 0
+  TutorialOverride: 0
   OnAttackingList: 0
-  Override: 1
+  StartupRan: 0
+  Alive: 0
+  Override: 0
   PatrolOverrdide: 0
   AttackAreaOverride: 0
   IsAttacking: 0
@@ -1850,6 +1854,7 @@ MonoBehaviour:
     CurrentNodeState: 0
   AllNodeChoices: []
   SpireLoaction: {fileID: 0}
+  SpireParentScript: {fileID: 0}
   TargetedPosition: {x: 0, y: 0, z: 0}
   HasTargetPosition: 0
   CurrentDistance: 0
@@ -1937,7 +1942,7 @@ AudioSource:
   MinDistance: 5
   MaxDistance: 100
   Pan2D: 0
-  rolloffMode: 2
+  rolloffMode: 0
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -1970,7 +1975,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -2010,6 +2015,40 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7237624700460793633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5264924548282321936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d033b5fa8573cf74eae8ff89ca7e3ec7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Emitter: {fileID: 6876396681573678820}
+  SoundPlaying: 0
+  CurrentSound: 4
+  EnemySounds:
+  - Name: Moving
+    SoundClip: {fileID: 8300000, guid: cd4a65106686afb4ebaefe8e94c680e5, type: 3}
+    Volume: 1
+    Pitch: 0
+    Looping: 1
+    Source: {fileID: 0}
+  - Name: Attack
+    SoundClip: {fileID: 8300000, guid: 1257d6b549a425c4c8fc5e2ea8124384, type: 3}
+    Volume: 1
+    Pitch: 0
+    Looping: 0
+    Source: {fileID: 0}
+  - Name: Silence
+    SoundClip: {fileID: 8300000, guid: 9b0815494f8c7424c90de0bf1bc7ef10, type: 3}
+    Volume: 1
+    Pitch: 0
+    Looping: 1
+    Source: {fileID: 0}
 --- !u!1 &5519751498931474071
 GameObject:
   m_ObjectHideFlags: 0

@@ -27,7 +27,7 @@ public class BTPersuePlayer : BTNodeBase
         {
 
             EnemyScript.PatrolActive = false;
-
+            Debug.Log("OPlayer");   
             EnemyScript.SetDestination(EnemyScript.PlayerTarget);
             EnemyScript.HandlePlayerRange();
             Debug.Log("the devils take ");

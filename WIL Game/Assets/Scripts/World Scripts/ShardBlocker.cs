@@ -22,6 +22,7 @@ public class ShardBlocker : MonoBehaviour
             MaxblockLevel = 3;
         }
         CurrentBlockLevel = MaxblockLevel;
+        RemainingCounter = transform.GetComponentInChildren<TextMeshProUGUI>();
         RemainingCounter.text = "Needed Gems: " + CurrentBlockLevel.ToString();
     }
 
@@ -70,6 +71,10 @@ public class ShardBlocker : MonoBehaviour
 
     public void RemoveBlockLevel()
     {
+        if (!PlayerInBounds)
+        {
+            return;
+        }
         CurrentBlockLevel--;
         RemainingCounter.text="Needed Gems: "+CurrentBlockLevel.ToString();
         if (CurrentBlockLevel <= 0)

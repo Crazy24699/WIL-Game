@@ -15,14 +15,15 @@ public class GemPickup : MonoBehaviour
 
     private void OnTriggerEnter(Collider Collision)
     {
-        if (Collision.CompareTag("Player") && Collision.gameObject.GetComponent<PlayerInteraction>() != null && !Uncounted)
+        if (Collision.CompareTag("Player") && Collision.gameObject.GetComponent<PlayerInteraction>() != null && Uncounted)
         {
             //Play anim
             //hide the shard body
             //Destroy shard after a moment
 
             Collision.GetComponent<PlayerInteraction>().IncrimentGemCount();
-            Uncounted = true;
+            Uncounted = false;
+            Uncounted = false;
             StartCoroutine(ShardInteraction());
         }
     }

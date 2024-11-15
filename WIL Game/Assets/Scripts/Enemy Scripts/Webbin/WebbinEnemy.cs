@@ -212,11 +212,11 @@ public class WebbinEnemy : BossBase
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            WebbinAnimations.SetTrigger("WebAttack");
+        //if (Input.GetKeyDown(KeyCode.L))
+        //{
+        //    WebbinAnimations.SetTrigger("WebAttack");
 
-        }
+        //}
         if (Override) { return; }
         UpdateDistance();
         if (AttackChosen && ActionAvaliable && CanAttack)
