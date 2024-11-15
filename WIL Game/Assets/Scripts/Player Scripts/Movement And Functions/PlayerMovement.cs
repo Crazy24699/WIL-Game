@@ -108,7 +108,7 @@ public class PlayerMovement : MonoBehaviour
             Instantiate(HitParticle, transform.position, Quaternion.identity);
         }
 
-
+        TrackPlayerMovement();
         if (PlayerAnimations.GetBool("IsAttacking"))
         {
             RigidbodyRef.velocity = Vector3.zero;
@@ -122,7 +122,7 @@ public class PlayerMovement : MonoBehaviour
         Speed = BaseMoveSpeed * SpeedMultiplier;
 
         MovePlayer();
-        TrackPlayerMovement();
+
     }
 
     private void Update()
@@ -241,7 +241,7 @@ public class PlayerMovement : MonoBehaviour
         bool BackGrounded = Physics.CheckSphere(Back_GroundCheckTransform.position, DetectionRadius, GroundLayers);
         Grounded = FrontGrounded || BackGrounded;
 
-        float VerticalGravity = Grounded ? -0.81f : -9.81f*2;
+        float VerticalGravity = Grounded ? -0.81f : -19.81f*2;
         RigidbodyRef.AddForce(new Vector3(0, VerticalGravity, 0), ForceMode.Acceleration);
 
         HandleAnimationStates();

@@ -8,6 +8,7 @@ public class GemPickup : MonoBehaviour
     private bool Uncounted = false;
     private void Start()
     {
+        Uncounted = true;
         GemBodyRef = transform.GetComponentInChildren<MeshRenderer>().gameObject;
         this.gameObject.name = GemBodyRef.name + "" + Random.Range(-965, 956);
     }

@@ -76,6 +76,9 @@ public class PlayerInteraction : MonoBehaviour
         PlayerInputRef.PlayerInteraction.ShowMenu.performed += Context => ChangeMenu();
         PlayerInputRef.PlayerInteraction.ShowMenu.Enable();
         PlayerInputRef.StoryMenu.EndStory.performed += Context => EndStory();
+
+        PlayerInputRef.PlayerAttack.Healing.performed += Context => Heal();
+        PlayerInputRef.PlayerAttack.Healing.Enable();
     }
 
     public AudioClip HandleAudioClip(string Name, bool Stop)
@@ -283,6 +286,16 @@ public class PlayerInteraction : MonoBehaviour
         HandleHealth(DamageTaken);
     }
 
+    private void Heal()
+    {
+        if (CurrentShardCount <= 0 || CurrentHealth>=MaxHealth) { return; }
+        CurrentHealth += 10;
+        if(CurrentHealth >= MaxHealth) {  CurrentHealth = MaxHealth; }
+        HandleHealthChange();
+        CurrentShardCount--;
+
+    }
+
     public void HandleHealth(int HealthChange)
     {
         if (!CanTakeDamage) { return; }
@@ -310,6 +323,12 @@ public class PlayerInteraction : MonoBehaviour
         PlayerMoveScript.StunLocked = true;
         yield return new WaitForSeconds(0.35f);
         PlayerMoveScript.StunLocked = false;
+    }
+
+    private void FixedUpdate()
+    {
+        HandleHealthChange();
+        ShardCounter.text = CurrentShardCount.ToString() + "/3";
     }
 
     private void HandleHealthChange()

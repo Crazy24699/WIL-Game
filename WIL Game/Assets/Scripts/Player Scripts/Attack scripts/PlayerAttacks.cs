@@ -13,6 +13,9 @@ public class PlayerAttacks : MonoBehaviour
 
     //May need to remove this
     [SerializeField] protected bool IsAttacking = false;
+    [SerializeField] protected bool ChannelAttack = false;
+    [SerializeField] private bool CanAttack = true;
+    private bool Moving = false;
 
     [Space(5)]
     public GameObject FreeLookCam;
@@ -25,7 +28,7 @@ public class PlayerAttacks : MonoBehaviour
     public Animator AttackAnimation;
 
     [Space(5)]
-                //PLAYER INPUT ACTIONS
+    //PLAYER INPUT ACTIONS
     public PlayerInput PlayerInputRef;
     protected InputAction MainAttack;
     protected InputAction SecondAttack;
@@ -37,7 +40,7 @@ public class PlayerAttacks : MonoBehaviour
     public PlayerMovement PlayerMoveScript;
     public CameraFunctionality CamFunctionScript;
     protected PlayerInteraction PlayerInteractionScript;
-    
+
     public enum AllAttacks
     {
         None,
@@ -74,16 +77,17 @@ public class PlayerAttacks : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+
         //PopulateAttacks();
         PopulateScripts();
         NextAttack = AllAttacks.None;
-        
+        CanAttack = true;
 
         CurrentAttack = AllAttacks.None;
 
         PlayerInputRef.Enable();
 
-        SetActiveAttack(AllAttacks.SlashAttack,AttackTypes.Primary);
+        SetActiveAttack(AllAttacks.SlashAttack, AttackTypes.Primary);
         SetClawState(2);
 
         SetActiveAttack(AllAttacks.TailWhip, AttackTypes.Secondary);
@@ -91,6 +95,18 @@ public class PlayerAttacks : MonoBehaviour
 
         SetActiveAttack(AllAttacks.BiteAttack, AttackTypes.Third);
         SetBiteState(2);
+
+        PlayerInputRef.PlayerAttack.CancelAttack.performed += Context => HandleAttackCancel();
+
+    }
+
+    private IEnumerator AttackCanceler()
+    {
+        HandleCameraState(true);
+        HandleMovementState(true);
+        yield return new WaitForSeconds(0.45f);
+        CanAttack = true;
+
     }
 
     private void PopulateScripts()
@@ -100,6 +116,20 @@ public class PlayerAttacks : MonoBehaviour
         PlayerMoveScript = FindObjectOfType<PlayerMovement>();
         PlayerInteractionScript = FindObjectOfType<PlayerInteraction>();
         CamFunctionScript = FindObjectOfType<CameraFunctionality>();
+    }
+    private void Update()
+    {
+        IsAttacking = AttackAnimation.GetBool("IsAttacking");
+    }
+    private void HandleAttackCancel()
+    {
+        if(!ChannelAttack) { return; }
+        Debug.Log("The doom");
+        CamFunctionScript.ChangeActiveCamera(false);
+        CanAttack = false;
+        UnlockMovement();
+        StartCoroutine(AttackCanceler());
+        ChannelAttack = false;
     }
 
     private void OnEnable()
@@ -114,13 +144,19 @@ public class PlayerAttacks : MonoBehaviour
 
     private void FixedUpdate()
     {
-        IsAttacking = AttackAnimation.GetBool("IsAttacking");
         
+        
+        if(IsAttacking)
+        {
+            
+        }
+
         //PlayerMoveScript.CanMove = !IsAttacking;
     }
 
     private void SetActiveAttack(AllAttacks ChosenAttack, AttackTypes AttackBind)
     {
+        
         switch (AttackBind)
         {
             case AttackTypes.Primary:
@@ -130,6 +166,9 @@ public class PlayerAttacks : MonoBehaviour
 
             case AttackTypes.Secondary:
                 PlayerInputRef.PlayerAttack.SecondaryAttack.performed += Context => AimProjectile();
+                PlayerInputRef.PlayerAttack.SecondaryAttack.performed += Context => SetChannelAttack(true);
+                
+                PlayerInputRef.PlayerAttack.SecondaryAttack.canceled += Context => SetChannelAttack(false);
                 PlayerInputRef.PlayerAttack.SecondaryAttack.canceled += Context => PerformAttack(ChosenAttack);
                 SecondAttack = PlayerInputRef.PlayerAttack.SecondaryAttack;
                 break;
@@ -164,9 +203,14 @@ public class PlayerAttacks : MonoBehaviour
         return false;
     }
 
+    private void SetChannelAttack(bool State)
+    {
+        ChannelAttack = State;  
+    }
+
     private void PerformAttack(AllAttacks SetAttck)
     {
-        if (!PlayerMoveScript.Grounded)
+        if (!PlayerMoveScript.Grounded || !CanAttack || ChannelAttack)
         {
             return;
         }
@@ -209,7 +253,7 @@ public class PlayerAttacks : MonoBehaviour
         {
             NextAttack = SetAttck;
         }
-        
+
     }
 
     private void HandleAttackChaining()
@@ -225,6 +269,8 @@ public class PlayerAttacks : MonoBehaviour
 
     private void AimProjectile()
     {
+        if (!PlayerMoveScript.Grounded) { return; }
+
         //Debug.Log("call our names in the vally of the saints");
         CamFunctionScript.ChangeActiveCamera(true);
         PlayerMoveScript.CanMove = false;
@@ -260,7 +306,7 @@ public class PlayerAttacks : MonoBehaviour
 
     private void BiteAttackFunction()
     {
-        IsAttacking = true;
+        //IsAttacking = true;
         PlayAttackAnim("BiteAttack");
         HandleMovementState(false);
         //StartCoroutine(AttackBoxLifetime(2.5f, Attacks[0]));
@@ -270,7 +316,7 @@ public class PlayerAttacks : MonoBehaviour
     {
 
         AttackAnimation.SetTrigger(AnimName);
-        AttackAnimation.SetBool(nameof(IsAttacking), true);
+        //AttackAnimation.SetBool(nameof(IsAttacking), true);
         //StartCoroutine(AttackReset());
         ResetAttack();
     }
@@ -301,7 +347,7 @@ public class PlayerAttacks : MonoBehaviour
     {
         bool Active = ActiveState == 1 ? true : false;
         ClawSlashBox.SetActive(Active);
-        IsAttacking = Active;
+        //IsAttacking = Active;
         if (ActiveState == 2)
         {
             return;
@@ -313,10 +359,11 @@ public class PlayerAttacks : MonoBehaviour
     [SerializeField]
     private void SetBiteState(int ActiveState)
     {
+        Debug.Log("burry");
         bool Active = ActiveState == 1 ? true : false;
+        IsAttacking = Active;
         //Debug.Log(Active + "  " + ActiveState+"Bite state");
         BiteBox.SetActive(Active);
-        IsAttacking = Active;
         if (ActiveState == 2)
         {
             return;
@@ -330,7 +377,7 @@ public class PlayerAttacks : MonoBehaviour
     private void SetTailAttackState(int ActiveState)
     {
         bool Active = ActiveState == 1 ? true : false;
-        IsAttacking = Active;
+        //IsAttacking = Active;
         if (ActiveState == 2)
         {
             return;

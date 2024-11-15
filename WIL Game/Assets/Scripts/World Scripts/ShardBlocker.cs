@@ -38,6 +38,17 @@ public class ShardBlocker : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (CurrentBlockLevel <= 0)
+        {
+            //Play animations 
+            //play sound
+            //play vfx
+            Destroy(this.gameObject);
+        }
+    }
+
     private void OnTriggerStay(Collider Collider)
     {
         if (Collider.CompareTag("Player") && PlayerInteractScript != null)

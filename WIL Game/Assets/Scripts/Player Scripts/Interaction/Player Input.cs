@@ -266,6 +266,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Healing"",
+                    ""type"": ""Button"",
+                    ""id"": ""7a5bd724-9e63-4a2b-a7e6-8910f5ac30f5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -305,11 +314,22 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""8658800a-7368-4e8a-a60f-d25ae4dfb9b5"",
-                    ""path"": ""<Mouse>/rightButton"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""CancelAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3081b3be-49ca-42ba-ba60-2f9674f1a5cd"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Healing"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -393,6 +413,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_PlayerAttack_SecondaryAttack = m_PlayerAttack.FindAction("Secondary Attack", throwIfNotFound: true);
         m_PlayerAttack_ThirdAttack = m_PlayerAttack.FindAction("Third Attack", throwIfNotFound: true);
         m_PlayerAttack_CancelAttack = m_PlayerAttack.FindAction("CancelAttack", throwIfNotFound: true);
+        m_PlayerAttack_Healing = m_PlayerAttack.FindAction("Healing", throwIfNotFound: true);
         // StoryMenu
         m_StoryMenu = asset.FindActionMap("StoryMenu", throwIfNotFound: true);
         m_StoryMenu_Click = m_StoryMenu.FindAction("Click", throwIfNotFound: true);
@@ -578,6 +599,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerAttack_SecondaryAttack;
     private readonly InputAction m_PlayerAttack_ThirdAttack;
     private readonly InputAction m_PlayerAttack_CancelAttack;
+    private readonly InputAction m_PlayerAttack_Healing;
     public struct PlayerAttackActions
     {
         private @PlayerInput m_Wrapper;
@@ -586,6 +608,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @SecondaryAttack => m_Wrapper.m_PlayerAttack_SecondaryAttack;
         public InputAction @ThirdAttack => m_Wrapper.m_PlayerAttack_ThirdAttack;
         public InputAction @CancelAttack => m_Wrapper.m_PlayerAttack_CancelAttack;
+        public InputAction @Healing => m_Wrapper.m_PlayerAttack_Healing;
         public InputActionMap Get() { return m_Wrapper.m_PlayerAttack; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -607,6 +630,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @CancelAttack.started += instance.OnCancelAttack;
             @CancelAttack.performed += instance.OnCancelAttack;
             @CancelAttack.canceled += instance.OnCancelAttack;
+            @Healing.started += instance.OnHealing;
+            @Healing.performed += instance.OnHealing;
+            @Healing.canceled += instance.OnHealing;
         }
 
         private void UnregisterCallbacks(IPlayerAttackActions instance)
@@ -623,6 +649,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @CancelAttack.started -= instance.OnCancelAttack;
             @CancelAttack.performed -= instance.OnCancelAttack;
             @CancelAttack.canceled -= instance.OnCancelAttack;
+            @Healing.started -= instance.OnHealing;
+            @Healing.performed -= instance.OnHealing;
+            @Healing.canceled -= instance.OnHealing;
         }
 
         public void RemoveCallbacks(IPlayerAttackActions instance)
@@ -720,6 +749,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnSecondaryAttack(InputAction.CallbackContext context);
         void OnThirdAttack(InputAction.CallbackContext context);
         void OnCancelAttack(InputAction.CallbackContext context);
+        void OnHealing(InputAction.CallbackContext context);
     }
     public interface IStoryMenuActions
     {
