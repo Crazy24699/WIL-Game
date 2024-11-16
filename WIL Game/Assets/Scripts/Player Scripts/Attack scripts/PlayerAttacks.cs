@@ -304,6 +304,12 @@ public class PlayerAttacks : MonoBehaviour
         SpawnedSlash.GetComponent<ProjectileBase>().LifeStartup(TailFirePoint.transform.forward, 200 * 3);
     }
 
+    [SerializeField ] private void NotAttacking()
+    {
+        PlayerMoveScript.Attacking = false;
+        AttackAnimation.SetBool("IsAttacking", false);
+    }
+
     private void BiteAttackFunction()
     {
         //IsAttacking = true;

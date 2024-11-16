@@ -122,13 +122,14 @@ public class PlayerMovement : MonoBehaviour
         Speed = BaseMoveSpeed * SpeedMultiplier;
 
         MovePlayer();
-
+        AlignToSurface();
     }
 
     private void Update()
     {
         if (StunLocked) { return; }
         DashResetTimer();
+
 
         TrackBatloOrientation();
         ReduceDashVelocity();
@@ -234,6 +235,32 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
+    private void AlignToSurface()
+    {
+        RaycastHit HitInfo;
+        if(Physics.Raycast(transform.position, Vector3.down, out HitInfo, Mathf.Infinity, GroundLayers))
+        {
+            // Get the surface normal
+            Vector3 surfaceNormal = HitInfo.normal;
+
+            // Calculate the desired rotation to align with the surface normal
+            Quaternion targetRotation = Quaternion.FromToRotation(transform.up, surfaceNormal) * transform.rotation;
+
+            // Decompose the current rotation into Euler angles
+            Vector3 currentEulerAngles = transform.rotation.eulerAngles;
+
+            // Decompose the target rotation into Euler angles
+            Vector3 targetEulerAngles = targetRotation.eulerAngles;
+
+            // Additively modify only the X and Z axes, keeping the Y axis unchanged
+            float smoothedX = Mathf.LerpAngle(currentEulerAngles.x, targetEulerAngles.x, 100 * Time.deltaTime);
+            float smoothedZ = Mathf.LerpAngle(currentEulerAngles.z, targetEulerAngles.z, 100 * Time.deltaTime);
+
+            // Apply the new rotation
+            transform.rotation = Quaternion.Euler(smoothedX, currentEulerAngles.y, smoothedZ);
+        }
+    }
+
     private void TrackPlayerMovement()
     {
         
@@ -241,7 +268,7 @@ public class PlayerMovement : MonoBehaviour
         bool BackGrounded = Physics.CheckSphere(Back_GroundCheckTransform.position, DetectionRadius, GroundLayers);
         Grounded = FrontGrounded || BackGrounded;
 
-        float VerticalGravity = Grounded ? -0.81f : -19.81f*2;
+        float VerticalGravity = Grounded ? -9.81f : -27.81f*2;
         RigidbodyRef.AddForce(new Vector3(0, VerticalGravity, 0), ForceMode.Acceleration);
 
         HandleAnimationStates();

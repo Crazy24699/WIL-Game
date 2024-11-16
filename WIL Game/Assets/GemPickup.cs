@@ -21,7 +21,7 @@ public class GemPickup : MonoBehaviour
             //hide the shard body
             //Destroy shard after a moment
 
-            Collision.GetComponent<PlayerInteraction>().IncrimentGemCount();
+            //Collision.GetComponent<PlayerInteraction>().IncrimentGemCount();
             Uncounted = false;
             Uncounted = false;
             StartCoroutine(ShardInteraction());

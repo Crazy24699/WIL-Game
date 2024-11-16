@@ -114,6 +114,15 @@ public class PlayerInteraction : MonoBehaviour
         ShardCounter.text = CurrentShardCount.ToString() + "/3";
     }
 
+    private void DecrimentShard()
+    {
+        if (CurrentShardCount<= 0) { return; }
+        if (!InBlockerRange) { return; }
+        CurrentShardBlocker.RemoveBlockLevel();
+        CurrentShardCount--;
+        ShardCounter.text = CurrentGemCount.ToString();
+    }
+
     public void IncrimentGemCount()
     {
         CurrentGemCount++;
@@ -222,7 +231,8 @@ public class PlayerInteraction : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.E))
         {
-            HandleGemUpdate();
+            //HandleGemUpdate();
+            DecrimentShard();
         }
 
     }

@@ -95,7 +95,7 @@ public class BTBaseEnemy : BaseEnemy
             {
                 if (CurrentRangeTime < OutOfRangeTimer) { CurrentRangeTime = OutOfRangeTimer; }
 
-                Debug.DrawRay(this.transform.position, TargetDirection, Color.red, 50);
+                //Debug.DrawRay(this.transform.position, TargetDirection, Color.red, 50);
                 return;
             }
         }

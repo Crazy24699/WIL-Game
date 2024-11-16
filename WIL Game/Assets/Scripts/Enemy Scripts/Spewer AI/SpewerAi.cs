@@ -82,6 +82,11 @@ public class SpewerAi : BTBaseEnemy
             return;
         }
 
+        if(!Alive)
+        {
+            Destroy(this.gameObject);
+        }
+
 
         if (TutorialOverride) { return; }
         HandleForce();
@@ -115,7 +120,8 @@ public class SpewerAi : BTBaseEnemy
             OnAttackingList = true;
 
         }
-        if (!OnAttackingList) { return; }
+
+        if (!OnAttackingList || !CanAttack) { return; }
         Debug.Log("Wishing for\r\nWicked ways");
 
         LockForAttack();
@@ -123,19 +129,26 @@ public class SpewerAi : BTBaseEnemy
 
     }
 
+    public void DisableAttacking()
+    {
+        CanAttack = false;
+        CanAttackPlayer = false;
+    }
+
+    public IEnumerator StartAttackCooldown()
+    {
+
+        yield return new WaitForSeconds(1);
+        CanAttack = true;
+        CanAttackPlayer = true;
+    }
+
     public void SpawnDropplet()
     {
         GameObject SpawnedDropplet = Instantiate(Dropplet, SpewPoint.transform.position, SpewPoint.transform.rotation);
         SpawnedDropplet.GetComponent<ProjectileBase>().LifeStartup(transform.forward, 100);
-        CanAttackPlayer = false;
+        //CanAttackPlayer = false;
     }
-
-    public void AttackCooldown()
-    {
-        StartCoroutine(AttackCooldown(2.5f));
-
-    }
-
 
     public void CreateBehaviourTree()
     {

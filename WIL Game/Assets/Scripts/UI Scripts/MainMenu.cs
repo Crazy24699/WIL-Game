@@ -35,6 +35,12 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
 
+    public void StartGame()
+    {
+        SceneManager.LoadScene("Level 1");
+        Time.timeScale = 1.0f;
+    }
+
     public void ShowOptions()
     {
         OptionsMenuPanel.SetActive(true);

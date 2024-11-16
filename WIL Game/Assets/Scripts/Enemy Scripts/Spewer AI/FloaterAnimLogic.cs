@@ -18,5 +18,13 @@ public class FloaterAnimLogic : MonoBehaviour
         SpewerAIScript.SpawnDropplet();
     }
     
+    private void DisableAttack()
+    {
+        SpewerAIScript.CanAttackPlayer = false;
+    }
 
+    private void StartAttackCooldown()
+    {
+        StartCoroutine(SpewerAIScript.StartAttackCooldown());
+    }
 }
