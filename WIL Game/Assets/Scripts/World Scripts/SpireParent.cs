@@ -35,7 +35,7 @@ public class SpireParent : MonoBehaviour
 
         WorldHandler WorldHandler = FindObjectOfType<WorldHandler>();
 
-        WorldHandler.AllSpires.Add(SpireParentLevel, SpireOptions.ToList());
+        //WorldHandler.AllSpires.Add(SpireParentLevel, SpireOptions.ToList());
         Debug.Log(WorldHandler.AllSpires.Count+"        "+this.name);
     }
 

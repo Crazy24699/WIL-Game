@@ -33,8 +33,9 @@ public class EnemySoundManager : MonoBehaviour
 
     public void PlaySound(SoundOptions SelectedSound)
     {
-        if (CurrentSound==SelectedSound) { return; }
+        if (CurrentSound==SelectedSound) { Debug.Log("Sounder"); return; }
         StopSound();
+        Debug.Log("Sounder      "+SelectedSound);
         bool Exists = EnemySounds.Any(ES => ES.Name == SelectedSound.ToString());
         if (!Exists) { Debug.LogError("Sound no existo"); return; }
         Sound SoundRef = EnemySounds.FirstOrDefault(Snd => Snd.Name == SelectedSound.ToString());

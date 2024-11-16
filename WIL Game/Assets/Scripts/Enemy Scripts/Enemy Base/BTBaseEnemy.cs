@@ -62,7 +62,7 @@ public class BTBaseEnemy : BaseEnemy
 
     private void PopulateSpire()
     {
-
+        
         List<SpireObject> SpireListChosen = SpireParentScript.SpireOptions.ToList();
         Debug.Log(SpireListChosen.Count);
         SpireLoaction = SpireListChosen[Random.Range(0, SpireListChosen.Count)];
@@ -128,6 +128,7 @@ public class BTBaseEnemy : BaseEnemy
     public void SetDestination(Transform ObjectLocation)
     {
         NavMeshRef.SetDestination(ObjectLocation.transform.position);
+        CurrentTarget = ObjectLocation;
         NavMeshRef.isStopped = false;
     }
 

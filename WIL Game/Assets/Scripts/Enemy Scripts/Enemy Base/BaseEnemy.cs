@@ -45,17 +45,18 @@ public class BaseEnemy : MonoBehaviour
 
     [Space(5)]
     [HideInInspector] public Transform PlayerTarget;
+    public Transform CurrentTarget;
     #endregion
 
     [HideInInspector] protected Vector3 PlayerDirection;
-    protected Vector3 RetreatPosition;
+    [SerializeField]protected Vector3 RetreatPosition;
     [HideInInspector] protected Vector3 CurrentPosition;
 
     [Header("Booleans"), Space(5)]
     #region Bools
     [HideInInspector] protected bool CanTakeDamage = true;
- public bool SeenPlayer = false;
- public bool PatrolActive;
+    public bool SeenPlayer = false;
+    public bool PatrolActive;
     public bool PlayerEscaped;
     [SerializeField] protected bool TutorialOverride;
 
@@ -74,6 +75,7 @@ public class BaseEnemy : MonoBehaviour
     public bool Override = false;
     public bool PatrolOverrdide = false; [Header("Booleans"), Space(5)]
     public bool AttackAreaOverride = false;
+    [SerializeField]protected bool TakingDamage = false;
 
     [HideInInspector] public bool IsAttacking;
     public bool OutOfAttackRange;
@@ -221,8 +223,11 @@ public class BaseEnemy : MonoBehaviour
     {
         //Damage effect
         //Damage sound effect
+        TakingDamage = true;
+        EnemyAudioManager.PlaySound(EnemySoundManager.SoundOptions.TakeDamage);
         if (!StartupRan || TutorialOverride) { return; }
         StartCoroutine(ImmunityTimer());
+        ApplyKnockback();
         Debug.Log("without a passion");
     }
 
@@ -257,7 +262,8 @@ public class BaseEnemy : MonoBehaviour
 
     public void RotateToTarget()
     {
-        Vector3 TargetDirection = PlayerRef.transform.position - this.transform.position;
+        if(CurrentTarget == null) { return; }
+        Vector3 TargetDirection = CurrentTarget.transform.position - this.transform.position;
         TargetDirection.y = 0.0f;
         Quaternion TargetRotation = Quaternion.LookRotation(TargetDirection);
 
@@ -362,6 +368,7 @@ public class BaseEnemy : MonoBehaviour
         RetreatPosition = RetreatPosition.RoundVector(2);
 
         NavMeshRef.SetDestination(RetreatPosition);
+        
         AdvancedRetreat = true;
     }
 
@@ -381,6 +388,7 @@ public class BaseEnemy : MonoBehaviour
     protected IEnumerator ImmunityTimer()
     {
         CanTakeDamage = false;
+        //TakingDamage = false;
         if (ImmunityTime <= 0)
         {
             Debug.LogError("ImmunityTimer not set on: " + this.gameObject.name);
@@ -388,6 +396,7 @@ public class BaseEnemy : MonoBehaviour
         }
         yield return new WaitForSeconds(ImmunityTime);
         CanTakeDamage = true;
+
     }
 
 

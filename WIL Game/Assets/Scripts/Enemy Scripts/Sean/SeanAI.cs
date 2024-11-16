@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class SeanAI : BaseEnemy
+public class SeanAI : BTBaseEnemy
 {
     [SerializeField]private bool Attacking = false;
 
@@ -26,17 +26,30 @@ public class SeanAI : BaseEnemy
     [SerializeField] private float MinAttackDistance;
 
     private Vector3 IntialStalkingPosition;
+    private Vector3 CurrentVelocity;
+
+    private Animator SeanAnimations;
+
+    private bool IsMoving = false;
+    [SerializeField] private bool TestOverride;
 
     private void Start()
     {
-        BaseStartup();
+        if(TestOverride)
+        {
+            Debug.LogError("Remove this when the enemy is done");
+            BaseStartup();
+        }
     }
 
     protected override void CustomStartup()
     {
-        base.CustomStartup();
+
+        SeanAnimations = GetComponentInChildren<Animator>();
         MaxHealth = 10;
-        BaseMoveSpeed = 15;
+        BaseMoveSpeed = NavMeshRef.speed ;
+        base.CustomStartup();
+
         EnemyObjectRef = this.gameObject;
         PlayerRef = GameObject.FindGameObjectWithTag("Player");
         PlayerTarget = PlayerRef.transform;
@@ -51,9 +64,40 @@ public class SeanAI : BaseEnemy
         //remove this   ;
         RetreatPosition = transform.position;
         StalkingTimer = StalkTime;
+        PatrolActive = true;
     }
 
+    private void HandleMoveAnim()
+    {
 
+        if(IsAttacking|| TakingDamage) { return; }
+        Debug.Log("past days gone again");
+        if (CurrentVelocity.magnitude <= 2)
+        {
+            IsMoving = false;
+            if (!Attacking || TakingDamage)
+            {
+                EnemyAudioManager.PlaySound(EnemySoundManager.SoundOptions.Silence);
+            }
+        }
+        else if(CurrentVelocity.magnitude > 2)
+        {
+            IsMoving = true;
+            EnemyAudioManager.PlaySound(EnemySoundManager.SoundOptions.Moving);
+        }
+        SeanAnimations.SetBool("Moving", IsMoving);
+        
+    }
+
+    public void ImpactSound()
+    {
+        Debug.Log("attack set");
+        EnemyAudioManager.PlaySound(EnemySoundManager.SoundOptions.Attack);
+    }
+
+    
+
+    /*
     public override void Attack()
     {
         if(!CanAttack || !OnAttackingList) { return; }
@@ -80,39 +124,35 @@ public class SeanAI : BaseEnemy
         }
         AttackUp = CanAttack;
     }
-
+    */
     private void Update()
     {
         if (!StartupRan) { return; }
-
-        //if(Input.GetKeyDown(KeyCode.L))
-        //{
-        //    //NavMeshRef.isStopped = true;
-
-        //}
+        CurrentVelocity = NavMeshRef.velocity;
+        HandleMoveAnim();
         RetreatPosition.y = transform.position.RoundVector(2).y;
 
         CurrentPosition = transform.position.RoundVector(2);
         CurrentPlayerDistance = Vector3.Distance(this.transform.position, PlayerTarget.transform.position);
 
         RotateToTarget();
+        HandlePatrol();
         HandleBehaviour();
-        
-        //if (KeepAttackDistance)
-        //{
-            
-        //    //KeepOrbitDistance();
-        //    return;
-        //}
-
-        //HandleRetreating();
-        //if(Retreat) { return; }
-        //Attack();
-
-        //KeepChosenDistance();
-        //HandleOrbit();
 
     }
+
+    private void HandlePatrol()
+    {
+        if (SeenPlayer || PatrolOverrdide) { return; }
+
+        Debug.Log("patroling");
+        if (!NavMeshRef.hasPath && !NavMeshRef.pathPending)
+        {
+            SetDestination(WaypointPosition);
+        }
+
+    }
+
 
     private Vector3 HandleCirlcing()
     {
@@ -124,9 +164,18 @@ public class SeanAI : BaseEnemy
     }
 
     private void HandleBehaviour() 
-    { 
+    {
 
+        if (!SeenPlayer)
+        {
+            PatrolActive = true;
+        }
+        else if(SeenPlayer)
+        {
+            PatrolActive = false;
+        }
 
+        if(PatrolActive) { return; }
         if (!OnAttackingList)
         {
             Orbiting = true;
@@ -147,6 +196,7 @@ public class SeanAI : BaseEnemy
                 NavMeshRef.isStopped = false;
                 Debug.Log("SetDestination");
                 NavMeshRef.SetDestination(PlayerTarget.transform.position);
+                CurrentTarget = PlayerTarget;
                 Debug.Log("143");
 
                 return;
@@ -179,18 +229,24 @@ public class SeanAI : BaseEnemy
     {
         if (CurrentPlayerDistance <= MinAttackDistance)
         {
+            SeanAnimations.SetTrigger("AttackTrigger");
             NavMeshRef.isStopped = true;
             NavMeshRef.velocity = Vector3.zero;
             CanAttack = false;
             Debug.Log("attacked");
 
-            StartCoroutine(RetreatDelay());
+            //StartCoroutine(RetreatDelay());
             return;
         }
         NavMeshRef.isStopped = false;
         NavMeshRef.SetDestination(PlayerTarget.transform.position);
         Debug.Log("182");
 
+    }
+
+    public void RetreatWaitTime()
+    {
+        StartCoroutine(RetreatDelay());
     }
 
     private void StalkingTime()
@@ -226,19 +282,6 @@ public class SeanAI : BaseEnemy
 
     private void KeepChosenDistance()
     {
-        //if(Attacking) { return; }
-        //if(CurrentPlayerDistance<=MinStalkDistance)
-        //{
-        //    CanAttack = true;
-        //    StopCoroutine(AttackCooldown());
-        //    Attack();
-        //    Vector3 RandomPoint = Random.insideUnitCircle;
-
-        //    NavMeshRef.isStopped = false;
-        //    RandomPoint += PlayerTarget.transform.position;
-        //    Retreat = true;
-        //    NavMeshRef.SetDestination(Vector3.zero);
-        //}
 
         if (CurrentPlayerDistance < MaxStalkDistance - 10) 
         {
@@ -337,6 +380,7 @@ public class SeanAI : BaseEnemy
     public IEnumerator RetreatDelay()
     {
         IntialStalkingPosition = transform.position.RoundVector(2);
+        RetreatPosition = IntialStalkingPosition;
         Debug.Log("retreat");
         yield return new WaitForSeconds(WaitTime);
         Retreat = true;

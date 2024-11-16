@@ -13,22 +13,36 @@ public class SeanAnimLink : MonoBehaviour
     }
 
     [SerializeField]
-    private void ActivateImmune()
-    {
-
-    }
-
-    [SerializeField]
-    private void DeactivateImmune()
-    {
-
-    }
-
-    [SerializeField]
     private void ActivateAttackBox()
     {
         Debug.Log("base");
         CollisionBox.SetActive(true);
+    }
+
+
+    [SerializeField]
+    private void AttackTrue()
+    {
+        SeanScriptLink.IsAttacking = true;
+    }
+    [SerializeField]
+    private void AttackFalse()
+    {
+        SeanScriptLink.IsAttacking = false;
+    }
+
+
+
+    [SerializeField]
+    private void PlayImpact()
+    {
+        SeanScriptLink.ImpactSound();
+    }
+
+    [SerializeField]
+    private void TriggerRetreat()
+    {
+        SeanScriptLink.RetreatWaitTime();
     }
 
     [SerializeField]
@@ -36,11 +50,5 @@ public class SeanAnimLink : MonoBehaviour
     {
         Debug.Log("switch");
         CollisionBox.SetActive(false);
-    }
-
-    [SerializeField]
-    private void RetreatWaitTime()
-    {
-        
     }
 }

@@ -245,6 +245,7 @@ public class EnemyBase : MonoBehaviour
     public void SetDestination(Transform ObjectLocation)
     {
         NavMeshRef.SetDestination(ObjectLocation.transform.position);
+
         NavMeshRef.isStopped = false;
     }
 

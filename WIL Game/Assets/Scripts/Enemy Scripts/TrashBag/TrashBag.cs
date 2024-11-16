@@ -126,12 +126,15 @@ public class TrashBag : BTBaseEnemy
         if (NavMeshRef.velocity.magnitude > 1)
         {
             TrashBag_Animations.SetBool("Moving", true);
-            EnemyAudioManager.PlaySound(EnemySoundManager.SoundOptions.Moving);
+            if (!TakingDamage)
+            {
+                EnemyAudioManager.PlaySound(EnemySoundManager.SoundOptions.Moving);
+            }
         }
         else if (NavMeshRef.velocity.magnitude <= 1)
         {
             TrashBag_Animations.SetBool("Moving", false);
-            if (!Attacking)
+            if (!Attacking || !TakingDamage)
             {
                 EnemyAudioManager.PlaySound(EnemySoundManager.SoundOptions.Silence);
             }
@@ -189,6 +192,7 @@ public class TrashBag : BTBaseEnemy
                     if (!NavMeshRef.hasPath && !NavMeshRef.pathPending)
                     {
                         NavMeshRef.SetDestination(PlayerRef.transform.position);
+                        CurrentTarget = PlayerRef.transform;
                         Debug.Log("be dangerous");
                     }
                 }
@@ -203,6 +207,7 @@ public class TrashBag : BTBaseEnemy
                 NavMeshRef.enabled = true;
                 Debug.Log("wishing us for wicked ways");
                 NavMeshRef.SetDestination(PlayerRef.transform.position);
+                CurrentTarget = PlayerRef.transform;
             }
             else if (CurrentDistance.RoundFloat(2) <= MinFollowDistance + 1 && CanAttack)
             {
@@ -262,6 +267,7 @@ public class TrashBag : BTBaseEnemy
             Debug.Log("old firend");
             if (!NavMeshRef.enabled) { NavMeshRef.enabled = true; }
             NavMeshRef.SetDestination(PlayerRef.transform.position);
+            CurrentTarget = PlayerRef.transform;
             NavMeshRef.speed = BaseMoveSpeed + 10;
             
         }
@@ -364,6 +370,7 @@ public class TrashBag : BTBaseEnemy
                 NavMeshRef.isStopped = false;
                 Debug.Log("ive made our hellbent mistake");
                 NavMeshRef.SetDestination(PlayerRef.transform.position);
+                CurrentTarget = PlayerRef.transform;
                 Debug.Log(NavMeshRef.destination);
             }
         }
