@@ -45,7 +45,9 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private GameObject PlayerStoryMenu;
 
 
-    [SerializeField] private Sound[] PlayerSounds;
+    [SerializeField] public Sound[] PlayerSounds;
+    [SerializeField] private AudioSource PlayerAudioSource;
+
 
     // Start is called before the first frame update
     void Awake()
@@ -54,7 +56,7 @@ public class PlayerInteraction : MonoBehaviour
 
         PlayerCamFunction = this.transform.root.GetComponentInChildren<CameraFunctionality>();
 
-
+        PlayerAudioSource = this.GetComponent<AudioSource>();
         Cursor.lockState = CursorLockMode.Locked;
         MenuActive = false ;
         PlayerInputRef = new PlayerInput();
@@ -99,6 +101,18 @@ public class PlayerInteraction : MonoBehaviour
                 break;
         }
         return null;
+    }
+
+    public void PlayAttackSounds(string SoundEffectName)
+    {
+        bool SoundExists = PlayerSounds.Any(Snd => Snd.Name == SoundEffectName);
+        if (!SoundExists) { Debug.LogError("Sound doesnt exist"); return; }
+
+        Sound SoundClip = PlayerSounds.FirstOrDefault(Snd => Snd.Name == SoundEffectName);
+        PlayerAudioSource.clip = SoundClip.SoundClip;
+
+
+        PlayerAudioSource.Play();
     }
 
     public void HandleShardUpdate()

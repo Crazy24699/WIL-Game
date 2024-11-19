@@ -16,7 +16,7 @@ public class BTKaraMove : BTNodeBase
 
     public override NodeStateOptions RunLogicAndState()
     {
-
+        
         if(KaraScript.CanMove && KaraScript.BeyondAllAttack || (KaraScript.AllAttacksDown))
         {
             KaraScript.SetDestination(KaraScript.PlayerRef.transform);

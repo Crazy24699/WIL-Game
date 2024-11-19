@@ -27,6 +27,17 @@ public class BossBase : MonoBehaviour
 
     }
 
+    public void RotateToTarget()
+    {
+        if (PlayerRef == null) { return; }
+        Vector3 TargetDirection = PlayerRef.transform.position - this.transform.position;
+        TargetDirection.y = 0.0f;
+        Quaternion TargetRotation = Quaternion.LookRotation(TargetDirection);
+
+        this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, TargetRotation, (35f + 180) * Time.deltaTime);
+    }
+
+
     protected void HealtbarStartup()
     {
         if (HealthBar == null)
@@ -38,7 +49,7 @@ public class BossBase : MonoBehaviour
         HealthBar.value = CurrentHealth;
     }
 
-    public void HandleHealth(int HealthChange)
+    public virtual void HandleHealth(int HealthChange)
     {
         int ChangedHealth = (CurrentHealth + HealthChange);
         Die(ChangedHealth);
@@ -48,7 +59,7 @@ public class BossBase : MonoBehaviour
         HealthBar.value = CurrentHealth;
     }
 
-    protected void Die(int HealthCheck)
+    protected virtual void Die(int HealthCheck)
     {
         if (HealthCheck <= 0)
         {

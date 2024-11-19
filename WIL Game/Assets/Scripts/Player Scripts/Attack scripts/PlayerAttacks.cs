@@ -300,7 +300,7 @@ public class PlayerAttacks : MonoBehaviour
 
     public void SpawnTailProjectile()
     {
-        GameObject SpawnedSlash = Instantiate(TailSlashObject, TailFirePoint.transform.position, transform.rotation);
+        GameObject SpawnedSlash = Instantiate(TailSlashObject, TailFirePoint.transform.position, TailFirePoint.transform.rotation);
         SpawnedSlash.GetComponent<ProjectileBase>().LifeStartup(TailFirePoint.transform.forward, 200 * 3);
     }
 
@@ -432,4 +432,20 @@ public class PlayerAttacks : MonoBehaviour
         PlayerInteractionScript.CanTakeDamage = false;
     }
 
+    [SerializeField]
+    private void PlayTailWhipSound()
+    {
+        PlayerInteractionScript.PlayAttackSounds("Tail Whip");
+    }
+
+    [SerializeField]
+    private void PlayBiteSound()
+    {
+        PlayerInteractionScript.PlayAttackSounds("Bite");
+    }
+    [SerializeField]
+    private void PlaySlashSound()
+    {
+        PlayerInteractionScript.PlayAttackSounds("Slash");
+    }
 }

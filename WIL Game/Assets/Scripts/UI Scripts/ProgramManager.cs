@@ -10,6 +10,16 @@ public class ProgramManager : MonoBehaviour
     public static ProgramManager ProgramManagerInstance;
     public bool GamePaused = false;
 
+    public enum AllLevels
+    {
+        Tutorial,
+        Level1,
+        Level2,
+        Level3
+    };
+
+    public AllLevels CurrentLevel;
+
     public void Start()
     {
         if(ProgramManagerInstance == null)
@@ -24,6 +34,11 @@ public class ProgramManager : MonoBehaviour
         }
         Debug.Log("got one");
         
+    }
+
+    public void ReportLevel(AllLevels LevelUpdate)
+    {
+
     }
 
 

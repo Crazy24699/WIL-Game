@@ -9,7 +9,7 @@ public class KaraBossAI : BossBase
     #region Bools
     public bool PerformingAttack;
 
-
+    public BossSoundManager BossSoundManage;
     
     
     [HideInInspector] public bool CustomLocationChosen = false;
@@ -96,6 +96,10 @@ public class KaraBossAI : BossBase
 
         PlayerRef = FindObjectOfType<PlayerInteraction>().gameObject;
 
+        if (BossSoundManage == null)
+        {
+            BossSoundManage = this.GetComponent<BossSoundManager>();
+        }
 
         Alive = true;
         ActionLockoutTime = 5;
@@ -127,6 +131,18 @@ public class KaraBossAI : BossBase
     }
 
 
+    public override void HandleHealth(int HealthChange)
+    {
+        base.HandleHealth(HealthChange);
+        BossSoundManage.PlaySound(BossSoundManager.SoundOptions.TakeDamage);
+    }
+
+    protected override void Die(int HealthCheck)
+    {
+        base.Die(HealthCheck);
+        BossSoundManage.PlaySound(BossSoundManager.SoundOptions.Death);
+    }
+
 
     private void FixedUpdate()
     {
@@ -153,7 +169,7 @@ public class KaraBossAI : BossBase
 
         CheckDistance();
         //AttackChecker();
-
+        RotateToTarget();
         //New code
 
         CanPerformAction = PlayerDistance <= MaxAttackDistance ? true : false;
@@ -166,6 +182,7 @@ public class KaraBossAI : BossBase
             }
         }
 
+        
 
         if (CanPerformAction)
         {
@@ -191,6 +208,8 @@ public class KaraBossAI : BossBase
         KaraAnimations.SetTrigger("CoalAttack");
 
     }
+
+    
 
     public void SlashHorn()
     {

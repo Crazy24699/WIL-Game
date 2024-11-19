@@ -15,14 +15,14 @@ public class EnemyAttackCollider : MonoBehaviour
         Debug.Log(Collision.name);
         if (Collision.CompareTag("Player"))
         {
-        Debug.Log("This Player");
+            Debug.Log("This Player");
             PlayerInteraction PlayerHealth = Collision.GetComponent<PlayerInteraction>();
             if (PlayerHealth == null)
             {
                 PlayerHealth=Collision.transform.GetComponentInParent<PlayerInteraction>();
             }
-            PlayerHealth.HandleHealth(-AttackDamage);
-        Debug.Log("Takes Damage");
+            PlayerHealth.TakeHit(-AttackDamage, transform.position);
+            Debug.Log("Takes Damage");
 
         }
     }
