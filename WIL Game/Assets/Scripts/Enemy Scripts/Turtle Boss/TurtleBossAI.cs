@@ -9,9 +9,9 @@ using UnityEngine.UI;
 public class TurtleBossAI : BossBase
 {
 
-
     [SerializeField]public BubbleAttack BubbleAttackClass;
     public BucketAttack BucketAttackClass;
+    public BossSoundManager BossSoundManage;
 
     [SerializeField]private Vector3 PositionLockCords;
     public Vector3 CurrentVelocity;
@@ -64,6 +64,12 @@ public class TurtleBossAI : BossBase
             TurnSpeed = 4.5f;
         }
         CurrentHealth = MaxHealth;
+
+
+        if (BossSoundManage == null)
+        {
+            BossSoundManage = this.GetComponent<BossSoundManager>();
+        }
 
         TurtleAnimation = transform.GetComponentInChildren<Animator>();
         PlayerRef = FindObjectOfType<PlayerInteraction>().gameObject;

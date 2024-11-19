@@ -60,4 +60,9 @@ public class HinuAimTrigger : MonoBehaviour
         TurtleAttackScript.ChangeLockState();
     }
 
+    [SerializeField]
+    private void PlayWalkSound()
+    {
+
+    }
 }
