@@ -118,13 +118,6 @@ public class PlayerInteraction : MonoBehaviour
     public void HandleShardUpdate()
     {
         CurrentShardCount++;
-        if( CurrentShardCount>= 3 )
-        {
-            CurrentShardCount -= 3;
-
-            CurrentGemCount++;
-            GemCounter.text = CurrentGemCount.ToString();
-        }
         ShardCounter.text = CurrentShardCount.ToString() + "/3";
     }
 
@@ -151,10 +144,31 @@ public class PlayerInteraction : MonoBehaviour
         GemCounter.text = CurrentGemCount.ToString();
     }
 
+    private void OnDestroy()
+    {
+        PlayerInputRef.PlayerInteraction.ShowMenu.performed -= Context => ChangeMenu();
+        PlayerInputRef.PlayerInteraction.ShowMenu.Disable();
+
+        PlayerInputRef.StoryMenu.EndStory.performed -= Context => EndStory();
+        PlayerInputRef.StoryMenu.EndStory.Disable();
+
+        PlayerInputRef.PlayerAttack.Healing.performed -= Context => Heal();
+        PlayerInputRef.PlayerAttack.Healing.Disable();
+    }
+
     public void OnDisable()
     {
         InputRef.Disable();
         PlayerInputRef.PlayerInteraction.ShowMenu.Disable();
+
+        PlayerInputRef.PlayerInteraction.ShowMenu.performed -= Context => ChangeMenu();
+        PlayerInputRef.PlayerInteraction.ShowMenu.Disable();
+
+        PlayerInputRef.StoryMenu.EndStory.performed -= Context => EndStory();
+        PlayerInputRef.StoryMenu.EndStory.Disable();
+
+        PlayerInputRef.PlayerAttack.Healing.performed -= Context => Heal();
+        PlayerInputRef.PlayerAttack.Healing.Disable();
     }
 
     public void ChangeMenu()
@@ -304,11 +318,11 @@ public class PlayerInteraction : MonoBehaviour
         Direction.y = 0;
         Debug.DrawRay(ObjectHitPosition, Direction*20,Color.blue,300.0f);
 
+        HandleHealth(DamageTaken);
         StartCoroutine(HandleStunLock());
         StartCoroutine(ImmunityTimer());
         PlayerMoveScript.ApplyKnockback(Direction);
-
-        HandleHealth(DamageTaken);
+        
     }
 
     private void Heal()
@@ -324,7 +338,7 @@ public class PlayerInteraction : MonoBehaviour
     public void HandleHealth(int HealthChange)
     {
         if (!CanTakeDamage) { return; }
-
+        Debug.Log(HealthChange);
         if (HealthChange <= 0)
         {
             PlayerAnimator.SetTrigger("TakeHit");

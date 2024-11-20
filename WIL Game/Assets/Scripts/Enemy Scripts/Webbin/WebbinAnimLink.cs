@@ -6,12 +6,29 @@ public class WebbinAnimLink : MonoBehaviour
 {
     private WebbinEnemy WebbinScript;
 
+    private bool RollAttacking = false;
+    private bool ScuttleMoving = false;
+
     // Start is called before the first frame update
     void Start()
     {
         WebbinScript = transform.parent.root.GetComponent<WebbinEnemy>();
     }
 
+
+    private void StartScuttle()
+    {
+        if(ScuttleMoving) { return; }
+
+        ScuttleMoving = true;
+        WebbinScript.BossSoundManagerScript.PlaySound(BossSoundManager.SoundOptions.Moving);
+    }
+
+    private void EndScuttle()
+    {
+        ScuttleMoving = false;
+        WebbinScript.BossSoundManagerScript.PlaySound(BossSoundManager.SoundOptions.Silence);
+    }
 
     private void StartAttackCooldown()
     {
@@ -27,9 +44,19 @@ public class WebbinAnimLink : MonoBehaviour
         Debug.Log("Web barrage");
     }
 
-    private void StartActionDelay()
+    [SerializeField]
+    private void StartRollAttack()
     {
+        if(RollAttacking) { return; }
+        RollAttacking = true;
+        WebbinScript.BossSoundManagerScript.PlaySound(BossSoundManager.SoundOptions.Attack1);
+    }
 
+    [SerializeField] 
+    private void EndRollAttack()
+    {
+        RollAttacking = false;
+        //WebbinScript.BossSoundManagerScript.PlaySound(BossSoundManager.SoundOptions.Silence);
     }
 
 }

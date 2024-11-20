@@ -38,6 +38,7 @@ public class HinuAimTrigger : MonoBehaviour
     private void StartBashAttack()
     {
         HitBoxEngaged = true;
+        PunchHitBox.enabled = HitBoxEngaged;
         StartCoroutine(TurtleAttackScript.BucketAttackClass.AttackCooldown());
         TurtleAttackScript.ChangeLockState();
     }
@@ -63,6 +64,14 @@ public class HinuAimTrigger : MonoBehaviour
     [SerializeField]
     private void PlayWalkSound()
     {
-
+        TurtleAttackScript.BossSoundManage.PlaySound(BossSoundManager.SoundOptions.Moving);
     }
+
+    [SerializeField]
+    private void PlayPunchSound()
+    {
+        TurtleAttackScript.BossSoundManage.PlaySound(BossSoundManager.SoundOptions.Attack1);
+    }
+
+
 }

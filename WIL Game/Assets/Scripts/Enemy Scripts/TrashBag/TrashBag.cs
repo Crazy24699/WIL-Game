@@ -35,8 +35,11 @@ public class TrashBag : BTBaseEnemy
 
     private void Start()
     {
-        Debug.LogError("Remove this when the enemy is done");
-        BaseStartup();
+        //Debug.LogError("Remove this when the enemy is done");
+        if (Override)
+        {
+            BaseStartup();
+        }
 
     }
 

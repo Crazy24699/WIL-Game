@@ -31,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
     protected float TurnSmoothingVel;
     public float TurnTime = 0.1f;
 
-    private float MovingDelayTimer = 0.15f;
+    private float MovingDelayTimer = 0.05f;
     [SerializeField] private float CurrentMoveDelayTime;
 
     private float DashSetTime = 0.93f;
@@ -82,6 +82,9 @@ public class PlayerMovement : MonoBehaviour
 
         PlayerInputRef = new PlayerInput();
         PlayerInputRef.Enable();
+
+        PlayerInputRef.BasePlayerMovement.Enable();
+
         PlayerInputRef.BasePlayerMovement.MovementModifiers.performed += Context => Sprint(2.5f);
         PlayerInputRef.BasePlayerMovement.MovementModifiers.canceled += Context => Sprint(1f);
         SpeedMultiplier = 1f;
@@ -165,10 +168,9 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("kickback;");
             Vector3 SetDashDirection = (PlayerOrientation.forward * DashDirection.y + PlayerOrientation.right * DashDirection.x) * DashDistance;
             PlayerAttackScript.SetDodgeInfo((PlayerOrientation.forward * DashDirection.y + PlayerOrientation.right * DashDirection.x).normalized);
-            
+
             RigidbodyRef.AddForce(SetDashDirection * 25, ForceMode.Impulse);
             PlayerDashing = true;
-
             StartCoroutine(DashTime());
         }
     }
@@ -186,6 +188,30 @@ public class PlayerMovement : MonoBehaviour
         {
             RigidbodyRef.velocity *= 0.975f;
         }
+    }
+
+    private void OnDestroy()
+    {
+        PlayerInputRef.BasePlayerMovement.MovementModifiers.performed -= Context => Sprint(2.5f);
+        PlayerInputRef.BasePlayerMovement.MovementModifiers.canceled -= Context => Sprint(1f);
+
+        PlayerInputRef.BasePlayerMovement.DashReading.performed -= Context => HandleDashDirection();
+        PlayerInputRef.BasePlayerMovement.DashMovement.performed -= Context => StartDash();
+        PlayerInputRef.Dispose();
+        PlayerInputRef.Disable();
+    }
+
+    private void OnDisable()
+    {
+        PlayerInputRef.BasePlayerMovement.MovementModifiers.performed -= Context => Sprint(2.5f);
+        PlayerInputRef.BasePlayerMovement.MovementModifiers.canceled -= Context => Sprint(1f);
+
+        PlayerInputRef.BasePlayerMovement.DashReading.performed -= Context => HandleDashDirection();
+        PlayerInputRef.BasePlayerMovement.DashMovement.performed -= Context => StartDash();
+
+        PlayerInputRef.Dispose();
+        PlayerInputRef.Disable();
+
     }
 
     private void DashResetTimer()
@@ -216,6 +242,8 @@ public class PlayerMovement : MonoBehaviour
         {
             DashDirection = NormalizeDashDirection(NewDashDirection);
         }
+
+
     }
 
     private Vector2 NormalizeDashDirection(Vector2 inputDirection)
@@ -240,19 +268,13 @@ public class PlayerMovement : MonoBehaviour
         RaycastHit HitInfo;
         if(Physics.Raycast(transform.position, Vector3.down, out HitInfo, Mathf.Infinity, GroundLayers))
         {
-            // Get the surface normal
             Vector3 surfaceNormal = HitInfo.normal;
 
-            // Calculate the desired rotation to align with the surface normal
             Quaternion targetRotation = Quaternion.FromToRotation(transform.up, surfaceNormal) * transform.rotation;
-
-            // Decompose the current rotation into Euler angles
             Vector3 currentEulerAngles = transform.rotation.eulerAngles;
 
-            // Decompose the target rotation into Euler angles
             Vector3 targetEulerAngles = targetRotation.eulerAngles;
 
-            // Additively modify only the X and Z axes, keeping the Y axis unchanged
             float smoothedX = Mathf.LerpAngle(currentEulerAngles.x, targetEulerAngles.x, 100 * Time.deltaTime);
             float smoothedZ = Mathf.LerpAngle(currentEulerAngles.z, targetEulerAngles.z, 100 * Time.deltaTime);
 

@@ -23,7 +23,7 @@ public class ShardBlocker : MonoBehaviour
         }
         CurrentBlockLevel = MaxblockLevel;
         RemainingCounter = transform.GetComponentInChildren<TextMeshProUGUI>();
-        RemainingCounter.text = "Needed Gems: " + CurrentBlockLevel.ToString();
+        RemainingCounter.text = "Press E to use shards.\nShards Needed: " + CurrentBlockLevel.ToString();
     }
 
 
@@ -76,7 +76,7 @@ public class ShardBlocker : MonoBehaviour
             return;
         }
         CurrentBlockLevel--;
-        RemainingCounter.text="Needed Gems: "+CurrentBlockLevel.ToString();
+        RemainingCounter.text="Press E to use shards.\nShards Needed: "+CurrentBlockLevel.ToString();
         if (CurrentBlockLevel <= 0)
         {
             //Play animations 

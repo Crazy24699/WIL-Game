@@ -222,7 +222,8 @@ public class TurtleBossAI : BossBase
             if (CurrentDelay <= 0)
             {
                 CurrentDelay = BubbleShotDelay;
-                BubbleAttackClass.ShootingThing();
+                BubbleAttackClass.SpawnBubbleShot();
+                
                 Debug.Log("Run mf run");
             }
 
@@ -265,7 +266,7 @@ public class TurtleBossAI : BossBase
 
         public float AttackRange;
 
-        public void BubbleShot(int ShotIndex, string NameNumbers)
+        public void BubbleShoting(int ShotIndex, string NameNumbers)
         {
             
 
@@ -275,7 +276,7 @@ public class TurtleBossAI : BossBase
 
         }
 
-        public void ShootingThing()
+        public void SpawnBubbleShot()
         {
             GameObject BubbleShotObejct = Instantiate(BubblePrefab, ShootPoint.transform.position, ShootPoint.transform.rotation);
             BubbleShotObejct.GetComponent<ProjectileBase>().LifeStartup(ShootPoint.transform.forward, 300);

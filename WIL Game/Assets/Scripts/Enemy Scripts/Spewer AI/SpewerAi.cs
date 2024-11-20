@@ -6,10 +6,10 @@ using UnityEngine;
 
 //if this is here, that means you have not taken the spewer ai off of its dev 
 //exception and needs to be. 
-using TMPro;
-using Microsoft;
-using JetBrains;
-using OpenCover;
+//using TMPro;
+//using Microsoft;
+//using JetBrains;
+//using OpenCover;
 
 public class SpewerAi : BTBaseEnemy
 {
@@ -20,14 +20,16 @@ public class SpewerAi : BTBaseEnemy
     protected float PlayerDistance;
     public float MaxAttackDist;
 
+    public bool IsMoving = false;
 
+    public EnemySoundManager EnemySoundManagerScript;
 
     private Animator EnemyAnimator;
     
 
     protected override void CustomStartup()
     {
-        
+        EnemySoundManagerScript = GetComponent<EnemySoundManager>();
         MaxFollowDistance = 20.25f;
         base.CustomStartup();
         CreateBehaviourTree();
@@ -62,12 +64,10 @@ public class SpewerAi : BTBaseEnemy
         //CurrentPosition = transform.position.RoundVector(2);
         //CurrentPlayerDistance = Vector3.Distance(this.transform.position, PlayerTarget.transform.position);
 
-        if(SeenPlayer)
-        {
-            PatrolActive = false;
-        }
 
-        if (TutorialOverride)
+        if (!StartupRan) { return; }
+
+        if (TutorialOverride )
         {
 
             HealthBar.value = CurrentHealth;
@@ -77,18 +77,21 @@ public class SpewerAi : BTBaseEnemy
                 Destroy(gameObject);
             }
         }
-        if (!StartupRan)
+
+
+        if (TutorialOverride) { return; }
+        if (SeenPlayer)
         {
-            return;
+            PatrolActive = false;
         }
 
-        if(!Alive)
+
+        if (!Alive)
         {
             Destroy(this.gameObject);
         }
 
 
-        if (TutorialOverride) { return; }
         HandleForce();
 
 

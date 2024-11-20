@@ -7,6 +7,7 @@ public class BossSoundManager : MonoBehaviour
 {
     [SerializeField] private AudioSource Emitter;
     public bool SoundPlaying = false;
+
     public enum SoundOptions
     {
         Moving,

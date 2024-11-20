@@ -14,6 +14,7 @@ public class ProjectileBase : MonoBehaviour
     protected int Damage;
     protected bool CanDestory = false;
 
+
     [SerializeField]private float AdditionalForce;
 
     public void LifeStartup(Vector3 DirectionalForce, float InitalForce)
@@ -47,6 +48,7 @@ public class ProjectileBase : MonoBehaviour
             InvokeRepeating("VelocityReduction", 0, 0.25f);
         }
         LifeStarted = true;
+
     }
 
     protected virtual void CustomBehaviour()

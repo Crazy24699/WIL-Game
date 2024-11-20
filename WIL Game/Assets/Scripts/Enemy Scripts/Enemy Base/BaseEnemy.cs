@@ -90,7 +90,7 @@ public class BaseEnemy : MonoBehaviour
     protected Rigidbody RigidbodyRef;
     [SerializeField] protected LayerMask PlayerLayer;
     [SerializeField]private EnemyVision VisionLinkScript;
-    protected EnemySoundManager EnemyAudioManager;
+    [SerializeField]protected EnemySoundManager EnemyAudioManager;
     #endregion
     
     public void BaseStartup()
@@ -222,7 +222,7 @@ public class BaseEnemy : MonoBehaviour
     protected virtual void TakeHit()
     {
         //Damage effect
-        //Damage sound effect
+        if (TutorialOverride) { return; }
         TakingDamage = true;
         EnemyAudioManager.PlaySound(EnemySoundManager.SoundOptions.TakeDamage);
         if (!StartupRan || TutorialOverride) { return; }

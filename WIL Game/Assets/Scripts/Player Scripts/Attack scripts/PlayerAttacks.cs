@@ -308,6 +308,7 @@ public class PlayerAttacks : MonoBehaviour
     {
         PlayerMoveScript.Attacking = false;
         AttackAnimation.SetBool("IsAttacking", false);
+        PlayerMoveScript.AttackLocked = false;
     }
 
     private void BiteAttackFunction()
@@ -435,6 +436,7 @@ public class PlayerAttacks : MonoBehaviour
     [SerializeField]
     private void PlayTailWhipSound()
     {
+        Debug.Log("fuck fuck fuyck");
         PlayerInteractionScript.PlayAttackSounds("Tail Whip");
     }
 

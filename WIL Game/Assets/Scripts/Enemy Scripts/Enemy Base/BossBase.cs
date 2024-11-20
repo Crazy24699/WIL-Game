@@ -64,7 +64,7 @@ public class BossBase : MonoBehaviour
         if (HealthCheck <= 0)
         {
             CurrentHealth = 0;
-            if (EndZoneArea)
+            if (!EndZoneArea)
             {
                 Debug.LogError("Endzone not set");
                 return;

@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
+
+    [SerializeField] private GameObject OptionsPanel;
+    [SerializeField] private GameObject PausePanel;
+
     public void ToMainMenu()
     {
         SceneManager.LoadScene("Main Menu");
@@ -14,6 +18,16 @@ public class PauseMenu : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    public void ShowOptions(bool ActiveState)
+    {
+        OptionsPanel.SetActive(ActiveState);
+    }
+
+    public void SetPauseState(bool PauseMenuActive)
+    {
+        PausePanel.SetActive(PauseMenuActive);
     }
 
     public void QuitGame()

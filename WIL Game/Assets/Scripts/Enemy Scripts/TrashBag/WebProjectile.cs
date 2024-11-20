@@ -10,11 +10,11 @@ public class WebProjectile : ProjectileBase
     private bool IsProjectile = true;
     private bool StartupRan = false;
 
-    [SerializeField] private MeshFilter StickingWeb_MF;
-    [SerializeField] private MeshFilter CurrentMeshFilter;
+    //[SerializeField] private MeshFilter StickingWeb_MF;
+    //[SerializeField] private MeshFilter CurrentMeshFilter;
     
-    [SerializeField] private Collider WebMeshCollider;
-    [SerializeField] private Collider DroppletCollider;
+    //[SerializeField] private Collider WebMeshCollider;
+    //[SerializeField] private Collider DroppletCollider;
 
     [SerializeField] private AudioSource WebAudio;
 
@@ -22,11 +22,16 @@ public class WebProjectile : ProjectileBase
 
     protected override void CustomBehaviour()
     {
-        CurrentMeshFilter = GetComponent<MeshFilter>();
-        WebMeshCollider = GetComponent<MeshCollider>();
-        DroppletCollider = GetComponent<SphereCollider>();
+        //CurrentMeshFilter = GetComponent<MeshFilter>();
+        //WebMeshCollider = GetComponent<MeshCollider>();
+        //DroppletCollider = GetComponent<SphereCollider>();
 
         StartupRan = true;
+
+
+        WebAudio.pitch = Random.Range(-0.95f, 1.15f);
+        WebAudio.Play();
+
     } 
 
 
@@ -41,25 +46,28 @@ public class WebProjectile : ProjectileBase
 
                 return;
             }
-            //Destroy(this.gameObject);
+            //
         }
 
-        if(Collision.CompareTag("Ground") && IsProjectile)
+        if (Collision.CompareTag("Ground") )
         {
-            StopPosition = transform.position;
-            StopPosition.y += 1.25f;
+            //StopPosition = transform.position;
+            //StopPosition.y += 1.25f;
 
-            RigidBodyRef.velocity = Vector3.one;
-            RigidBodyRef.isKinematic = true;
-            transform.position = StopPosition;
+            //RigidBodyRef.velocity = Vector3.one;
+            //RigidBodyRef.isKinematic = true;
+            //transform.position = StopPosition;
 
-            WebMeshCollider.enabled = true;
-            DroppletCollider.enabled = false;
-            CurrentMeshFilter.sharedMesh = StickingWeb_MF.sharedMesh;
-            transform.localScale = Vector3.one * 0.85f;
+            //WebMeshCollider.enabled = true;
+            //DroppletCollider.enabled = false;
+            //CurrentMeshFilter.sharedMesh = StickingWeb_MF.sharedMesh;
+            //transform.localScale = Vector3.one * 0.85f;
 
-            StartCoroutine(GroundLife());
-            IsProjectile = false;
+            //StartCoroutine(GroundLife());
+            //IsProjectile = false;
+
+
+            Destroy(this.gameObject);
         }
     }
 

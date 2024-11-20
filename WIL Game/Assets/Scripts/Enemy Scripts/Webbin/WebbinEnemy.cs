@@ -43,7 +43,7 @@ public class WebbinEnemy : BossBase
     public WebSpit WebAttack;
     public RollBash BashAttack;
     private Animator WebbinAnimations;
-
+    [SerializeField] public BossSoundManager BossSoundManagerScript;
 
     //Script area 
     public enum AttackOptions
@@ -60,6 +60,7 @@ public class WebbinEnemy : BossBase
     {
         BossStartup();
         WebbinAnimations = transform.GetComponentInChildren<Animator>();
+        BossSoundManagerScript = GetComponent<BossSoundManager>();
     }
 
     public override void BossStartup()
@@ -206,9 +207,9 @@ public class WebbinEnemy : BossBase
             return;
         }
 
-
-
     }
+
+
 
     private void Update()
     {
@@ -343,6 +344,8 @@ public class WebbinEnemy : BossBase
                 //fire web spit
                 GameObject SpawnedWebShot= Instantiate(WebShotPrefab, AttackPoint.transform.position, Quaternion.identity);
                 SpawnedWebShot.GetComponent<ProjectileBase>().LifeStartup(AttackPoint.transform.forward, 125f);
+                //ParentScriptLink.BossSoundManagerScript.PlaySound(BossSoundManager.SoundOptions.Attack2);
+
                 Debug.Log("this spit");
 
 

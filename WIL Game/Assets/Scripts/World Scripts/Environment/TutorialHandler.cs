@@ -12,7 +12,7 @@ public class TutorialHandler : MonoBehaviour
 
     private void Start()
     {
-        Player_HUD_Text.text = "Press W,A,S,D to move, proceed \nto the waypoint";
+        Player_HUD_Text.text = "Press W,A,S,D to move, you are able to press space to dash in a direction, proceed \nto the waypoint";
     }
 
 

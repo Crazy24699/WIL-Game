@@ -15,9 +15,17 @@ public class FloaterAnimLogic : MonoBehaviour
     [SerializeField]
     private void SpewDrop()
     {
+        SpewerAIScript.IsMoving = false;
         SpewerAIScript.SpawnDropplet();
+        PlaySpitSound();
     }
-    
+
+    [SerializeField]
+    private void StopMoving()
+    {
+        SpewerAIScript.IsMoving = false;
+    }
+
     private void DisableAttack()
     {
         SpewerAIScript.CanAttackPlayer = false;
@@ -27,4 +35,21 @@ public class FloaterAnimLogic : MonoBehaviour
     {
         StartCoroutine(SpewerAIScript.StartAttackCooldown());
     }
+
+    [SerializeField]
+    private void PlaySpitSound()
+    {
+        SpewerAIScript.EnemySoundManagerScript.PlaySound(EnemySoundManager.SoundOptions.Attack);
+        SpewerAIScript.IsMoving = false;
+    }
+
+    [SerializeField]
+    private void PlayMoveSound()
+    {
+        if(SpewerAIScript.IsMoving) { return; }
+        SpewerAIScript.IsMoving = true;
+        Debug.Log("Play");
+        SpewerAIScript.EnemySoundManagerScript.PlaySound(EnemySoundManager.SoundOptions.Moving);
+    }
+
 }

@@ -14,6 +14,7 @@ public class BubbleProjectile : ProjectileBase
     private Material BubbleMaterialClone;
     private Color MaterialColour;
 
+    public AudioSource Clip;
     private bool ProjectileActive = false;
 
     protected override void CustomBehaviour()
@@ -33,6 +34,8 @@ public class BubbleProjectile : ProjectileBase
         MaterialColour = BubbleMaterialRef.color;
 
         StartCoroutine(ProjectileActivator());
+        Clip.pitch = Random.Range(-0.95f, 1.15f);
+        Clip.Play();
     }
 
     private void Start()
