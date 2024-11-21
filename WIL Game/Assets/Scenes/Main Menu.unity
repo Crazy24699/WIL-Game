@@ -783,7 +783,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 24300002, guid: 257f0a4ea5f51214f919b34720698499, type: 2}
   m_audioClip: {fileID: 8300000, guid: 2c9832188706c64438aee6d602fff314, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.511
+  m_Volume: 1
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -792,7 +792,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 1000
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -880,7 +880,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GamePaused: 0
+  MasterMixer: {fileID: 24100000, guid: 257f0a4ea5f51214f919b34720698499, type: 2}
+  MusicSource: {fileID: 0}
   CurrentLevel: 0
+  SetTracks:
+  - ThisSoundTrack: 0
+    Audio: {fileID: 8300000, guid: 73345e0b1b8f92649ad3bd19f9cb99f0, type: 3}
+  - ThisSoundTrack: 1
+    Audio: {fileID: 8300000, guid: a34782bc52debd04faaf74a8f5e96655, type: 3}
+  - ThisSoundTrack: 2
+    Audio: {fileID: 8300000, guid: b710a7f2469fe6c46abd605729cdcc86, type: 3}
+  CurrentTrack: 0
 --- !u!1 &377788496
 GameObject:
   m_ObjectHideFlags: 0
@@ -1199,6 +1209,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MasterMixer: {fileID: 24100000, guid: 257f0a4ea5f51214f919b34720698499, type: 2}
+  VolumeSlider: {fileID: 382450026}
 --- !u!1 &418911945
 GameObject:
   m_ObjectHideFlags: 0

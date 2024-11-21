@@ -61,7 +61,7 @@ public class BaseEnemy : MonoBehaviour
     [SerializeField] protected bool TutorialOverride;
 
     protected bool ReduceKnockbackForce;
-    [HideInInspector] public bool OnAttackingList = false;
+     public bool OnAttackingList = false;
 
     protected bool CanAttack = true;
     protected bool Orbiting;

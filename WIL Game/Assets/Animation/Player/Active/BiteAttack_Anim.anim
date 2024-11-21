@@ -102538,6 +102538,13 @@ AnimationClip:
     floatParameter: 0
     intParameter: 1
     messageOptions: 0
+  - time: 0
+    functionName: DisableTakeDamage
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.041666668
     functionName: LockAttack
     data: 
@@ -102568,6 +102575,13 @@ AnimationClip:
     messageOptions: 0
   - time: 0.9166667
     functionName: UnlockMovement
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.9166667
+    functionName: EnableTakeDamage
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

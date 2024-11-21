@@ -80,6 +80,10 @@ public class BTBaseEnemy : BaseEnemy
         StartCoroutine(AttackCooldown(3.5f));
     }
 
+    public void RemoveFromAttackList()
+    {
+        WorldHandlerScript.EnemiesAttacking.Remove(this.gameObject);
+    }
 
     public void HandlePlayerRange()
     {
@@ -112,7 +116,6 @@ public class BTBaseEnemy : BaseEnemy
                 PlayerEscaped = true;
                 PatrolActive = true;
                 Debug.Log("Patrol Active");
-
             }
         }
 

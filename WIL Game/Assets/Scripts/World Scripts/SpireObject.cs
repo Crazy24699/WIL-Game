@@ -33,6 +33,7 @@ public class SpireObject : MonoBehaviour
     {
         if (TriggerObject.CompareTag("Enemy"))
         {
+            Debug.Log(TriggerObject.name);
             if(TriggerObject.GetComponent<BTBaseEnemy>() == null)
             {
                 return;

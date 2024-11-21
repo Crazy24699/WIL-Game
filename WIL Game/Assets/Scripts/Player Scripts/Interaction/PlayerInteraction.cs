@@ -327,7 +327,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Heal()
     {
-        if (CurrentShardCount <= 0 || CurrentHealth>=MaxHealth) { return; }
+        if (CurrentShardCount <= 0 || CurrentHealth>=MaxHealth || InBlockerRange) { return; }
         CurrentHealth += 10;
         if(CurrentHealth >= MaxHealth) {  CurrentHealth = MaxHealth; }
         HandleHealthChange();

@@ -41,6 +41,7 @@ public class BTPatrol : BTNodeBase
             EnemyScript.SetDestination(EnemyScript.WaypointPosition);
             if (EnemyScript.OnAttackingList)
             {
+                EnemyScript.RemoveFromAttackList();
                 EnemyScript.OnAttackingList = false;
             }
             return NodeStateOptions.Running;

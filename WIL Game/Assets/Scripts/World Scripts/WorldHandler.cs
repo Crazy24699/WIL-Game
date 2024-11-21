@@ -14,6 +14,7 @@ public class WorldHandler : MonoBehaviour
     [Space(1.2f), Header(" ")]
     [SerializeField] private GameObject PlayerStartPosition;
     public PlayerInteraction PlayerInteractionScript;
+    private ProgramManager ProgramManagerScriptRef;
 
     public Dictionary<int, List<SpireObject>> AllSpires = new Dictionary<int, List<SpireObject>>();
 
@@ -31,6 +32,8 @@ public class WorldHandler : MonoBehaviour
 
     [SerializeField] private List<GameObject> Entities = new List<GameObject>();
 
+    private bool TracksFading;
+
     public enum GameModes
     {
         Story,
@@ -38,7 +41,10 @@ public class WorldHandler : MonoBehaviour
         Gameplay
     };
 
+    public ProgramManager.MusicTracks CurrentTrack;
+
     public GameModes CurrentMode;
+    public ProgramManager.AllLevels CurrentLevel;
 
     private bool RunLoadscreen = false;
 
@@ -64,8 +70,26 @@ public class WorldHandler : MonoBehaviour
         //Debug.Log(AllSpires.ElementAt(0).Value.Count);
 
         ModeChange.AddListener(() => ChangeInputMode(CurrentMode));
+        ProgramManagerScriptRef = FindObjectOfType<ProgramManager>();
+        if (ProgramManagerScriptRef == null)
+        {
+            
+        }
+        //CurrentTrack = ProgramManagerScriptRef.CurrentTrack;
+        ProgramManagerScriptRef.CurrentLevel = CurrentLevel;
+        ProgramManagerScriptRef.SwitchTracks(ProgramManager.MusicTracks.Levels);
+    }
+
+    private void FixedUpdate()
+    {
+        
+    }
+
+    private void FadeTracks()
+    {
 
     }
+
 
 
     public void ChangeInputMode(GameModes ChosenMode)
@@ -98,7 +122,28 @@ public class WorldHandler : MonoBehaviour
     {
         CurrentTimescale = Time.timeScale;
         VisableEnemies=EnemiesAttacking.ToList();
+
+        if (CurrentLevel == ProgramManager.AllLevels.MainMenu && CurrentTrack != ProgramManager.MusicTracks.MainTheme)
+        {
+            ProgramManagerScriptRef.SwitchTracks(ProgramManager.MusicTracks.MainTheme);
+            CurrentTrack = ProgramManager.MusicTracks.MainTheme;
+
+        }
+
+        if (EnemiesAttacking.Count > 0 && CurrentTrack!=ProgramManager.MusicTracks.Fight)
+        {
+            ProgramManagerScriptRef.SwitchTracks(ProgramManager.MusicTracks.Fight);
+            CurrentTrack = ProgramManager.MusicTracks.Fight;
+        }
+        else if (EnemiesAttacking.Count <= 0 && CurrentTrack != ProgramManager.MusicTracks.Levels)
+        {
+            ProgramManagerScriptRef.SwitchTracks(ProgramManager.MusicTracks.Levels);
+            CurrentTrack = ProgramManager.MusicTracks.Levels;
+        }
+
     }
+
+    
 
     private IEnumerator TempSetActiveEnemy()
     {

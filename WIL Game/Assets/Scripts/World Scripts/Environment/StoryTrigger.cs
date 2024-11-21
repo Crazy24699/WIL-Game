@@ -7,6 +7,9 @@ public class StoryTrigger : MonoBehaviour
 
     private WorldHandler WorldHandlerScript;
 
+
+    [SerializeField] private string StoryText; 
+
     private void Start()
     {
         WorldHandlerScript = FindObjectOfType<WorldHandler>();

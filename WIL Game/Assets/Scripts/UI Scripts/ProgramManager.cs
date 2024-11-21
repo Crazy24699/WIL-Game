@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 
 public class ProgramManager : MonoBehaviour
@@ -9,9 +11,13 @@ public class ProgramManager : MonoBehaviour
 
     public static ProgramManager ProgramManagerInstance;
     public bool GamePaused = false;
+    public AudioMixer MasterMixer;
+
+    public AudioSource MusicSource;
 
     public enum AllLevels
     {
+        MainMenu,
         Tutorial,
         Level1,
         Level2,
@@ -20,12 +26,27 @@ public class ProgramManager : MonoBehaviour
 
     public AllLevels CurrentLevel;
 
+    public SoundTracks[] SetTracks;
+    public enum MusicTracks
+    {
+        MainTheme,
+        Levels,
+        Fight
+    }
+    [Space(5)]
+
+    public MusicTracks CurrentTrack;
+
     public void Start()
     {
         if(ProgramManagerInstance == null)
         {
             ProgramManagerInstance = this;
             DontDestroyOnLoad(this.gameObject);
+
+            ManagerStartup();
+            
+
             return;
         }
         else
@@ -36,11 +57,43 @@ public class ProgramManager : MonoBehaviour
         
     }
 
-    public void ReportLevel(AllLevels LevelUpdate)
+    private void ManagerStartup()
     {
+        MasterMixer.SetFloat("MasterVolumeParm", 0);
+
+        if (MusicSource == null)
+        {
+            MusicSource = this.gameObject.GetComponent<AudioSource>();
+        }
 
     }
 
+    public void ReportLevel(AllLevels LevelUpdate)
+    {
+        CurrentLevel = LevelUpdate;
+        if (CurrentLevel == AllLevels.MainMenu)
+        {
+            SwitchTracks(MusicTracks.MainTheme);
+        }
+    }
+
+
+
+    #region Audio
+    public void SwitchTracks(MusicTracks ChosenTrack)
+    {
+        MusicSource.clip = SetTracks.FirstOrDefault(Clp => Clp.ThisSoundTrack == ChosenTrack).Audio;
+        MusicSource.Play();
+    }
+
+    [Serializable]
+    public class SoundTracks
+    {
+        public ProgramManager.MusicTracks ThisSoundTrack;
+        public AudioClip Audio;
+    }
+
+    #endregion
 
     private void Update()
     {
