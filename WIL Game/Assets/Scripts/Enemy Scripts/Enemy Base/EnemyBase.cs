@@ -294,7 +294,7 @@ public class EnemyBase : MonoBehaviour
     protected void Die()
     {
         Alive = false;
-        WorldHandlerScript.SetNextActive(this.gameObject);
+        //WorldHandlerScript.SetNextActive(this.gameObject);
     }
 
 

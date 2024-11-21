@@ -1,3 +1,4 @@
+using Pathfinding;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,8 @@ public class HinuAimTrigger : MonoBehaviour
 
     [SerializeField] private Collider PunchHitBox;
     [SerializeField] private TurtleBossAI TurtleAttackScript;
+
+    private bool BubbleAttack;
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +36,8 @@ public class HinuAimTrigger : MonoBehaviour
         PunchHitBox.enabled = HitBoxEngaged;
         TurtleAttackScript.ChangeLockState();
     }
+
+    
 
     [SerializeField]
     private void StartBashAttack()

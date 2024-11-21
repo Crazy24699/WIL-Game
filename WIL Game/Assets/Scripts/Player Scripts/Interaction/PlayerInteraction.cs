@@ -36,9 +36,11 @@ public class PlayerInteraction : MonoBehaviour
     public ShardBlocker CurrentShardBlocker;
     private CameraFunctionality PlayerCamFunction;
 
+
     //public GameObject[] HeartImages;
     public GameObject PauseScreen;
     public GameObject DeathScreen;
+    public GameObject HitParticle;
 
     [SerializeField] private GameObject PlayerUI_Panel;
     [SerializeField] private GameObject PlayerMenu;
@@ -128,6 +130,10 @@ public class PlayerInteraction : MonoBehaviour
         CurrentShardBlocker.RemoveBlockLevel();
         CurrentShardCount--;
         ShardCounter.text = CurrentGemCount.ToString();
+    }
+    public void PlayHit(Vector3 ParticlePosition)
+    {
+        Instantiate(HitParticle, ParticlePosition, Quaternion.identity);
     }
 
     public void IncrimentGemCount()
@@ -240,6 +246,15 @@ public class PlayerInteraction : MonoBehaviour
         DeathCheck();
         HandleInputTest();
         HandleEnvrionmentInteraction();
+
+
+        if (Input.GetKeyDown(KeyCode.Keypad1))
+        {
+            return;
+            float Ypos= this.transform.position.y + 50;
+            this.transform.position=new Vector3(this.transform.position.x,Ypos, this.transform.position.z);
+        }
+
     }
 
     private void DeathCheck()

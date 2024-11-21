@@ -41,7 +41,7 @@ public class EnemySoundManager : MonoBehaviour
         Sound SoundRef = EnemySounds.FirstOrDefault(Snd => Snd.Name == SelectedSound.ToString());
 
         Emitter.clip = SoundRef.SoundClip;
-        Emitter.volume = SoundRef.Volume;
+        //Emitter.volume = SoundRef.Volume;
         //Emitter.pitch = SoundRef.Pitch;
         Emitter.loop = SoundRef.Looping;
         CurrentSound = SelectedSound;

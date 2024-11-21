@@ -17,7 +17,9 @@ public class TailWhipAttack : ProjectileBase
         CurrentLifeTime = LifeTime;
 
         CustomLifeTimer = true;
-        transform.rotation = Quaternion.Euler(0, 90, 0);
+        //Vector3 CurrentRotation = transform.rotation.eulerAngles;
+        //CurrentRotation *= -1;
+        //transform.rotation = Quaternion.Euler(CurrentRotation);
     }
 
 

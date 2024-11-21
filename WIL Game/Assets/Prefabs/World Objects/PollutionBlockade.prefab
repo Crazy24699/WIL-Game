@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1312534130862845531}
   - component: {fileID: 6162531402033698520}
   - component: {fileID: 8431708672390369168}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 5080847087920859342}
   - component: {fileID: 4075176049013170755}
   - component: {fileID: 3355798353685922422}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -221,7 +221,7 @@ GameObject:
   - component: {fileID: 1876397145596376389}
   - component: {fileID: 216158194917048049}
   - component: {fileID: 8032696659040182714}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -324,7 +324,7 @@ GameObject:
   - component: {fileID: 6781726566541286318}
   - component: {fileID: 4248903577214776825}
   - component: {fileID: 443953661371862592}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PollutionBlockade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -417,7 +417,7 @@ GameObject:
   - component: {fileID: 8782798808322187737}
   - component: {fileID: 5642200469125967484}
   - component: {fileID: 7613871900117916342}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PollutionBlockade
   m_TagString: Untagged
   m_Icon: {fileID: 0}

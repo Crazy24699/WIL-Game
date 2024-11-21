@@ -136,9 +136,9 @@ public class SeanAI : BTBaseEnemy
         CurrentPlayerDistance = Vector3.Distance(this.transform.position, PlayerTarget.transform.position);
 
         RotateToTarget();
+        HandleOrbit();
         HandlePatrol();
         HandleBehaviour();
-
     }
 
     private void HandlePatrol()
@@ -179,6 +179,10 @@ public class SeanAI : BTBaseEnemy
         if (!OnAttackingList)
         {
             Orbiting = true;
+            if (CheckIfSlotFree())
+            {
+                WorldHandlerScript.EnemiesAttacking.Add(this.gameObject);
+            }
             Debug.Log("Orbiting");
             return;
         }

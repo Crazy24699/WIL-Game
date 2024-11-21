@@ -89,6 +89,9 @@ public class TurtleBossAI : BossBase
         
         UpdateDistance();
         RootNode.RunLogicAndState();
+
+
+
     }
 
 
@@ -125,6 +128,21 @@ public class TurtleBossAI : BossBase
             BucketBash();
             
         }
+
+
+        if (BubbleAttackClass.SpewBubbles)
+        {
+            Vector3 PlayerPosition = PlayerRef.transform.position;
+            //PlayerPosition.y = BubbleAttackClass.ShootPoint.transform.position.y;
+
+            Vector3 Direction = (PlayerPosition - transform.position).normalized;
+
+            Quaternion LookRotationValue = Quaternion.LookRotation(Direction);
+
+            BubbleAttackClass.ShootPoint.transform.rotation = Quaternion.Lerp(BubbleAttackClass.ShootPoint.transform.rotation, LookRotationValue, Time.deltaTime * 1800);
+
+        }
+
 
         SetDestination(PlayerRef.transform);
 

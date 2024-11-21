@@ -152,11 +152,28 @@ public class TrashBag : BTBaseEnemy
         HandlePatrol();
     }
 
-    
+
+    private void HandleOrbit()
+    {
+        Debug.Log("Riviers has run dry");
+        if (Orbiting)
+        {
+            RotateToTarget();
+            KeepOrbitDistance();
+            return;
+        }
+    }
 
     private void HandlePatrol()
     {
-        if(SeenPlayer || PatrolOverrdide) { return; }
+        if(PatrolOverrdide) { return; }
+
+        if(SeenPlayer && !OnAttackingList)
+        {
+            Orbiting = true;
+            PatrolActive = false;
+            return;
+        }
 
         Debug.Log("patroling");
         if(!NavMeshRef.hasPath && !NavMeshRef.pathPending)
@@ -176,6 +193,7 @@ public class TrashBag : BTBaseEnemy
     private void HandleAttackSequence()
     {
         if (!StartupRan || !CanMove) { return; }
+        if (!OnAttackingList) { return; }
 
         if (Attacking)
         {
@@ -346,7 +364,7 @@ public class TrashBag : BTBaseEnemy
 
     private void HandleAttack()
     {
-
+        if (!OnAttackingList) { return; }
         if (!SeenPlayer || !CanMove) { return; }
         CurrentPosition = transform.position.RoundVector(2);
         CurrentDistance = Vector3.Distance(PlayerRef.transform.position, transform.position);

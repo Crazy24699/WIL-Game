@@ -172,7 +172,7 @@ public class BTBaseEnemy : BaseEnemy
     protected virtual void Die()
     {
         Alive = false;
-        WorldHandlerScript.SetNextActive(this.gameObject);
+        //WorldHandlerScript.SetNextActive(this.gameObject);
     }
 
 }

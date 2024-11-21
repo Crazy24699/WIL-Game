@@ -13,7 +13,7 @@ public class PlayerAttacks : MonoBehaviour
 
     //May need to remove this
     [SerializeField] protected bool IsAttacking = false;
-    [SerializeField] protected bool ChannelAttack = false;
+    [SerializeField] public bool ChannelAttack = false;
     [SerializeField] private bool CanAttack = true;
     private bool Moving = false;
 
@@ -23,6 +23,7 @@ public class PlayerAttacks : MonoBehaviour
     public GameObject TailFirePoint;
     [SerializeField] private GameObject ClawSlashBox;
     [SerializeField] private GameObject BiteBox;
+
 
     [Space(5)]
     public Animator AttackAnimation;
@@ -208,6 +209,7 @@ public class PlayerAttacks : MonoBehaviour
         ChannelAttack = State;  
     }
 
+
     private void PerformAttack(AllAttacks SetAttck)
     {
         if (!PlayerMoveScript.Grounded || !CanAttack || ChannelAttack)
@@ -269,7 +271,7 @@ public class PlayerAttacks : MonoBehaviour
 
     private void AimProjectile()
     {
-        if (!PlayerMoveScript.Grounded) { return; }
+        if (!PlayerMoveScript.Grounded || IsAttacking) { return; }
 
         //Debug.Log("call our names in the vally of the saints");
         CamFunctionScript.ChangeActiveCamera(true);
@@ -436,7 +438,7 @@ public class PlayerAttacks : MonoBehaviour
     [SerializeField]
     private void PlayTailWhipSound()
     {
-        Debug.Log("fuck fuck fuyck");
+
         PlayerInteractionScript.PlayAttackSounds("Tail Whip");
     }
 

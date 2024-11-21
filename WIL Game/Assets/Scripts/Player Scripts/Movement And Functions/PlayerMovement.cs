@@ -59,7 +59,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] protected Transform Front_GroundCheckTransform;
     [SerializeField] protected Transform Back_GroundCheckTransform;
 
-    public GameObject HitParticle;
     
 
     public bool Attacking = false;
@@ -112,9 +111,11 @@ public class PlayerMovement : MonoBehaviour
         //}
 
         TrackPlayerMovement();
-        if (PlayerAnimations.GetBool("IsAttacking"))
+        if (PlayerAnimations.GetBool("IsAttacking") || AttackLocked|| PlayerAttackScript.ChannelAttack)
         {
+            CanMove = false;
             RigidbodyRef.velocity = Vector3.zero;
+            MoveDirection = Vector3.zero;
             //Debug.Log("laced with poison");
             return;
         }
@@ -160,6 +161,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void StartDash()
     {
+        if (PlayerAttackScript.ChannelAttack) { return; }
         if (DashDirection != Vector2.zero && !PlayerDashing)
         {
             PlayerAudioSource.Stop();
@@ -231,6 +233,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleDashDirection()
     {
+        if (PlayerAttackScript.ChannelAttack) { return; }
         Vector2 NewDashDirection = PlayerInputRef.BasePlayerMovement.DashReading.ReadValue<Vector2>().normalized;
 
         if (DashDirection == Vector2.zero && NewDashDirection != Vector2.zero)
@@ -290,8 +293,8 @@ public class PlayerMovement : MonoBehaviour
         bool BackGrounded = Physics.CheckSphere(Back_GroundCheckTransform.position, DetectionRadius, GroundLayers);
         Grounded = FrontGrounded || BackGrounded;
 
-        float VerticalGravity = Grounded ? -9.81f : -27.81f*2;
-        RigidbodyRef.AddForce(new Vector3(0, VerticalGravity, 0), ForceMode.Acceleration);
+        float VerticalGravity = Grounded ? -9.81f : -200f*2;
+        RigidbodyRef.AddForce(new Vector3(0, VerticalGravity, 0), ForceMode.Force);
 
         HandleAnimationStates();
         InputDirection = PlayerInputRef.BasePlayerMovement.Movement.ReadValue<Vector3>().normalized;
@@ -316,7 +319,7 @@ public class PlayerMovement : MonoBehaviour
         MoveDelay();
         if (InputDirection.magnitude <= 0.1f )
         {
-            RigidbodyRef.velocity = new Vector3(0,RigidbodyRef.velocity.y,0);
+            RigidbodyRef.velocity = new Vector3(0, RigidbodyRef.velocity.y, 0);
             CanMove = false;
             PlayerAudioSource.Stop();
             return;
@@ -328,7 +331,7 @@ public class PlayerMovement : MonoBehaviour
         }
         if (CurrentSpeed <= 5)
         {
-            Debug.Log("Fuck");
+
             PlayerAudioSource.Stop();
         }
         if (!CanMove) { return; }
@@ -339,10 +342,12 @@ public class PlayerMovement : MonoBehaviour
             //Debug.Log(PlayerAudioSource.isPlaying);
         }
 
-        PlayerVelocity.y = (Grounded) ? 0 : PlayerVelocity.y;
+        //PlayerVelocity.y = (Grounded) ? 0 : PlayerVelocity.y;
         Vector3 CustomVelocity = new Vector3(RigidbodyRef.velocity.x, RigidbodyRef.velocity.y, RigidbodyRef.velocity.z);
         if (CustomVelocity.magnitude > Speed) 
         {
+
+            //if there is an odd bug in the code with velocity not reseting correctly, look at this shit
             return;
             Vector3 VelocityCap = CustomVelocity.normalized * Speed;
             RigidbodyRef.velocity = new Vector3(VelocityCap.x, VelocityCap.y

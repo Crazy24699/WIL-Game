@@ -46,6 +46,7 @@ public class ShardBlocker : MonoBehaviour
             //Play animations 
             //play sound
             //play vfx
+            PlayerInteractScript.InBlockerRange = false;
             Destroy(this.gameObject);
         }
     }

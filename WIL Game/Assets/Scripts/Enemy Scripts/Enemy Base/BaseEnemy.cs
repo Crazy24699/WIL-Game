@@ -95,6 +95,8 @@ public class BaseEnemy : MonoBehaviour
     
     public void BaseStartup()
     {
+        OrbitingDistance = 40;
+
         EnemyAudioManager = GetComponent<EnemySoundManager>();
         if (EnemyAudioManager == null)
         {
@@ -192,6 +194,16 @@ public class BaseEnemy : MonoBehaviour
 
     }
 
+    //checks if the attacking slot for the world handler attacking enemies is open
+    protected bool CheckIfSlotFree()
+    {
+        bool SlotOpen = WorldHandlerScript.EnemiesAttacking.Count < 3 &&
+            !WorldHandlerScript.EnemiesAttacking.Contains(this.gameObject);
+
+
+        return SlotOpen;
+    }
+
     protected void CheckSoundPlayState()
     {
         SoundPlaying = EnemyAudioManager.SoundPlaying;
@@ -258,6 +270,10 @@ public class BaseEnemy : MonoBehaviour
     {
         Alive = false;
         Instantiate(PolutionShardPrefab, transform.position, Quaternion.identity);
+        if (OnAttackingList)
+        {
+            WorldHandlerScript.EnemiesAttacking.Remove(this.gameObject);
+        }
     }
 
     public void RotateToTarget()
@@ -318,6 +334,12 @@ public class BaseEnemy : MonoBehaviour
 
             return;
         }
+        if (CurrentPlayerDistance > OrbitingDistance + 10)
+        {
+            Debug.Log("possible can");
+            NavMeshRef.SetDestination(PlayerRef.transform.position);
+            NavMeshRef.isStopped = false;
+        }
         if (AdvancedRetreat)
         {
             if (CurrentPosition == RetreatPosition)
@@ -351,13 +373,13 @@ public class BaseEnemy : MonoBehaviour
         }
         else
         {
-            Debug.Log("thriller");
-            NavMeshRef.isStopped = true;
-            if (RigidbodyRef.velocity != Vector3.zero)
-            {
+            //Debug.Log("thriller");
+            //NavMeshRef.isStopped = true;
+            //if (RigidbodyRef.velocity != Vector3.zero)
+            //{
 
-                RigidbodyRef.velocity = Vector3.zero;
-            }
+            //    RigidbodyRef.velocity = Vector3.zero;
+            //}
         }
     }
 
