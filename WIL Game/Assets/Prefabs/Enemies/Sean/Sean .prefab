@@ -995,7 +995,7 @@ MonoBehaviour:
   PatrolActive: 0
   PlayerEscaped: 0
   TutorialOverride: 0
-  OnAttackingList: 1
+  OnAttackingList: 0
   StartupRan: 0
   Alive: 0
   Override: 0
@@ -1011,6 +1011,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8192
   VisionLinkScript: {fileID: 0}
+  EnemyAudioManager: {fileID: 0}
   SpireAreaNumber: 1
   CurrentRangeTime: 0
   WaypointPosition: {fileID: 0}

@@ -10327,11 +10327,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3903236220028915141, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.00000006534184
+      value: 0.00000005680231
       objectReference: {fileID: 0}
     - target: {fileID: 3903236220028915141, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000007993587
+      value: 0.0000000069489037
       objectReference: {fileID: 0}
     - target: {fileID: 3903236220028915141, guid: dad1b43818dbcd04487c42822a048c6f, type: 3}
       propertyPath: m_LocalRotation.y
@@ -12758,25 +12758,9 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2015937804055563491, guid: a737f6fc874b4554fa952bd3f027d7e5, type: 3}
-      propertyPath: m_Speed
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 8342565009740715393, guid: a737f6fc874b4554fa952bd3f027d7e5, type: 3}
-      propertyPath: Override
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8342565009740715393, guid: a737f6fc874b4554fa952bd3f027d7e5, type: 3}
-      propertyPath: SpireParentScript
-      value: 
-      objectReference: {fileID: 147875095}
     - target: {fileID: 8910179973334578134, guid: a737f6fc874b4554fa952bd3f027d7e5, type: 3}
       propertyPath: m_Name
       value: 'Sean '
-      objectReference: {fileID: 0}
-    - target: {fileID: 8910179973334578134, guid: a737f6fc874b4554fa952bd3f027d7e5, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
