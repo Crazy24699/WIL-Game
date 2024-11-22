@@ -16,6 +16,7 @@ TagManager:
   - BarrierBreakPowerup
   - LevelBarrier
   - SpireParent
+  - Game End
   layers:
   - Default
   - TransparentFX

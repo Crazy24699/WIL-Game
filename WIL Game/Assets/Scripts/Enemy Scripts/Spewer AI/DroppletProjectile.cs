@@ -13,7 +13,7 @@ public class DroppletProjectile : ProjectileBase
             {
 
                 Collision.transform.GetComponentInParent<PlayerInteraction>().HandleHealth(-5);
-                Collision.transform.GetComponentInParent<PlayerInteraction>().TakeHit(-5, transform.position);
+                //Collision.transform.GetComponentInParent<PlayerInteraction>().TakeHit(-5, transform.position);
                 Destroy(this.gameObject);
             }
             if (Collision.CompareTag("Ground"))

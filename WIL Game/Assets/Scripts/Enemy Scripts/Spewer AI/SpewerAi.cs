@@ -141,7 +141,7 @@ public class SpewerAi : BTBaseEnemy
     public IEnumerator StartAttackCooldown()
     {
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2.5f);
         CanAttack = true;
         CanAttackPlayer = true;
     }

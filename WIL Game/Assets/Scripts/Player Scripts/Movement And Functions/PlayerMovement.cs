@@ -103,7 +103,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (StunLocked) { return; }
+        if (StunLocked || PlayerInteractScript.AtEnd) { return; }
 
         //if (Input.GetKey(KeyCode.L))
         //{
@@ -129,9 +129,19 @@ public class PlayerMovement : MonoBehaviour
         AlignToSurface();
     }
 
+    public void StopMoving()
+    {
+        InputDirection = Vector3.zero;
+        MoveDirection=Vector3.zero;
+        CurrentSpeed = 0;
+        RigidbodyRef.velocity = Vector3.zero;
+        PlayerAnimations.SetBool("Is Moving", false);
+        PlayerAnimations.SetBool("Is Running", false);
+    }
+
     private void Update()
     {
-        if (StunLocked) { return; }
+        if (StunLocked || PlayerInteractScript.AtEnd) { return; }
         DashResetTimer();
 
 

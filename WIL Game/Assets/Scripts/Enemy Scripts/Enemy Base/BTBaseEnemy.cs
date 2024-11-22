@@ -32,6 +32,7 @@ public class BTBaseEnemy : BaseEnemy
     [HideInInspector] public SpireObject SpireLoaction;
     public SpireParent SpireParentScript;
 
+
     protected override void CustomStartup()
     {
         CurrentRangeTime = OutOfRangeTimer;

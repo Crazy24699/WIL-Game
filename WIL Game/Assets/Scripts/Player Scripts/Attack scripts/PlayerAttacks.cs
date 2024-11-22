@@ -41,6 +41,7 @@ public class PlayerAttacks : MonoBehaviour
     public PlayerMovement PlayerMoveScript;
     public CameraFunctionality CamFunctionScript;
     protected PlayerInteraction PlayerInteractionScript;
+    protected WorldHandler WorldHandlerScript;
 
     public enum AllAttacks
     {
@@ -78,7 +79,7 @@ public class PlayerAttacks : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-
+        WorldHandlerScript = FindObjectOfType<WorldHandler>();
         //PopulateAttacks();
         PopulateScripts();
         NextAttack = AllAttacks.None;
@@ -98,6 +99,8 @@ public class PlayerAttacks : MonoBehaviour
         SetBiteState(2);
 
         PlayerInputRef.PlayerAttack.CancelAttack.performed += Context => HandleAttackCancel();
+
+
 
     }
 
@@ -143,17 +146,6 @@ public class PlayerAttacks : MonoBehaviour
         PlayerInputRef.Disable();
     }
 
-    private void FixedUpdate()
-    {
-        
-        
-        if(IsAttacking)
-        {
-            
-        }
-
-        //PlayerMoveScript.CanMove = !IsAttacking;
-    }
 
     private void SetActiveAttack(AllAttacks ChosenAttack, AttackTypes AttackBind)
     {
@@ -212,7 +204,8 @@ public class PlayerAttacks : MonoBehaviour
 
     private void PerformAttack(AllAttacks SetAttck)
     {
-        if (!PlayerMoveScript.Grounded || !CanAttack || ChannelAttack)
+        if (PlayerInteractionScript.AtEnd) { return; }
+        if (!PlayerMoveScript.Grounded || !CanAttack || ChannelAttack || WorldHandlerScript.CurrentMode!=WorldHandler.GameModes.Gameplay)
         {
             return;
         }

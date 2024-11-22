@@ -17,11 +17,14 @@ public class PlayerInteraction : MonoBehaviour
     protected PlayerAttacks PlayerAttacks;
     protected Animator PlayerAnimator;
     private PlayerMovement PlayerMoveScript;
+    public TextMeshProUGUI StoryText;
+    public EndGame EndGameScript;
 
     public bool MenuActive;
     public bool CanTakeDamage = true;
     public bool InBlockerRange;
     public bool PoweredUp = false;
+    public bool AtEnd = false;
 
     public int MaxHealth;
     public int CurrentHealth;
@@ -41,10 +44,13 @@ public class PlayerInteraction : MonoBehaviour
     public GameObject PauseScreen;
     public GameObject DeathScreen;
     public GameObject HitParticle;
+    public Image EndScreen;
 
     [SerializeField] private GameObject PlayerUI_Panel;
     [SerializeField] private GameObject PlayerMenu;
     [SerializeField] private GameObject PlayerStoryMenu;
+    public GameObject EndStoryPanel;
+    public TextMeshProUGUI EndStoryText;
 
 
     [SerializeField] public Sound[] PlayerSounds;
@@ -79,7 +85,7 @@ public class PlayerInteraction : MonoBehaviour
 
         PlayerInputRef.PlayerInteraction.ShowMenu.performed += Context => ChangeMenu();
         PlayerInputRef.PlayerInteraction.ShowMenu.Enable();
-        PlayerInputRef.StoryMenu.EndStory.performed += Context => EndStory();
+        PlayerInputRef.StoryMenu.EndStory.performed += Context => ExitStory();
 
         PlayerInputRef.PlayerAttack.Healing.performed += Context => Heal();
         PlayerInputRef.PlayerAttack.Healing.Enable();
@@ -116,6 +122,8 @@ public class PlayerInteraction : MonoBehaviour
 
         PlayerAudioSource.Play();
     }
+
+
 
     public void HandleShardUpdate()
     {
@@ -155,7 +163,7 @@ public class PlayerInteraction : MonoBehaviour
         PlayerInputRef.PlayerInteraction.ShowMenu.performed -= Context => ChangeMenu();
         PlayerInputRef.PlayerInteraction.ShowMenu.Disable();
 
-        PlayerInputRef.StoryMenu.EndStory.performed -= Context => EndStory();
+        PlayerInputRef.StoryMenu.EndStory.performed -= Context => ExitStory();
         PlayerInputRef.StoryMenu.EndStory.Disable();
 
         PlayerInputRef.PlayerAttack.Healing.performed -= Context => Heal();
@@ -170,7 +178,24 @@ public class PlayerInteraction : MonoBehaviour
         PlayerInputRef.PlayerInteraction.ShowMenu.performed -= Context => ChangeMenu();
         PlayerInputRef.PlayerInteraction.ShowMenu.Disable();
 
-        PlayerInputRef.StoryMenu.EndStory.performed -= Context => EndStory();
+        PlayerInputRef.StoryMenu.EndStory.performed -= Context => ExitStory();
+        PlayerInputRef.StoryMenu.EndStory.Disable();
+
+        PlayerInputRef.PlayerAttack.Healing.performed -= Context => Heal();
+        PlayerInputRef.PlayerAttack.Healing.Disable();
+    }
+
+    private void DisableInput()
+    {
+        InputRef.Disable();
+        PlayerInputRef.PlayerInteraction.ShowMenu.Disable();
+
+        PlayerInputRef.PlayerAttack.Disable();
+
+        PlayerInputRef.PlayerInteraction.ShowMenu.performed -= Context => ChangeMenu();
+        PlayerInputRef.PlayerInteraction.ShowMenu.Disable();
+
+        PlayerInputRef.StoryMenu.EndStory.performed -= Context => ExitStory();
         PlayerInputRef.StoryMenu.EndStory.Disable();
 
         PlayerInputRef.PlayerAttack.Healing.performed -= Context => Heal();
@@ -200,8 +225,9 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    private void EndStory()
+    public void ExitStory()
     {
+        if(AtEnd) { return; }
         WorldHandlerScript.CurrentMode = WorldHandler.GameModes.Gameplay;
         HandleStoryState(false);
         WorldHandlerScript.ModeChange.Invoke();
@@ -247,6 +273,10 @@ public class PlayerInteraction : MonoBehaviour
         HandleInputTest();
         HandleEnvrionmentInteraction();
 
+        if (PlayerStoryMenu.activeSelf)
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
 
         if (Input.GetKeyDown(KeyCode.Keypad1))
         {
@@ -255,6 +285,44 @@ public class PlayerInteraction : MonoBehaviour
             this.transform.position=new Vector3(this.transform.position.x,Ypos, this.transform.position.z);
         }
 
+    }
+
+    public void StoryEnd()
+    {
+        AtEnd = true;
+        PlayerMoveScript.CurrentSpeed = 0;
+        PlayerMoveScript.PlayerVelocity = Vector3.zero;
+        PlayerMoveScript.StopMoving();
+        PlayerAnimator.SetBool("Is Moving", false);
+        EndStoryPanel.SetActive(true);
+        PlayerMoveScript.StopMoving();
+
+
+        PlayerMoveScript.CanMove = false;
+        WorldHandlerScript.ChangeInputMode(WorldHandler.GameModes.Story);
+        Cursor.lockState = CursorLockMode.None ;
+
+        PlayerHealthBar.transform.parent.gameObject.SetActive(false);
+        DisableInput();
+        PlayerHealthBar.enabled = false;
+        ShardCounter.enabled = false;
+        PlayerMoveScript.StopMoving();
+
+
+        PlayerAnimator.SetTrigger("Game Finished");
+
+    }
+
+    public void DarkenScreen()
+    {
+        EndScreen.color=new Color(0,0,0,EndScreen.color.a+0.17f);
+    }
+
+
+
+    public void NextText()
+    {
+        EndGameScript.UpdateStoryText();
     }
 
     private void DeathCheck()
@@ -410,6 +478,12 @@ public class PlayerInteraction : MonoBehaviour
             PoweredUp = true;
             Destroy(Collision.gameObject);
         }
+
+        if(Collision.CompareTag("Game End"))
+        {
+            EndGameScript = Collision.GetComponent<EndGame>();
+        }
+
     }
 
 }

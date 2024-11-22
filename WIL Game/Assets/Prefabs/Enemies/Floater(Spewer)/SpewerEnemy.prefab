@@ -450,7 +450,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.95
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -508,7 +508,7 @@ MonoBehaviour:
   EnemySounds:
   - Name: Moving
     SoundClip: {fileID: 8300000, guid: 9e50931fc4532e1448b877cedc21d5b7, type: 3}
-    Volume: 1
+    Volume: 0.85
     Pitch: 0.34
     Looping: 1
     Source: {fileID: 0}
