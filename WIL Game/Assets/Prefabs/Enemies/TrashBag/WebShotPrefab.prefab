@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 2639569036308676706}
   - component: {fileID: 5551770584091817680}
   - component: {fileID: 3051502658109294534}
-  - component: {fileID: -8506694530017942070}
   - component: {fileID: 1633115574920465890}
   m_Layer: 0
   m_Name: WebShotPrefab
@@ -151,33 +150,7 @@ MonoBehaviour:
   ForceChanges: {x: 0, y: 0, z: 0}
   AdditionalForce: 0
   Webbing: {fileID: 919132149155446097, guid: e897075284d45b94a9ccc1d1128c37e2, type: 3}
-  StickingWeb_MF: {fileID: -5754084199372789682, guid: e897075284d45b94a9ccc1d1128c37e2, type: 3}
-  CurrentMeshFilter: {fileID: 0}
-  WebMeshCollider: {fileID: 0}
-  DroppletCollider: {fileID: 0}
-  WebAudio: {fileID: 0}
---- !u!64 &-8506694530017942070
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2203105151485397241}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4711208715938537054, guid: e897075284d45b94a9ccc1d1128c37e2, type: 3}
+  WebAudio: {fileID: 1633115574920465890}
 --- !u!82 &1633115574920465890
 AudioSource:
   m_ObjectHideFlags: 0

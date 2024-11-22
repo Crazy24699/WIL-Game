@@ -253,7 +253,7 @@ public class GenSwarmLogic : MonoBehaviour
     private void Attack()
     {
         if (DevAttackOverride) { return; }
-        if (!OnAttackList && WorldHandlerScript.EnemiesAttacking.Count < 2)
+        if (!OnAttackList)
         {
             WorldHandlerScript.EnemiesAttacking.Add(this.gameObject);
             OnAttackList = true;

@@ -28,6 +28,7 @@ public class WebProjectile : ProjectileBase
 
         StartupRan = true;
 
+        Damage = 3;
 
         WebAudio.pitch = Random.Range(-0.95f, 1.15f);
         WebAudio.Play();

@@ -58,6 +58,10 @@ public class TrashBag : BTBaseEnemy
 
         TargetedPosition.y = transform.position.y;
         PatrolActive = true;
+
+        TrshBag_AnimLink AnimLink = transform.GetComponentInChildren<TrshBag_AnimLink>();
+        AnimLink.TrashBagScript = this;
+
     }
 
     public override void Attack()
@@ -109,6 +113,12 @@ public class TrashBag : BTBaseEnemy
         if (!Alive) { return; }
 
         CheckSoundPlayState();
+
+
+        if (OnAttackingList)
+        {
+            RotateToTarget();
+        }
 
 
         //if (Input.GetKeyDown(KeyCode.Space))
@@ -176,7 +186,7 @@ public class TrashBag : BTBaseEnemy
         }
 
         Debug.Log("patroling");
-        if(!NavMeshRef.hasPath && !NavMeshRef.pathPending)
+        if(!NavMeshRef.hasPath && !NavMeshRef.pathPending && !Attacking)
         {
             SetDestination(WaypointPosition);
         }
@@ -193,6 +203,7 @@ public class TrashBag : BTBaseEnemy
     private void HandleAttackSequence()
     {
         if (!StartupRan || !CanMove) { return; }
+        OnAttackingList = SeenPlayer;
         if (!OnAttackingList) { return; }
 
         if (Attacking)

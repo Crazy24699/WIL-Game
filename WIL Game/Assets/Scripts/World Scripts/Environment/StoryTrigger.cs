@@ -22,10 +22,11 @@ public class StoryTrigger : MonoBehaviour
             PlayerInteractionScript = FindObjectOfType<PlayerInteraction>();
             ///display the e to interact message to the player
             ///switch the player to interact keyboard binds
-            Cursor.lockState = CursorLockMode.None;
             WorldHandlerScript.CurrentMode = WorldHandler.GameModes.Story;
             WorldHandlerScript.ModeChange.Invoke();
             PlayerInteractionScript.StoryText.text = StoryText;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
             ///show the mouse 
             ///make the escape key to exit the story telling mode
             ///add a pause button at the top

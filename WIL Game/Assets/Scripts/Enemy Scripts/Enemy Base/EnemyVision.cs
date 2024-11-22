@@ -17,7 +17,7 @@ public class EnemyVision : MonoBehaviour
 
     public bool CanSeePlayer;
     [SerializeField]private bool LostPlayer = false;
-    private BaseEnemy SightLinkScript;
+    [SerializeField]private BaseEnemy SightLinkScript;
 
     public void Startup(BaseEnemy LinkScript)
     {
@@ -39,6 +39,7 @@ public class EnemyVision : MonoBehaviour
 
     private void Update()
     {
+        SightLinkScript.SeenPlayer = CanSeePlayer;
         if (Input.GetKeyDown(KeyCode.V))
         {
             LostPlayer = false;

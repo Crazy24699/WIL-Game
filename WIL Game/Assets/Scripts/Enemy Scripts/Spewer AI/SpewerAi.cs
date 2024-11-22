@@ -119,9 +119,14 @@ public class SpewerAi : BTBaseEnemy
     {
         if (WorldHandlerScript.EnemiesAttacking.Count < 2 && !OnAttackingList)
         {
+
+
+        }
+
+        if (!OnAttackingList)
+        {
             WorldHandlerScript.EnemiesAttacking.Add(this.gameObject);
             OnAttackingList = true;
-
         }
 
         if (!OnAttackingList || !CanAttack) { return; }

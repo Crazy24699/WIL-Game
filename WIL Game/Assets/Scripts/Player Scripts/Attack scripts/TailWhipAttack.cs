@@ -44,7 +44,7 @@ public class TailWhipAttack : ProjectileBase
             }
             if(Collision.GetComponent<EnemyBase>() != null)
             {
-                Collision.GetComponent<EnemyBase>().HandleHealth(-1);
+                Collision.GetComponent<EnemyBase>().HandleHealth(-5);
 
             }
             Destroy(this.gameObject);
@@ -53,7 +53,7 @@ public class TailWhipAttack : ProjectileBase
         if (Collision.CompareTag("Boss"))
         {
             Debug.Log("aaaa");
-            Collision.GetComponent<BossBase>().HandleHealth(-1);
+            Collision.GetComponent<BossBase>().HandleHealth(-5);
             Destroy(this.gameObject);
         }
         if (ColliderExceptions.Contains(Collision.tag))

@@ -19,7 +19,7 @@ public class BossBase : MonoBehaviour
     protected bool StartupRan;
 
     [SerializeField]protected Slider HealthBar;
-    protected bool Alive = true;
+    [SerializeField]protected bool Alive = true;
     //[HideInInspector] public bool BossBeaten = false;
 
     public virtual void BossStartup()
@@ -34,7 +34,7 @@ public class BossBase : MonoBehaviour
         TargetDirection.y = 0.0f;
         Quaternion TargetRotation = Quaternion.LookRotation(TargetDirection);
 
-        this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, TargetRotation, (35f + 180) * Time.deltaTime);
+        this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, TargetRotation, (35f + 80) * Time.deltaTime);
     }
 
 

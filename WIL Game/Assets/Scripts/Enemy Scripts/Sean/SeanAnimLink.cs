@@ -7,9 +7,14 @@ public class SeanAnimLink : MonoBehaviour
     [SerializeField] private SeanAI SeanScriptLink;
     [SerializeField] private GameObject CollisionBox;
 
-    private void Start()
+    //private void Start()
+    //{
+    //    //SeanScriptLink = transform.root.root.GetComponent<SeanAI>();
+    //}
+
+    public void SetLink(SeanAI SeanLink)
     {
-        SeanScriptLink = transform.root.root.GetComponent<SeanAI>();
+        SeanScriptLink = SeanLink;
     }
 
     [SerializeField]

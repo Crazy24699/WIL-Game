@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TrshBag_AnimLink : MonoBehaviour
 {
-    private TrashBag TrashBagScript;
+    public TrashBag TrashBagScript;
     private void Start()
     {
         TrashBagScript = transform.root.root.GetComponent<TrashBag>();

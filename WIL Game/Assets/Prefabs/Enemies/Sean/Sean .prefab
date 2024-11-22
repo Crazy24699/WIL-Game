@@ -1031,7 +1031,7 @@ MonoBehaviour:
   StalkingSpeed: 0.75
   WaitTime: 3.25
   MinAttackDistance: 6.5
-  TestOverride: 1
+  TestOverride: 0
 --- !u!54 &3991995668084292115
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1127,6 +1127,7 @@ MonoBehaviour:
     m_Bits: 1216
   CanSeePlayer: 0
   LostPlayer: 0
+  SightLinkScript: {fileID: 0}
 --- !u!82 &9083714124019722873
 AudioSource:
   m_ObjectHideFlags: 0

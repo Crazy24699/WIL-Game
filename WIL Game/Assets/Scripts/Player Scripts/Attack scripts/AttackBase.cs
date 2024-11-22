@@ -21,6 +21,18 @@ public class AttackBase : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+
+        if (Input.GetKeyDown(KeyCode.Keypad5))
+        {
+
+            AppliedDamage = 5000;
+
+
+        }
+    }
+
     private void OnTriggerEnter(Collider Collision)
     {
         if (Collision.CompareTag("Enemy") && PlayerAttackRef != null && this.isActiveAndEnabled)

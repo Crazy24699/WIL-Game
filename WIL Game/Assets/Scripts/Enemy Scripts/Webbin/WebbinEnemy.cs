@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static WebbinEnemy;
 
 public class WebbinEnemy : BossBase
 {
@@ -68,7 +67,7 @@ public class WebbinEnemy : BossBase
 
         PlayerRef = GameObject.FindObjectOfType<PlayerInteraction>().gameObject;
         NavMeshRef = GetComponent<NavMeshAgent>();
-        MaxHealth = 8;
+        MaxHealth = 25;
         CurrentHealth = MaxHealth;
         CreateBehaviourTree();
         BaseMoveSpeed = NavMeshRef.speed;
@@ -78,6 +77,7 @@ public class WebbinEnemy : BossBase
         BashAttack.AttackStartup(this);
 
         StartupRan = true;
+        Alive = true;
     }
 
     private void CreateBehaviourTree()
@@ -104,6 +104,12 @@ public class WebbinEnemy : BossBase
         if (ActionAvaliable && StartupRan)
         {
             RootNode.RunLogicAndState();
+        }
+
+        if (CurrentHealth <= 0)
+        {
+            Die(CurrentHealth);
+            Destroy(this.gameObject);
         }
 
         BeyondCurrentAttackRange = TrackAttackRange();

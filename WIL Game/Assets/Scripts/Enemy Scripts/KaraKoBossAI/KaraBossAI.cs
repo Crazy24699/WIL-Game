@@ -107,6 +107,7 @@ public class KaraBossAI : BossBase
         KaraAnimations = transform.GetComponentInChildren<Animator>();
         CreateBehaviourTree();
         HealtbarStartup();
+        CanMove = true;
 
         MaxAttackDistance = CoalAttack.AttackDistance;
         StartupRan = true;

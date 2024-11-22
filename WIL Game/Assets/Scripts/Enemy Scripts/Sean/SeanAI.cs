@@ -46,6 +46,8 @@ public class SeanAI : BTBaseEnemy
     {
 
         SeanAnimations = GetComponentInChildren<Animator>();
+        SeanAnimLink Link = transform.GetComponentInChildren<SeanAnimLink>();
+        Link.SetLink(this);
         MaxHealth = 10;
         BaseMoveSpeed = NavMeshRef.speed ;
         base.CustomStartup();
@@ -166,6 +168,7 @@ public class SeanAI : BTBaseEnemy
     private void HandleBehaviour() 
     {
 
+        OnAttackingList = SeenPlayer;
         if (!SeenPlayer)
         {
             PatrolActive = true;
@@ -178,6 +181,8 @@ public class SeanAI : BTBaseEnemy
         if(PatrolActive) { return; }
         if (!OnAttackingList)
         {
+
+
             Orbiting = true;
             if (CheckIfSlotFree())
             {

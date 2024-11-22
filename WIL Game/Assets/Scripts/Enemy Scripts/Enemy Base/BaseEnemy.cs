@@ -197,7 +197,7 @@ public class BaseEnemy : MonoBehaviour
     //checks if the attacking slot for the world handler attacking enemies is open
     protected bool CheckIfSlotFree()
     {
-        bool SlotOpen = WorldHandlerScript.EnemiesAttacking.Count < 3 &&
+        bool SlotOpen =
             !WorldHandlerScript.EnemiesAttacking.Contains(this.gameObject);
 
 

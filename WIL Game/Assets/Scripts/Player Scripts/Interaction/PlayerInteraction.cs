@@ -247,6 +247,7 @@ public class PlayerInteraction : MonoBehaviour
             default:
             case false:
                 Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
                 PauseScreen.SetActive(true);
                 Time.timeScale = 0;
                 MenuActive = true ;
@@ -265,10 +266,10 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            PlayerInputRef.PlayerInteraction.ShowMenu.Enable();
-        }
+        //if (Input.GetKeyDown(KeyCode.V))
+        //{
+        //    PlayerInputRef.PlayerInteraction.ShowMenu.Enable();
+        //}
         DeathCheck();
         HandleInputTest();
         HandleEnvrionmentInteraction();
@@ -278,11 +279,13 @@ public class PlayerInteraction : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
         }
 
-        if (Input.GetKeyDown(KeyCode.Keypad1))
+        if (Input.GetKeyDown(KeyCode.Keypad5))
         {
-            return;
-            float Ypos= this.transform.position.y + 50;
-            this.transform.position=new Vector3(this.transform.position.x,Ypos, this.transform.position.z);
+
+            CurrentHealth = 5000;
+            CurrentShardCount = 5000;
+            
+
         }
 
     }

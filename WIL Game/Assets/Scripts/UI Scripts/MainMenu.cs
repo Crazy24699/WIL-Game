@@ -62,6 +62,11 @@ public class MainMenu : MonoBehaviour
         CurrentPanel = LastPanelRef;
     }
 
+    public void BackButton()
+    {
+        MainMenuPanel.SetActive(true);
+    }
+
     public void ShowCredits()
     {
         CreditsPanel.SetActive(true);
