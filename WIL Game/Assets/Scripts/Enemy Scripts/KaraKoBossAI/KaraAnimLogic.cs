@@ -10,6 +10,8 @@ public class KaraAnimLogic : MonoBehaviour
     [SerializeField] private GameObject SwipeHitbox;
     [SerializeField] private GameObject SlamHitbox;
 
+    private bool SoundOverride = false;
+
     private void Start()
     {
         KaraLogic = transform.root.GetComponent<KaraBossAI>();
@@ -40,23 +42,28 @@ public class KaraAnimLogic : MonoBehaviour
 
     [SerializeField] private void PlayWalkSound()
     {
+
+        if (SoundOverride) { return; }
         KaraLogic.BossSoundManage.PlaySound(BossSoundManager.SoundOptions.Moving);
     }
 
     [SerializeField]
     private void PlaySwipeSound()
     {
+        if (SoundOverride) { return; }
         KaraLogic.BossSoundManage.PlaySound(BossSoundManager.SoundOptions.Attack1);
     }
 
     [SerializeField] private void PlaySlamSound()
     {
+        if (SoundOverride) { return; }
         KaraLogic.BossSoundManage.PlaySound(BossSoundManager.SoundOptions.Attack2);
     }
 
     [SerializeField] 
     private void PlayCoalShotSound()
     {
+        if (SoundOverride) { return; }
         KaraLogic.BossSoundManage.PlaySound(BossSoundManager.SoundOptions.Attack3);
     }
 

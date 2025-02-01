@@ -95,6 +95,9 @@ public class BaseEnemy : MonoBehaviour
     
     public void BaseStartup()
     {
+
+        Debug.Log("enemyStart");
+
         OrbitingDistance = 40;
 
         EnemyAudioManager = GetComponent<EnemySoundManager>();
@@ -128,6 +131,7 @@ public class BaseEnemy : MonoBehaviour
         BaseMoveSpeed = NavMeshRef.speed;
 
         StartupRan = true;
+        Debug.Log("The startup ran");
         Alive = true;
         if (GetComponent<EnemyVision>() != null)
         {

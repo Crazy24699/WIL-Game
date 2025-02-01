@@ -32,6 +32,7 @@ public class SpewerAi : BTBaseEnemy
         EnemySoundManagerScript = GetComponent<EnemySoundManager>();
         MaxFollowDistance = 20.25f;
         base.CustomStartup();
+
         CreateBehaviourTree();
         EnemyAnimator = GetComponent<Animator>();
         if (EnemyAnimator == null)

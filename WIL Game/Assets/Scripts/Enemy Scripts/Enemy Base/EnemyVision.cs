@@ -15,6 +15,7 @@ public class EnemyVision : MonoBehaviour
     public LayerMask TargetMask;
     public LayerMask ObstructionMask;
 
+    private bool StartupRan = false;
     public bool CanSeePlayer;
     [SerializeField]private bool LostPlayer = false;
     [SerializeField]private BaseEnemy SightLinkScript;
@@ -23,6 +24,7 @@ public class EnemyVision : MonoBehaviour
     {
         StartCoroutine(FOVRoutine());
         SightLinkScript = LinkScript;
+        Debug.Log("this setup ran");
     }
     
 
@@ -39,6 +41,7 @@ public class EnemyVision : MonoBehaviour
 
     private void Update()
     {
+        if (!StartupRan) { return; }
         SightLinkScript.SeenPlayer = CanSeePlayer;
         if (Input.GetKeyDown(KeyCode.V))
         {

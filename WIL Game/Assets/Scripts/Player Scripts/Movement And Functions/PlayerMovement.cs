@@ -4,43 +4,56 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Unity Components")]
 
-    public Rigidbody RigidbodyRef;
+    #region Unity Components
     public InputActionReference PlayerActionMap;
-    private PlayerAttacks PlayerAttackScript;
-    [SerializeField] private PlayerInput PlayerInputRef;
+    private PlayerInput PlayerInputRef;
     [SerializeField] private PlayerInput DashInput;
-    [SerializeField] private PlayerInteraction PlayerInteractScript;
-    private WorldHandler WorldHandlerScript;
-
     public LayerMask GroundLayers;
     private RaycastHit SlopeHit;
     [SerializeField]private AudioSource PlayerAudioSource;
 
+    public Rigidbody RigidbodyRef;
+    public Animator PlayerAnimations;
+    #endregion
 
-    [SerializeField]private string CurrentClipName;
+    [Header("Scripts"), Space(1.25f)]
 
+    #region Scripts
+    private PlayerInteraction PlayerInteractScript;
+    private WorldHandler WorldHandlerScript;
+    private PlayerAttacks PlayerAttackScript;
+    #endregion
+
+
+    [Header("Floats"),Space(1.25f)]
+    //Floats
+    #region Floats
+    //Basic movement 
     public float BaseMoveSpeed;
     public float SpeedMultiplier;
     public float CurrentSpeed;
-    public float Speed;
-    public float DetectionRadius=0.35f;
-    private float WalkSpeed;
-    private float RunSpeed;
+    public float MaxSpeed;
 
-    protected float TurnSmoothingVel;
-    public float TurnTime = 0.1f;
 
-    private float MovingDelayTimer = 0.05f;
+    private float MovingDelayTimer = 0.0425f;
     [SerializeField] private float CurrentMoveDelayTime;
 
+    //Dashing
     private float DashSetTime = 0.93f;
     [SerializeField] private float DashDelayTimer;
     [SerializeField] private float DashDistance=20;
+
+    //Environment Detection
     private float MaxSlopeAngle = 35f;
+    public float DetectionRadius=0.35f;
+    #endregion
 
-    public Animator PlayerAnimations;
 
+    [Header("Vectors"), Space(1.25f)]
+
+    #region Vectors
     public Vector3 PlayerVelocity;
     [SerializeField] protected Vector3 MoveDirection;
     [SerializeField] protected Vector3 InputDirection;
@@ -50,27 +63,37 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] protected Vector3 PreviousPosition;
     public Vector3 Gravity;
     [Space(2)]
+    #endregion
 
-
+    [Header("Transforms"), Space(1.25f)]
+    
+    #region Transforms
     public Transform PlayerOrientation;
     public Transform BaltoOrientation;
     public Transform BaltoRef;
     public Transform MainCamera;
     [SerializeField] protected Transform Front_GroundCheckTransform;
     [SerializeField] protected Transform Back_GroundCheckTransform;
+    #endregion
 
-    
+    [Header("Bools"), Space(1.25f)]
 
+    #region
     public bool Attacking = false;
     public bool AttackLocked = false;
     public bool CanMove = false;
     [SerializeField]private bool DashSet = false;
     [SerializeField]private bool PlayerDashing = false;
-    private bool CanDash = false;
-    [SerializeField]public bool Grounded;
-    [SerializeField] private bool IsMoving;
-    public bool StunLocked = false;
 
+    [SerializeField]public bool Grounded;
+    public bool StunLocked = false;
+    #endregion
+
+
+    private string CurrentClipName;
+    
+    
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -95,8 +118,7 @@ public class PlayerMovement : MonoBehaviour
         PlayerInteractScript = gameObject.GetComponent<PlayerInteraction>();
 
         CurrentMoveDelayTime = MovingDelayTimer;
-        WalkSpeed = BaseMoveSpeed * 1;
-        RunSpeed = BaseMoveSpeed * 2.5f;
+
         PlayerAudioSource = this.GetComponent<AudioSource>();
         WorldHandlerScript = FindObjectOfType<WorldHandler>();
     }
@@ -104,11 +126,6 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         if (StunLocked || PlayerInteractScript.AtEnd) { return; }
-
-        //if (Input.GetKey(KeyCode.L))
-        //{
-        //    Instantiate(HitParticle, transform.position, Quaternion.identity);
-        //}
 
         TrackPlayerMovement();
         if (PlayerAnimations.GetBool("IsAttacking") || AttackLocked|| PlayerAttackScript.ChannelAttack)
@@ -123,7 +140,7 @@ public class PlayerMovement : MonoBehaviour
         //Keep this in the fixed update method because if it isnt then it
         //causes the player to jitter and stutter
 
-        Speed = BaseMoveSpeed * SpeedMultiplier;
+        MaxSpeed = BaseMoveSpeed * SpeedMultiplier;
 
         MovePlayer();
         AlignToSurface();
@@ -150,9 +167,9 @@ public class PlayerMovement : MonoBehaviour
 
 
         Vector3 MessuredVelocity = new Vector3(PlayerVelocity.x, 0, PlayerVelocity.z);
-        if (MessuredVelocity.magnitude > Speed && !PlayerDashing)
+        if (MessuredVelocity.magnitude > MaxSpeed && !PlayerDashing)
         {
-            Vector3 VelocityCap = PlayerVelocity.normalized * Speed;
+            Vector3 VelocityCap = PlayerVelocity.normalized * MaxSpeed;
             RigidbodyRef.velocity = new Vector3(VelocityCap.x, RigidbodyRef.velocity.y
                 , VelocityCap.z);
         }
@@ -354,24 +371,24 @@ public class PlayerMovement : MonoBehaviour
 
         //PlayerVelocity.y = (Grounded) ? 0 : PlayerVelocity.y;
         Vector3 CustomVelocity = new Vector3(RigidbodyRef.velocity.x, RigidbodyRef.velocity.y, RigidbodyRef.velocity.z);
-        if (CustomVelocity.magnitude > Speed) 
+        if (CustomVelocity.magnitude > MaxSpeed) 
         {
 
             //if there is an odd bug in the code with velocity not reseting correctly, look at this shit
             return;
-            Vector3 VelocityCap = CustomVelocity.normalized * Speed;
+            Vector3 VelocityCap = CustomVelocity.normalized * MaxSpeed;
             RigidbodyRef.velocity = new Vector3(VelocityCap.x, VelocityCap.y
                 , VelocityCap.z);
         }
 
         MoveDirection = PlayerOrientation.forward * InputDirection.z + PlayerOrientation.right * InputDirection.x;
-        RigidbodyRef.AddForce(new Vector3(MoveDirection.x, 0, MoveDirection.z) * 10f * (Speed) , ForceMode.Force);
+        RigidbodyRef.AddForce(new Vector3(MoveDirection.x, 0, MoveDirection.z) * 10f * (MaxSpeed) , ForceMode.Force);
 
 
         if (CanMove)
         {
 
-            if (CurrentSpeed <= WalkSpeed+3)
+            if (CurrentSpeed <= BaseMoveSpeed+3)
             {
                 PlayerAnimations.SetBool("IsRunning", false);
 

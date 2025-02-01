@@ -295,10 +295,10 @@ public class PlayerInteraction : MonoBehaviour
         AtEnd = true;
         PlayerMoveScript.CurrentSpeed = 0;
         PlayerMoveScript.PlayerVelocity = Vector3.zero;
-        PlayerMoveScript.StopMoving();
+        //PlayerMoveScript.StopMoving();
         PlayerAnimator.SetBool("Is Moving", false);
         EndStoryPanel.SetActive(true);
-        PlayerMoveScript.StopMoving();
+        //PlayerMoveScript.StopMoving();
 
 
         PlayerMoveScript.CanMove = false;
