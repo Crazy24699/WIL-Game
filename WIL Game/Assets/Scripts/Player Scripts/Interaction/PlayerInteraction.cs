@@ -31,6 +31,7 @@ public class PlayerInteraction : MonoBehaviour
     private int OldHealth;
     public int CurrentGemCount;
     public int CurrentShardCount;
+    public int AbilityPoints;
 
     private WorldHandler WorldHandlerScript;
     private Slider PlayerHealthBar;
