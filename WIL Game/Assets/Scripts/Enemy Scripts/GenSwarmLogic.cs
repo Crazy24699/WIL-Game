@@ -97,6 +97,18 @@ public class GenSwarmLogic : MonoBehaviour
         WorldHandlerScript = FindObjectOfType<WorldHandler>();
     }
 
+    /// <summary>
+    /// Fixing the non working
+    /// 
+    /// 1) break the enemy down a lot. Get moving working flawlessly
+    /// 2) Add the functionality in where it will orbit the player and follow them
+    /// 3) Get a retreat function working
+    /// 4) Start working on an attack function
+    /// 
+    /// </summary>
+
+
+
     private void SpawnSwarm()
     {
         for (int i = 0; i < SwarmNum; i++)
