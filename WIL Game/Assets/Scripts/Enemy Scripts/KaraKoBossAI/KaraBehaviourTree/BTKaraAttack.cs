@@ -37,13 +37,6 @@ public class BTKaraAttack : BTNodeBase
             return NodeStateOptions.Running;
         }
 
-        //if (KaraScript.AttackChosen && KaraScript.PerformingAttack && KaraScript.AttackChosen)
-        //{
-        //    Debug.Log("Attacking");
-        //    KaraScript.RunChosenAttack();
-        //    return NodeStateOptions.Running;
-        //}
-
         return NodeStateOptions.Failed;
     }
 
