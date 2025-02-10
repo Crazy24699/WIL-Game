@@ -76,7 +76,7 @@ public class CameraFunctionality : MonoBehaviour
         {
             FreeLockCamRef.m_XAxis.Value = FrozeCam_X_Value;
         }
-        HandleAimCamera();
+        //HandleAimCamera();
 
         //LockCamera();
         if (Input.GetKeyDown(KeyCode.U))
@@ -96,7 +96,7 @@ public class CameraFunctionality : MonoBehaviour
         }
 
 
-        if (PlayerMovementScript.Attacking || !PlayerMovementScript.CanMove || !CameraActive) { return; }
+        //if (PlayerMovementScript.Attacking || !PlayerMovementScript.CanMove || !CameraActive) { return; }
 
         RotateToView();
         HandleLockout();

@@ -36,14 +36,23 @@ public class PlayerMovement : MonoBehaviour
     public float CurrentSpeed;
     public float MaxSpeed;
 
+    [SerializeField] private float TargetSpeed;
+    private float OldTargetSpeed;
+    //How quickly the speed lerp change happens
+    [SerializeField] private float MovementSpeedChange = 10;
 
-    private float MovingDelayTimer = 0.0425f;
+    //The drag of the rigidbody
+    private float BaseNormalDrag;
+    private float BaseAngleDrag;
+
+    //Moving the body either in rotation or in general movement, for a small timeframe
+    private float MoveBodyDelayTime = 0.0425f;
     [SerializeField] private float CurrentMoveDelayTime;
 
     //Dashing
-    private float DashSetTime = 0.93f;
-    [SerializeField] private float DashDelayTimer;
-    [SerializeField] private float DashDistance=20;
+    private float DashSetTime = 1.2f;
+    [SerializeField] private float DashSpeed=20;
+
 
     //Environment Detection
     private float MaxSlopeAngle = 35f;
@@ -78,15 +87,19 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Bools"), Space(1.25f)]
 
-    #region
+    #region Booleans 
+
     public bool Attacking = false;
     public bool AttackLocked = false;
     public bool CanMove = false;
     [SerializeField]private bool DashSet = false;
     [SerializeField]private bool PlayerDashing = false;
+    private bool KeepMomentum;
 
     [SerializeField]public bool Grounded;
     public bool StunLocked = false;
+    public bool KnockbackLocked;
+
     #endregion
 
 
@@ -117,7 +130,7 @@ public class PlayerMovement : MonoBehaviour
         PlayerAttackScript = GetComponentInChildren<PlayerAttacks>();
         PlayerInteractScript = gameObject.GetComponent<PlayerInteraction>();
 
-        CurrentMoveDelayTime = MovingDelayTimer;
+        CurrentMoveDelayTime = MoveBodyDelayTime;
 
         PlayerAudioSource = this.GetComponent<AudioSource>();
         WorldHandlerScript = FindObjectOfType<WorldHandler>();
@@ -152,6 +165,7 @@ public class PlayerMovement : MonoBehaviour
         MoveDirection=Vector3.zero;
         CurrentSpeed = 0;
         RigidbodyRef.velocity = Vector3.zero;
+
         PlayerAnimations.SetBool("Is Moving", false);
         PlayerAnimations.SetBool("Is Running", false);
     }
@@ -159,12 +173,9 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         if (StunLocked || PlayerInteractScript.AtEnd) { return; }
-        DashResetTimer();
 
-
-        TrackBatloOrientation();
         ReduceDashVelocity();
-
+        HandleMoveSpeedChange();
 
         Vector3 MessuredVelocity = new Vector3(PlayerVelocity.x, 0, PlayerVelocity.z);
         if (MessuredVelocity.magnitude > MaxSpeed && !PlayerDashing)
@@ -176,10 +187,6 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    private void TrackBatloOrientation()
-    {
-        BaltoOrientation.forward = BaltoRef.forward.normalized * -1;
-    }
 
     private void Sprint(float Multiplier)
     {
@@ -191,16 +198,21 @@ public class PlayerMovement : MonoBehaviour
         if (PlayerAttackScript.ChannelAttack) { return; }
         if (DashDirection != Vector2.zero && !PlayerDashing)
         {
-            PlayerAudioSource.Stop();
-            PlayerAudioSource.clip = PlayerInteractScript.HandleAudioClip("Dashing", true);
-
+            TargetSpeed = DashSpeed;
+            KeepMomentum = true;
+            RigidbodyRef.useGravity = false;
+            MovementSpeedChange = 50;
             Debug.Log("kickback;");
-            Vector3 SetDashDirection = (PlayerOrientation.forward * DashDirection.y + PlayerOrientation.right * DashDirection.x) * DashDistance;
-            PlayerAttackScript.SetDodgeInfo((PlayerOrientation.forward * DashDirection.y + PlayerOrientation.right * DashDirection.x).normalized);
+            Vector3 SetDashDirection = (PlayerOrientation.forward * DashDirection.y + PlayerOrientation.right * DashDirection.x) * DashSpeed;
 
-            RigidbodyRef.AddForce(SetDashDirection * 25, ForceMode.Impulse);
+            RigidbodyRef.AddForce(SetDashDirection, ForceMode.Impulse);
             PlayerDashing = true;
-            StartCoroutine(DashTime());
+
+            //Cinemachine was messing up and the jittering was because of that. You arent dumb
+            //The fix was to change the update method and the blend update method to fixed update for both
+
+            //The original was smart and late, respectively
+            Invoke(nameof(DashReset), 0.45f);
         }
     }
 
@@ -243,19 +255,16 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    private void DashResetTimer()
+    private void DashReset()
     {
         DashSet = DashDirection != Vector2.zero;
+        PlayerDashing = false;
 
-        if (DashSet)
-        {
-            DashDelayTimer -= Time.deltaTime;
-            if (DashDelayTimer <= 0)
-            {
-                DashDirection = Vector2.zero;
-                DashDelayTimer = DashSetTime;
-            }
-        }
+
+        RigidbodyRef.drag = BaseNormalDrag;
+        RigidbodyRef.angularDrag = BaseAngleDrag;
+
+        RigidbodyRef.useGravity = true;
     }
 
     private void HandleDashDirection()
@@ -293,6 +302,57 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
+    private void ControlSpeed()
+    {
+
+        if (!Grounded && RigidbodyRef.useGravity)
+        {
+            RigidbodyRef.AddForce(Vector3.down * 6.25f, ForceMode.Force);
+        }
+
+        if (PlayerVelocity.magnitude > MaxSpeed)
+        {
+            Vector3 VelocityCap = PlayerVelocity.normalized * CurrentSpeed;
+            RigidbodyRef.velocity = new Vector3(VelocityCap.x, RigidbodyRef.velocity.y, VelocityCap.z);
+        }
+
+        if (InputDirection == Vector3.zero && !KnockbackLocked)
+        {
+            CurrentSpeed = 0;
+            PlayerVelocity = Vector3.zero;
+            MoveDirection = Vector3.zero;
+        }
+    }
+
+    private void HandleMoveSpeedChange()
+    {
+        bool TargetSpeedChanged = TargetSpeed != OldTargetSpeed;
+
+        if (!PlayerDashing)
+        {
+            TargetSpeed = BaseMoveSpeed;
+        }
+
+
+        if (TargetSpeedChanged)
+        {
+            Debug.Log("down");
+            if (KeepMomentum)
+            {
+                StopCoroutine(SmoothMoveSpeed());
+                StartCoroutine(SmoothMoveSpeed());
+                Debug.Log("overdrive");
+            }
+            else
+            {
+                StopCoroutine(SmoothMoveSpeed());
+                CurrentSpeed = TargetSpeed;
+                Debug.Log("get inside my head");
+            }
+        }
+        OldTargetSpeed = TargetSpeed;
+    }
+
     private void AlignToSurface()
     {
         RaycastHit HitInfo;
@@ -315,7 +375,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void TrackPlayerMovement()
     {
-        
+        //Tracks baltos current orientation 
+        BaltoOrientation.forward = BaltoRef.forward.normalized * -1;
+
+
         bool FrontGrounded = Physics.CheckSphere(Front_GroundCheckTransform.position, DetectionRadius, GroundLayers);
         bool BackGrounded = Physics.CheckSphere(Back_GroundCheckTransform.position, DetectionRadius, GroundLayers);
         Grounded = FrontGrounded || BackGrounded;
@@ -343,7 +406,10 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
+        TargetSpeed = BaseMoveSpeed * SpeedMultiplier;
+
         MoveDelay();
+
         if (InputDirection.magnitude <= 0.1f )
         {
             RigidbodyRef.velocity = new Vector3(0, RigidbodyRef.velocity.y, 0);
@@ -358,9 +424,9 @@ public class PlayerMovement : MonoBehaviour
         }
         if (CurrentSpeed <= 5)
         {
-
             PlayerAudioSource.Stop();
         }
+
         if (!CanMove) { return; }
         //Debug.Log("turn to rust");
         if(!PlayerAudioSource.isPlaying && CurrentSpeed > 4)
@@ -381,8 +447,20 @@ public class PlayerMovement : MonoBehaviour
                 , VelocityCap.z);
         }
 
+        CurrentSpeed = BaseMoveSpeed * SpeedMultiplier;
+
+        if (OnSlope())
+        {
+            RigidbodyRef.AddForce(GetMoveDirecOnSlope(MoveDirection) * CurrentSpeed * 10f, ForceMode.Force);
+        }
+
+        Debug.Log("Gods not home");
+        PlayerVelocity.y = (Grounded) ? 0 : PlayerVelocity.y;
+
+
         MoveDirection = PlayerOrientation.forward * InputDirection.z + PlayerOrientation.right * InputDirection.x;
-        RigidbodyRef.AddForce(new Vector3(MoveDirection.x, 0, MoveDirection.z) * 10f * (MaxSpeed) , ForceMode.Force);
+        RigidbodyRef.AddForce(new Vector3(MoveDirection.x, 0, MoveDirection.z).normalized * 10f * (CurrentSpeed), ForceMode.Force);
+
 
 
         if (CanMove)
@@ -400,6 +478,30 @@ public class PlayerMovement : MonoBehaviour
             }
 
         }
+
+    }
+
+    private IEnumerator SmoothMoveSpeed()
+    {
+
+        float SmoothTime = 0;
+        float SpeedDifference = Mathf.Abs(TargetSpeed - CurrentSpeed);
+        float StartSpeed = CurrentSpeed;
+
+        float SpeedBoostValue = MovementSpeedChange;
+
+        while (SmoothTime < SpeedDifference)
+        {
+            CurrentSpeed = Mathf.Lerp(StartSpeed, TargetSpeed, SmoothTime / SpeedDifference);
+            SmoothTime += Time.deltaTime * SpeedBoostValue;
+            Debug.Log("reee");
+
+            yield return null;
+        }
+
+        CurrentSpeed = TargetSpeed;
+        MovementSpeedChange = 1;
+        KeepMomentum = false;
 
     }
 
@@ -430,31 +532,25 @@ public class PlayerMovement : MonoBehaviour
 
     private void MoveDelay()
     {
-        if (InputDirection == Vector3.zero) { CanMove = false; CurrentMoveDelayTime = MovingDelayTimer; return; }
+        if (InputDirection == Vector3.zero) { CanMove = false; CurrentMoveDelayTime = MoveBodyDelayTime; return; }
         if (!CanMove)
         {
             CurrentMoveDelayTime -= Time.deltaTime;
             if(CurrentMoveDelayTime <= 0)
             {
                 CanMove = true;
-                CurrentMoveDelayTime = MovingDelayTimer;
+                CurrentMoveDelayTime = MoveBodyDelayTime;
             }
         }
         if (InputDirection != Vector3.zero && CanMove)
         {
-            CurrentMoveDelayTime = MovingDelayTimer;
+            CurrentMoveDelayTime = MoveBodyDelayTime;
         }
-    }
-
-    private IEnumerator DashTime()
-    {
-        yield return new WaitForSeconds(0.45f);
-        PlayerDashing = false;
     }
 
     private bool OnSlope()
     {
-        if(Physics.Raycast(transform.position,Vector3.down,out SlopeHit, transform.lossyScale.y + 1.25f))
+        if (Physics.Raycast(transform.position, Vector3.down, out SlopeHit, transform.lossyScale.y + 1.25f))
         {
             float Angle = Vector3.Angle(Vector3.up, SlopeHit.normal);
             return Angle < MaxSlopeAngle && Angle != 0;
@@ -462,9 +558,9 @@ public class PlayerMovement : MonoBehaviour
         return false;
     }
 
-    private Vector3 GetMoveDirecOnSlope()
+    private Vector3 GetMoveDirecOnSlope(Vector3 Direction)
     {
-        return Vector3.ProjectOnPlane(MoveDirection,SlopeHit.normal).normalized;
+        return Vector3.ProjectOnPlane(MoveDirection, SlopeHit.normal).normalized;
     }
 
     private void OnDrawGizmos()
