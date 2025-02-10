@@ -47,7 +47,7 @@ public class CameraFunctionality : MonoBehaviour
     public Vector3 TransformDirection;
     [SerializeField] protected Vector3 MoveDirection;
 
-    [SerializeField] private PlayerMovement PlayerMovementScript;
+    [SerializeField] private MoveTest PlayerMovementScript;
     public Cinemachine.CinemachineBrain Brain;
     public Cinemachine.CinemachineFreeLook FreeLockCamRef;
 
@@ -56,7 +56,7 @@ public class CameraFunctionality : MonoBehaviour
     {
         CurrentLockoutTime = LockoutTime;
 
-        PlayerMovementScript=transform.root.root.GetComponent<PlayerMovement>();
+        PlayerMovementScript = transform.root.root.GetComponent<MoveTest>();
         CameraActive = true;
         MouseSensitivity = 120f;
         FreeLockCamRef = GetComponentInChildren<CinemachineFreeLook>();
@@ -79,21 +79,6 @@ public class CameraFunctionality : MonoBehaviour
         //HandleAimCamera();
 
         //LockCamera();
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            return;
-            switch (LockView)
-            {
-                case false:
-                    CameraView = MainCamera.transform.position;
-                    LockView = true;
-                    break;
-
-                case true:
-                    LockView = false;
-                    break;
-            }
-        }
 
 
         //if (PlayerMovementScript.Attacking || !PlayerMovementScript.CanMove || !CameraActive) { return; }
@@ -103,7 +88,7 @@ public class CameraFunctionality : MonoBehaviour
 
     }
 
-    
+
 
     public void HandleCameraLockstate(bool LockState)
     {
@@ -147,6 +132,7 @@ public class CameraFunctionality : MonoBehaviour
 
         if (InputDirection != Vector3.zero)
         {
+            //InputDirection = new Vector3(InputDirection.x, InputDirection.y, InputDirection.z);
             PlayerObject.forward = Vector3.Slerp(PlayerObject.forward, InputDirection.normalized, Time.deltaTime * RotationSpeed);
 
         }
@@ -160,7 +146,7 @@ public class CameraFunctionality : MonoBehaviour
             CurrentLockoutTime -= Time.deltaTime;
             if (CurrentLockoutTime <= 0)
             {
-                
+
             }
         }
         else if (!LockView)
@@ -172,36 +158,36 @@ public class CameraFunctionality : MonoBehaviour
     private void HandleAimCamera()
     {
         //HandleCameraTransformValue();
-        if(!CameraActive || PlayerMovementScript.Attacking) { return; }
-        switch (AimCameraActive)
-        {
-            case true:
-                AimInfoSet = false;
-                AimCamera.transform.localRotation = Quaternion.Euler(0,0,0);
-                AimCameraRotation();
-                //HandleCameraTransformValue();
-                break;
+        //if(!CameraActive || PlayerMovementScript.Attacking) { return; }
+        //switch (AimCameraActive)
+        //{
+        //    case true:
+        //        AimInfoSet = false;
+        //        AimCamera.transform.localRotation = Quaternion.Euler(0,0,0);
+        //        AimCameraRotation();
+        //        //HandleCameraTransformValue();
+        //        break;
 
-            case false:
-                AimCamRotator.rotation = Quaternion.LookRotation(PlayerMovementScript.BaltoOrientation.right);
-                X_Rotation = 0;
-                Y_Rotation = 0;
-                //AimCamera.localRotation = Quaternion.Euler(transform.parent.forward);
-                //X_Rotation = PlayerMovementScript.BaltoOrientation.eulerAngles.x;
-                //Y_Rotation = PlayerMovementScript.BaltoOrientation.eulerAngles.y;
-                //Debug.Log("Hellish verses, at the alter we start to pray");
-                break;
+        //    case false:
+        //        AimCamRotator.rotation = Quaternion.LookRotation(PlayerMovementScript.BaltoOrientation.right);
+        //        X_Rotation = 0;
+        //        Y_Rotation = 0;
+        //        //AimCamera.localRotation = Quaternion.Euler(transform.parent.forward);
+        //        //X_Rotation = PlayerMovementScript.BaltoOrientation.eulerAngles.x;
+        //        //Y_Rotation = PlayerMovementScript.BaltoOrientation.eulerAngles.y;
+        //        //Debug.Log("Hellish verses, at the alter we start to pray");
+        //        break;
 
-        }
+        //}
 
     }
 
     private void HandleCameraTransformValue()
     {
-        
-        float X_Rotation=Mathf.Repeat(AimCamera.transform.localEulerAngles.x, 360);
-        float Y_Rotation=Mathf.Repeat(AimCamera.transform.localEulerAngles.y, 360);
-        float Z_Rotation=Mathf.Repeat(AimCamera.transform.localEulerAngles.z, 360);
+
+        float X_Rotation = Mathf.Repeat(AimCamera.transform.localEulerAngles.x, 360);
+        float Y_Rotation = Mathf.Repeat(AimCamera.transform.localEulerAngles.y, 360);
+        float Z_Rotation = Mathf.Repeat(AimCamera.transform.localEulerAngles.z, 360);
         Quaternion UpdatedTransform = Quaternion.Euler(X_Rotation, Y_Rotation, Z_Rotation);
         AimCamera.transform.rotation = UpdatedTransform;
     }
@@ -214,7 +200,7 @@ public class CameraFunctionality : MonoBehaviour
             case true:
                 AimCamera.gameObject.SetActive(AimActive);
                 MainCamera.gameObject.SetActive(false);
-                
+
                 break;
 
             case false:
@@ -228,7 +214,7 @@ public class CameraFunctionality : MonoBehaviour
 
     private void AimCameraRotation()
     {
-        
+
 
         if (!AimInfoSet)
         {
@@ -243,7 +229,7 @@ public class CameraFunctionality : MonoBehaviour
         Y_Rotation = Mathf.Clamp(Y_Rotation, -30, 30);
 
         AimCamera.transform.localRotation = Quaternion.Euler(X_Rotation, Y_Rotation, 0);
-        FirePoint.localRotation = Quaternion.Euler(X_Rotation, Y_Rotation-90, 0);
+        FirePoint.localRotation = Quaternion.Euler(X_Rotation, Y_Rotation - 90, 0);
     }
 
     private void PopulateNewAimInfo()
