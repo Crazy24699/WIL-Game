@@ -38,8 +38,7 @@ public class MoveTest : MonoBehaviour
     [SerializeField] private float MovementSpeedChange = 10;
 
     //Dashing
-    private float DashSetTime = 0.93f;
-    [SerializeField] private float DashDelayTimer;
+    private float DashSetTime = 0.93f; //Setting the dash direction 
     [SerializeField] private float DashSpeed = 20;
 
     public Vector3 PlayerVelocity;
@@ -58,7 +57,6 @@ public class MoveTest : MonoBehaviour
     [SerializeField] protected Transform Front_GroundCheckTransform;
     [SerializeField] protected Transform Back_GroundCheckTransform;
     [SerializeField] private Transform BaltoModel;
-    public Transform BaltoOrientation;
 
 
     public bool Attacking = false;

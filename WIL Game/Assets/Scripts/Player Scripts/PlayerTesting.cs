@@ -76,9 +76,9 @@ public class PlayerTesting : MonoBehaviour
         }
         if(!AimCamera.activeSelf)
         {
-            CameraTransform.rotation = Quaternion.LookRotation(PlayerMoveScript.BaltoOrientation.right);
-            RotationX = PlayerMoveScript.BaltoOrientation.eulerAngles.x;
-            RotationY = PlayerMoveScript.BaltoOrientation.eulerAngles.y;
+            //CameraTransform.rotation = Quaternion.LookRotation(PlayerMoveScript.BaltoOrientation.right);
+            //RotationX = PlayerMoveScript.BaltoOrientation.eulerAngles.x;
+            //RotationY = PlayerMoveScript.BaltoOrientation.eulerAngles.y;
         }
         if(Input.GetMouseButtonUp(1))
         {
