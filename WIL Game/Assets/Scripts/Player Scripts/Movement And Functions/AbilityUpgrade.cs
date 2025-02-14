@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraTest : MonoBehaviour
+public class AbilityUpgrade : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()

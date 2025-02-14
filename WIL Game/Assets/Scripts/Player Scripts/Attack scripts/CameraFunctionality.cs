@@ -47,7 +47,7 @@ public class CameraFunctionality : MonoBehaviour
     public Vector3 TransformDirection;
     [SerializeField] protected Vector3 MoveDirection;
 
-    [SerializeField] private MoveTest PlayerMovementScript;
+    [SerializeField] private PlayerMovement PlayerMovementScript;
     public Cinemachine.CinemachineBrain Brain;
     public Cinemachine.CinemachineFreeLook FreeLockCamRef;
 
@@ -56,7 +56,7 @@ public class CameraFunctionality : MonoBehaviour
     {
         CurrentLockoutTime = LockoutTime;
 
-        PlayerMovementScript = transform.root.root.GetComponent<MoveTest>();
+        PlayerMovementScript = transform.root.root.GetComponent<PlayerMovement>();
         CameraActive = true;
         MouseSensitivity = 120f;
         FreeLockCamRef = GetComponentInChildren<CinemachineFreeLook>();
